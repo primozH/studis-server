@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -42,5 +43,25 @@ public class PrijavaVir {
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+    }
+
+    @GET
+    public Response posljiGesloNaMail(Uporabnik uporabnik) {
+        logger.info("posljiGesloNaMail");
+        // Vrni uporabnika iz baze (ce ga ni, error)
+        Uporabnik uporabnikVBazi = (Uporabnik) this.em.createNamedQuery("entitete.Uporabnik.vrniUporabnika")
+                                                      .setParameter("uporabniskoIme", uporabnik.getUporabniskoIme())
+                                                      .getSingleResult();
+        if (uporabnikVBazi != null) return Response.status(Response.Status.NOT_FOUND).build();
+
+        // Generiraj geslo in ga shrani v bazo
+        // todo { ... to be done ... } -> idea: 10digit random string (numbers + chars)
+
+        // Poslji mail
+        // todo rabimo mail account
+
+        // Ce je mail uspesno poslan, status OK
+        // if (mail != sentOK) return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); todo
+        return Response.status(Response.Status.OK).build();
     }
 }
