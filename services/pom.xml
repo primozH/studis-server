@@ -9,30 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>api</artifactId>
+    <artifactId>services</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
-            <artifactId>kumuluzee-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee</groupId>
-            <artifactId>kumuluzee-servlet-jetty</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.kumuluz.ee</groupId>
-            <artifactId>kumuluzee-jax-rs-jersey</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.rest</groupId>
-            <artifactId>kumuluzee-rest-core</artifactId>
-            <version>1.1.0</version>
+            <artifactId>kumuluzee-cdi-weld</artifactId>
         </dependency>
         <dependency>
             <groupId>si.fri.tpo10</groupId>
-            <artifactId>services</artifactId>
+            <artifactId>entities</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>

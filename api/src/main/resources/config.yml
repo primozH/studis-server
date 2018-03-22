@@ -1,0 +1,15 @@
+kumuluzee:
+  name: StudIS
+  version: 0.0.1
+  env:
+    name: dev
+  server:
+    http:
+      port: 8080
+
+  datasources:
+    - jndi-name: jdbc/studis
+      connection-url: jdbc:mysql://localhost:3306/studis
+      username: studis
+      password: studisIS
+      max-pool-size: 20
