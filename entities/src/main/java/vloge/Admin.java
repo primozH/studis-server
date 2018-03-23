@@ -1,4 +1,4 @@
 package vloge;
 
-public class Admin {
+public class Admin extends Oseba {
 }

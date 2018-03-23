@@ -1,4 +1,4 @@
 package vloge;
 
-public class Referent {
+public class Referent extends Oseba {
 }

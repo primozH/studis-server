@@ -1,10 +1,10 @@
 package vloge;
 
-import vpis.SifrantPredmetov;
-
 import java.util.List;
 
-public class Ucitelj {
+import vpis.SifrantPredmetov;
+
+public class Ucitelj extends Oseba {
 
     private List<SifrantPredmetov> predmeti;
 }

@@ -35,6 +35,11 @@
             <artifactId>services</artifactId>
             <version>0.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>si.fri.tpo10</groupId>
+            <artifactId>entities</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
