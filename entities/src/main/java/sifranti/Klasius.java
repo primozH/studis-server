@@ -1,4 +1,4 @@
-package vpis;
+package sifranti;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,12 +1,12 @@
-package vpis;
+package sifranti;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "oblika_studija")
-public class OblikaStudija {
+@Table(name = "nacin_studija")
+public class NacinStudija {
 
     @Id
     private Integer sifra;

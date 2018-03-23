@@ -1,4 +1,4 @@
 package vloge;
 
-public abstract class Oseba {
+public class Oseba {
 }

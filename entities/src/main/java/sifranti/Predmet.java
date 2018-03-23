@@ -1,4 +1,6 @@
-package vpis;
+package sifranti;
+
+import vpis.Semester;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "predmet")
-public class SifrantPredmetov {
+public class Predmet {
 
     @Id
     private Integer sifra;
@@ -14,5 +16,4 @@ public class SifrantPredmetov {
     private Semester semester;
     private Integer ECTS;
 
-    private PredmetTip tipPredmeta;
 }

@@ -1,4 +1,6 @@
-package vpis;
+package sifranti;
+
+import vpis.Stopnja;
 
 public class StudijskiProgram {
     private String sifra;
