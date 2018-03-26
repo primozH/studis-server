@@ -1,17 +1,18 @@
-package vloge;
+package prijava;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 
-@NamedQueries({ @NamedQuery(name = "entities.vloge.Oseba.vrniOsebo", query = "SELECT o FROM oseba o WHERE o.elektronska_posta = :elektronskaPosta") })
-//@NamedQuery(name = "entities.vloge.Oseba.preveriGeslo", query = "SELECT o FROM oseba o WHERE o.geslo = :geslo")
-@Entity(name = "oseba")
-public abstract class Oseba {
+/**
+ * Uporablja se samo pri prijavi v sistem.
+ * S pomocjo para elektronska_posta in geslo poisce v bazi
+ * ustreznega uporabnika in mu dovoli oz. zavrne vstop v sistem.
+ */
+@Entity(name = "prijava")
+public class Prijava {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,4 +44,5 @@ public abstract class Oseba {
     public void setGeslo(String geslo) {
         this.geslo = geslo;
     }
+
 }
