@@ -7,7 +7,7 @@ import java.util.Date;
 @Table(name = "uporabnik")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries( value = {
-        @NamedQuery(name = "entities.vloge.Uporabnik.prijava", query = "SELECT u.email, u.geslo FROM Uporabnik u WHERE u.email = :email")
+        @NamedQuery(name = "entities.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
 })
 public class Uporabnik {
 

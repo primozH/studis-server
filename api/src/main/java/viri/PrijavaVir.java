@@ -31,16 +31,15 @@ public class PrijavaVir {
         logger.info("preveriPrijavo");
         // Preveri, ce oseba obstaja v bazi
         Uporabnik osebaVBazi = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
-                                          .setParameter("email", prijava.getElektronskaPosta())
-                                          .getSingleResult();
-        if (osebaVBazi != null) {
+                                          .setParameter("email", prijava.getElektronskaPosta()).getSingleResult();
+        if (osebaVBazi == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         // Preveri, ce se geslo jema z uporabnikovim geslom iz baze
         if (prijava.getGeslo().equals(osebaVBazi.getGeslo())) {
             return Response.status(Response.Status.OK).build();
         } else {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
 }
