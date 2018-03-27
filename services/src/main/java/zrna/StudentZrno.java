@@ -27,8 +27,12 @@ public class StudentZrno {
      * @param queryParameters
      * @return
      */
-    public List<Student> getStudenti(QueryParameters queryParameters) {
+    public List<Student> getStudents(QueryParameters queryParameters) {
         return JPAUtils.queryEntities(em, Student.class, queryParameters);
+    }
+
+    public Long getStudentsCount(QueryParameters queryParameters) {
+        return JPAUtils.queryEntitiesCount(em, Student.class, queryParameters);
     }
 
     @Transactional
