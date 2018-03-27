@@ -3,8 +3,7 @@ package producer;
 import com.kumuluz.ee.rest.utils.QueryStringDefaults;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
-import javax.ws.rs.Produces;
+import javax.enterprise.inject.Produces;
 
 public class QueryStringDefaultProducer {
 

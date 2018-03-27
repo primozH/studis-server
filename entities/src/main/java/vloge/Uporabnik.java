@@ -1,7 +1,10 @@
 package vloge;
 
+import helpers.adapters.LocalDateTimeAdapter;
+
 import javax.persistence.*;
-import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "uporabnik")
@@ -18,13 +21,21 @@ public class Uporabnik {
     @Column(name = "geslo", nullable = false) private String geslo;
     @Column(name = "emso") private String emso;
 
-    @Column(name = "davcna_stevilka") private String davcnaStevilka;
-    @Column(name = "zadnja_prijava") private Date zadnjaPrijava;
+    @Column(name = "davcna_stevilka")
+    private String davcnaStevilka;
+
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    @Column(name = "zadnja_prijava")
+    private LocalDateTime zadnjaPrijava;
+
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     @Column(name = "spremenjeno", columnDefinition = "DATETIME NULL ON UPDATE CURRENT_TIMESTAMP")
-    private Date spremenjeno;
+    private LocalDateTime spremenjeno;
+
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     @Column(name = "ustvarjeno", insertable = false, updatable = false,
     columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
-    private Date ustvarjeno;
+    private LocalDateTime ustvarjeno;
 
     public Uporabnik() { }
 
@@ -50,11 +61,11 @@ public class Uporabnik {
     }
 
     public void setZadnjaPrijava() {
-        this.zadnjaPrijava = new Date();
+        this.zadnjaPrijava = LocalDateTime.now();
     }
 
     public void setSpremenjeno() {
-        this.spremenjeno = new Date();
+        this.spremenjeno = LocalDateTime.now();
     }
 
     public Integer getId() {
@@ -77,15 +88,15 @@ public class Uporabnik {
         return davcnaStevilka;
     }
 
-    public Date getZadnjaPrijava() {
+    public LocalDateTime getZadnjaPrijava() {
         return zadnjaPrijava;
     }
 
-    public Date getSpremenjeno() {
+    public LocalDateTime getSpremenjeno() {
         return spremenjeno;
     }
 
-    public Date getUstvarjeno() {
+    public LocalDateTime getUstvarjeno() {
         return ustvarjeno;
     }
 }

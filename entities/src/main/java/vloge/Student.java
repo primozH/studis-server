@@ -1,7 +1,10 @@
 package vloge;
 
+import helpers.adapters.LocalDateAdapter;
+
 import javax.persistence.*;
-import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "student")
@@ -11,7 +14,10 @@ public class Student extends Uporabnik {
     @Column(name = "vpisna_stevilka") private Integer vpisnaStevilka;
     @Column(name = "ime") private String ime;
     @Column(name = "priimek") private String priimek;
-    @Column(name = "datum_rojstva") private Date datumRojstva;
+
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @Column(name = "datum_rojstva")
+    private LocalDate datumRojstva;
 
     @Column(name = "tel_stevilka") private String telefonskaStevilka;
 
@@ -19,7 +25,7 @@ public class Student extends Uporabnik {
         super();
     }
 
-    public Student(String email, String geslo, Integer vpisnaStevilka, String ime, String priimek, Date datumRojstva, String telefonskaStevilka) {
+    public Student(String email, String geslo, Integer vpisnaStevilka, String ime, String priimek, LocalDate datumRojstva, String telefonskaStevilka) {
         super(email, geslo);
         this.vpisnaStevilka = vpisnaStevilka;
         this.ime = ime;
@@ -52,11 +58,11 @@ public class Student extends Uporabnik {
         return priimek;
     }
 
-    public Date getDatumRojstva() {
+    public LocalDate getDatumRojstva() {
         return datumRojstva;
     }
 
-    public void setDatumRojstva(Date datumRojstva) {
+    public void setDatumRojstva(LocalDate datumRojstva) {
         this.datumRojstva = datumRojstva;
     }
 

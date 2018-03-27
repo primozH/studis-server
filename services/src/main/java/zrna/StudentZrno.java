@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class StudentZrno {
 
     @Transactional
     public void createStudent() {
-        Student student = new Student("janez@novak.si", "12345", 63180001, "Janez", "Novak", new Date(),
+        Student student = new Student("janez@novak.si", "12345", 63180001, "Janez", "Novak",
+                LocalDate.now(),
                 "070123123");
         em.persist(student);
     }
