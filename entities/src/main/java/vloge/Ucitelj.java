@@ -1,10 +1,16 @@
 package vloge;
 
-import sifranti.Predmet;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import java.util.List;
+@Entity
+@Table(name = "ucitelj")
+public class Ucitelj extends Uporabnik {
 
-public class Ucitelj {
+    public Ucitelj() {
+    }
 
-    private List<Predmet> predmeti;
+    public Ucitelj(String email, String geslo) {
+        super(email, geslo);
+    }
 }

@@ -3,7 +3,7 @@ import javax.ws.rs.core.Application;
 import java.util.Set;
 
 @ApplicationPath("/api/v1")
-public class RESTEndpoint extends Application {
+public class RESTVir extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         return super.getClasses();
