@@ -13,25 +13,25 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import prijava.Prijava;
-import vloge.Oseba;
+import vloge.Uporabnik;
 
 @Path("prijava")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
-public class PrijavaViri {
+public class PrijavaVir {
 
     @PersistenceContext(unitName = "studis")
     private EntityManager em;
 
-    Logger logger = Logger.getLogger(PrijavaViri.class.getSimpleName());
+    Logger logger = Logger.getLogger(PrijavaVir.class.getSimpleName());
 
     @POST
     public Response preveriPrijavo(Prijava prijava) {
         logger.info("preveriPrijavo");
         // Preveri, ce oseba obstaja v bazi
-        Oseba osebaVBazi = (Oseba) this.em.createNamedQuery("entities.vloge.Oseba.vrniOsebo")
-                                          .setParameter("elektronskaPosta", prijava.getElektronskaPosta())
+        Uporabnik osebaVBazi = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
+                                          .setParameter("email", prijava.getElektronskaPosta())
                                           .getSingleResult();
         if (osebaVBazi != null) {
             return Response.status(Response.Status.NOT_FOUND).build();
