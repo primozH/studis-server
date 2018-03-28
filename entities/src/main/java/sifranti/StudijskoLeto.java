@@ -6,7 +6,10 @@ import javax.persistence.*;
 @Table(name = "studijsko_leto")
 public class StudijskoLeto {
 
-    @Id @GeneratedValue private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sifra")
+    private Integer id;
     @Column(name = "studijsko_leto")
     private String studijskoLeto;
 
