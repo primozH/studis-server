@@ -1,8 +1,15 @@
 package viri;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -12,6 +19,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.json.JSONObject;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 
 import prijava.Prijava;
 import vloge.Uporabnik;
@@ -25,23 +37,43 @@ public class PrijavaVir {
     @PersistenceContext(unitName = "studis")
     private EntityManager em;
 
-    Logger logger = Logger.getLogger(PrijavaVir.class.getSimpleName());
+    private static Logger logger = Logger.getLogger(PrijavaVir.class.getSimpleName());
+    private static final String STUDIS_MAIL = "studis.info.info@gmail.com";
+    private static final String STUDIS_GESLO = "studis123";
 
+    /**
+     * Primer responsa: {"jwtToken":"hashedString"}
+     *
+     * @param prijava
+     * @return json, ki vsebuje token
+     */
     @POST
     public Response preveriPrijavo(Prijava prijava) {
         logger.info("preveriPrijavo");
         // Preveri, ce oseba obstaja v bazi
-        Uporabnik uporabnikVBazi = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
-                                          .setParameter("email", prijava.getEmail()).getSingleResult();
-        if (uporabnikVBazi == null) {
+        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
+                                                 .setParameter("email", prijava.getEmail()).getSingleResult();
+        if (uporabnik == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        // Preveri, ce se geslo jema z uporabnikovim geslom iz baze
-        // Todo: hashiraj geslo za prijavo
-        String hashGesla = "";
 
-        if (hashGesla.equals(uporabnikVBazi.getGeslo())) {
-            return Response.status(Response.Status.OK).build();
+        if (uporabnik.primerjajGeslo(prijava.getGeslo())) {
+            String token = null;
+            try {
+                Algorithm algorithm = Algorithm.HMAC256("secret");
+                token = JWT.create()
+                           .withClaim("tip", uporabnik.getTip())
+                           .withClaim("uid", uporabnik.getId())
+                           .sign(algorithm);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (token == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("jwtToken", token);
+            return Response.ok(jsonObj.toString()).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -51,19 +83,58 @@ public class PrijavaVir {
     public Response posljiGesloNaMail(Prijava prijava) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
-        Uporabnik uporabnikVBazi = (Uporabnik) this.em.createNamedQuery("entitete.Uporabnik.prijava")
-                                                      .setParameter("email", prijava.getEmail())
-                                                      .getSingleResult();
-        if (uporabnikVBazi != null) return Response.status(Response.Status.NOT_FOUND).build();
+        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.Uporabnik.prijava")
+                                                 .setParameter("email", prijava.getEmail())
+                                                 .getSingleResult();
+        if (uporabnik != null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
-        // Generiraj geslo in ga shrani v bazo
-        // todo { ... to be done ... } -> idea: 10digit random string (numbers + chars)
+        String geslo = uporabnik.getGeslo();
 
-        // Poslji mail (https://stackoverflow.com/a/47452/6819938)
-        // todo rabimo mail account
+        String subject = "Ponastavljeno geslo - Studis";
+        String body = "Spoštovani,\n\nPošiljamo Vam ponastavljeno geslo za sistem Studis,"
+                      + " s katerim se poleg vašega elektronskega naslova prijavite v sistem.\n\nGeslo: <b>"
+                      + geslo
+                      + "<b>\n\nLep pozdrav,\nekipa Studis";
 
-        // Ce je mail uspesno poslan, status OK
-        // if (mail != sentOK) return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); todo
+        if (!sendFromGMail(uporabnik.getEmail(), subject, body)) return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         return Response.status(Response.Status.OK).build();
+    }
+
+    /**
+     * Posiljanje maila z geslom.
+     *
+     * @param to
+     * @param subject
+     * @param body
+     */
+    private boolean sendFromGMail(String to, String subject, String body) {
+        Properties props = System.getProperties();
+        String host = "smtp.gmail.com";
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.user", STUDIS_MAIL);
+        props.put("mail.smtp.password", STUDIS_GESLO);
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+
+        Session session = Session.getDefaultInstance(props);
+        MimeMessage message = new MimeMessage(session);
+        try {
+            message.setFrom(new InternetAddress(STUDIS_MAIL));
+            InternetAddress toAddress = new InternetAddress(to);
+            message.addRecipient(Message.RecipientType.TO, toAddress);
+            message.setSubject(subject);
+            message.setText(body);
+            Transport transport = session.getTransport("smtp");
+            transport.connect(host, STUDIS_MAIL, STUDIS_GESLO);
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+        } catch (Exception me) {
+            me.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

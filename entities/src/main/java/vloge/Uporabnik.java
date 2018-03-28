@@ -1,10 +1,21 @@
 package vloge;
 
-import helpers.adapters.LocalDateTimeAdapter;
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
+import java.util.Random;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import helpers.adapters.LocalDateTimeAdapter;
 
 @Entity
 @Table(name = "uporabnik")
@@ -20,6 +31,7 @@ public class Uporabnik {
     @Column(name = "email", nullable = false) private String email;
     @Column(name = "geslo", nullable = false) private String geslo;
     @Column(name = "emso") private String emso;
+    @Column(name = "DTYPE") private String tip;
 
     @Column(name = "davcna_stevilka")
     private String davcnaStevilka;
@@ -77,6 +89,10 @@ public class Uporabnik {
     }
 
     public String getGeslo() {
+        // Generiraj geslo in ga shrani v bazo
+        String randomGeslo = generirajRandomGeslo();
+        String hashGesla = hashiranjeGesla(randomGeslo);
+        // TODO shrani v bazo
         return geslo;
     }
 
@@ -98,5 +114,52 @@ public class Uporabnik {
 
     public LocalDateTime getUstvarjeno() {
         return ustvarjeno;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
+
+    /**
+     * Preveri, ce se geslo ujema z uporabnikovim geslom iz baze
+     *
+     * @param geslo
+     * @return
+     */
+    public boolean primerjajGeslo (String geslo) {
+        String hashGesla = hashiranjeGesla(geslo);
+        return this.geslo.equals(hashGesla);
+    }
+
+    /**
+     * Se uporablja pri shranjevanju v bazo in pred
+     * primerjanjem gesla iz frontenda z geslom iz baze.
+     *
+     * @return hashirano geslo
+     */
+    private String hashiranjeGesla(String geslo) {
+        return "";
+    }
+
+    private static final String ALFANUMERICNI_ZNAKI = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final int DOLZINA_RANDOM_GESLA = 10;
+
+    /**
+     * Se uporablja v kolikor uporabnik pozabi geslo
+     * oz. ob prvi prijavi v sistem.
+     *
+     * @return
+     */
+    private String generirajRandomGeslo() {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
+            stringBuilder.append(ALFANUMERICNI_ZNAKI.charAt(random.nextInt(ALFANUMERICNI_ZNAKI.length())));
+        }
+        return stringBuilder.toString();
     }
 }
