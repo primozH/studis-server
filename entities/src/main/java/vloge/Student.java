@@ -1,10 +1,12 @@
 package vloge;
 
 import helpers.adapters.LocalDateAdapter;
+import vpis.Vpis;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "student")
@@ -20,6 +22,9 @@ public class Student extends Uporabnik {
     private LocalDate datumRojstva;
 
     @Column(name = "tel_stevilka") private String telefonskaStevilka;
+
+    @OneToMany(targetEntity = Vpis.class)
+    private List<Vpis> vpisi;
 
     public Student() {
         super();
@@ -73,5 +78,13 @@ public class Student extends Uporabnik {
     public void setTelefonskaStevilka(String telefonskaStevilka) {
         // TODO verify phone number
         this.telefonskaStevilka = telefonskaStevilka;
+    }
+
+    public List<Vpis> getVpisi() {
+        return vpisi;
+    }
+
+    public void setVpisi(List<Vpis> vpisi) {
+        this.vpisi = vpisi;
     }
 }

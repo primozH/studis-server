@@ -1,5 +1,6 @@
 package sifranti;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,7 +10,9 @@ import javax.persistence.Table;
 public class DelPredmetnika {
 
     @Id
+    @Column(name = "sifra")
     private Integer sifra;
+    @Column(name = "tip")
     private String tip;
 
     public Integer getSifra() {

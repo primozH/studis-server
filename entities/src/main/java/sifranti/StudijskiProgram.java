@@ -2,12 +2,25 @@ package sifranti;
 
 import vpis.Stopnja;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "studijski_program")
 public class StudijskiProgram {
+    @Id
+    @Column(name = "sifra")
     private String sifra;
+    @Column(name = "naziv")
     private String naziv;
+    @Column(name = "stopnja")
     private Stopnja stopnja;
+    @Column(name = "stevilo_semestrov")
     private Integer stSemestrov;
-    private Integer sigraEVS;
+    @Column(name = "sifra_evs")
+    private Integer sifraEVS;
 
     public String getSifra() {
         return sifra;
@@ -41,11 +54,11 @@ public class StudijskiProgram {
         this.stSemestrov = stSemestrov;
     }
 
-    public Integer getSigraEVS() {
-        return sigraEVS;
+    public Integer getSifraEVS() {
+        return sifraEVS;
     }
 
-    public void setSigraEVS(Integer sigraEVS) {
-        this.sigraEVS = sigraEVS;
+    public void setSifraEVS(Integer sigraEVS) {
+        this.sifraEVS = sigraEVS;
     }
 }

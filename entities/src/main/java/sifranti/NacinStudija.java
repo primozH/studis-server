@@ -1,5 +1,6 @@
 package sifranti;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,8 +10,11 @@ import javax.persistence.Table;
 public class NacinStudija {
 
     @Id
+    @Column(name = "sifra")
     private Integer sifra;
+    @Column(name = "opis")
     private String opis;
+    @Column(name = "opis_ang")
     private String opisEng;
 
     public Integer getSifra() {

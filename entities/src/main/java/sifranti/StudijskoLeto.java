@@ -1,11 +1,13 @@
 package sifranti;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "studijsko_leto")
 public class StudijskoLeto {
 
     @Id @GeneratedValue private Integer id;
+    @Column(name = "studijsko_leto")
     private String studijskoLeto;
 
     public Integer getId() {

@@ -13,8 +13,11 @@ public class Klasius {
     @Column(name = "sifra")
     private Integer sifra;
 
+    @Column(name = "opis")
     private String opis;
+    @Column(name = "strokovni_naslov")
     private String strokovniNaslov;
+    @Column(name = "raven_izobrazbe")
     private String ravenIzobrazbe;
 
     public Integer getSifra() {
