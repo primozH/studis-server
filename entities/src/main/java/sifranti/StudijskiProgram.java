@@ -10,7 +10,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "studijski_program")
 public class StudijskiProgram {
+
     @Id
+    @Column(name = "sifra_evs")
+    private Integer sifraEVS;
     @Column(name = "sifra")
     private String sifra;
     @Column(name = "naziv")
@@ -19,8 +22,6 @@ public class StudijskiProgram {
     private Stopnja stopnja;
     @Column(name = "stevilo_semestrov")
     private Integer stSemestrov;
-    @Column(name = "sifra_evs")
-    private Integer sifraEVS;
 
     public String getSifra() {
         return sifra;

@@ -1,9 +1,6 @@
 package naslov;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -11,16 +8,19 @@ import java.util.List;
 public class Drzava {
 
     @Id
+    @Column(name = "iso_koda", nullable = false)
     private String dvomestnaKoda;
-
+    @Column(name = "iso_3_koda", nullable = false)
     private String trimestnaKoda;
+    @Column(name = "numericna_oznaka", nullable = false)
     private Integer numericnaOznaka;
+    @Column(name = "iso_naziv", nullable = false)
     private String ISONaziv;
+    @Column(name = "slovenski_naziv", nullable = false)
     private String slovenskiNaziv;
+    @Column(name = "opombe")
     private String opombe;
 
-    @OneToMany(targetEntity = Obcina.class)
-    private List<Obcina> obcine;
 
     public String getDvomestnaKoda() {
         return dvomestnaKoda;
@@ -68,13 +68,5 @@ public class Drzava {
 
     public void setOpombe(String opombe) {
         this.opombe = opombe;
-    }
-
-    public List<Obcina> getObcine() {
-        return obcine;
-    }
-
-    public void setObcine(List<Obcina> obcine) {
-        this.obcine = obcine;
     }
 }

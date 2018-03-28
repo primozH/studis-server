@@ -1,6 +1,8 @@
 package vloge;
 
 import helpers.adapters.LocalDateAdapter;
+import naslov.Drzava;
+import naslov.Obcina;
 import vpis.Vpis;
 
 import javax.persistence.*;
@@ -23,8 +25,37 @@ public class Student extends Uporabnik {
 
     @Column(name = "tel_stevilka") private String telefonskaStevilka;
 
+    @ManyToOne(targetEntity = Drzava.class)
+    @JoinColumn(name = "drzava_stalno")
+    private Drzava drzavaStalno;
+    @ManyToOne(targetEntity = Obcina.class)
+    @JoinColumn(name = "obcina_stalno")
+    private Obcina obcinaStalno;
+    @Column(name = "naslov_stalno")
+    private String naslovStalno;
+
+    @ManyToOne(targetEntity = Drzava.class)
+    @JoinColumn(name = "drzava_zacasno")
+    private Drzava drzavaZacasno;
+    @ManyToOne(targetEntity = Obcina.class)
+    @JoinColumn(name = "obcina_zacasno")
+    private Obcina obcinaZacasno;
+    @Column(name = "naslov_zacasno")
+    private String naslovZacasno;
+
+    @Column(name = "drzava_rojstva")
+    private String drzavaRojstva;
+    @Column(name = "obcina_rojstva")
+    private String obcinaRojstva;
+    @Column(name = "kraj_rojstva")
+    private String krajRojstva;
+
+    @Column(name = "spol")
+    private Spol spol;
+
     @OneToMany(targetEntity = Vpis.class)
     private List<Vpis> vpisi;
+
 
     public Student() {
         super();
@@ -39,28 +70,28 @@ public class Student extends Uporabnik {
         this.telefonskaStevilka = telefonskaStevilka;
     }
 
-    private void setVpisnaStevilka() {
-        // TODO generate enrolment number
-    }
-
-    private void setIme(String ime) {
-        this.ime = ime;
-    }
-
-    private void setPriimek(String priimek) {
-        this.priimek = priimek;
-    }
-
     public Integer getVpisnaStevilka() {
         return vpisnaStevilka;
+    }
+
+    public void setVpisnaStevilka(Integer vpisnaStevilka) {
+        this.vpisnaStevilka = vpisnaStevilka;
     }
 
     public String getIme() {
         return ime;
     }
 
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
     public String getPriimek() {
         return priimek;
+    }
+
+    public void setPriimek(String priimek) {
+        this.priimek = priimek;
     }
 
     public LocalDate getDatumRojstva() {
@@ -76,8 +107,87 @@ public class Student extends Uporabnik {
     }
 
     public void setTelefonskaStevilka(String telefonskaStevilka) {
-        // TODO verify phone number
         this.telefonskaStevilka = telefonskaStevilka;
+    }
+
+    public Drzava getDrzavaStalno() {
+        return drzavaStalno;
+    }
+
+    public void setDrzavaStalno(Drzava drzavaStalno) {
+        this.drzavaStalno = drzavaStalno;
+    }
+
+    public Obcina getObcinaStalno() {
+        return obcinaStalno;
+    }
+
+    public void setObcinaStalno(Obcina obcinaStalno) {
+        this.obcinaStalno = obcinaStalno;
+    }
+
+    public String getNaslovStalno() {
+        return naslovStalno;
+    }
+
+    public void setNaslovStalno(String naslovStalno) {
+        this.naslovStalno = naslovStalno;
+    }
+
+    public Drzava getDrzavaZacasno() {
+        return drzavaZacasno;
+    }
+
+    public void setDrzavaZacasno(Drzava drzavaZacasno) {
+        this.drzavaZacasno = drzavaZacasno;
+    }
+
+    public Obcina getObcinaZacasno() {
+        return obcinaZacasno;
+    }
+
+    public void setObcinaZacasno(Obcina obcinaZacasno) {
+        this.obcinaZacasno = obcinaZacasno;
+    }
+
+    public String getNaslovZacasno() {
+        return naslovZacasno;
+    }
+
+    public void setNaslovZacasno(String naslovZacasno) {
+        this.naslovZacasno = naslovZacasno;
+    }
+
+    public String getDrzavaRojstva() {
+        return drzavaRojstva;
+    }
+
+    public void setDrzavaRojstva(String drzavaRojstva) {
+        this.drzavaRojstva = drzavaRojstva;
+    }
+
+    public String getObcinaRojstva() {
+        return obcinaRojstva;
+    }
+
+    public void setObcinaRojstva(String obcinaRojstva) {
+        this.obcinaRojstva = obcinaRojstva;
+    }
+
+    public String getKrajRojstva() {
+        return krajRojstva;
+    }
+
+    public void setKrajRojstva(String krajRojstva) {
+        this.krajRojstva = krajRojstva;
+    }
+
+    public Spol getSpol() {
+        return spol;
+    }
+
+    public void setSpol(Spol spol) {
+        this.spol = spol;
     }
 
     public List<Vpis> getVpisi() {

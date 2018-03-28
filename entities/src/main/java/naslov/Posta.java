@@ -1,21 +1,15 @@
 package naslov;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "posta")
 public class Posta {
 
     @Id
+    @Column(name = "postna_stevilka")
     private Integer postnaStevilka;
-
-    @ManyToOne(targetEntity = Obcina.class)
-    @Id
-    private Obcina obcina;
-
+    @Column(name = "naziv_poste")
     private String nazivPoste;
 
 
@@ -33,13 +27,5 @@ public class Posta {
 
     public void setNazivPoste(String nazivPoste) {
         this.nazivPoste = nazivPoste;
-    }
-
-    public Obcina getObcina() {
-        return obcina;
-    }
-
-    public void setObcina(Obcina obcina) {
-        this.obcina = obcina;
     }
 }

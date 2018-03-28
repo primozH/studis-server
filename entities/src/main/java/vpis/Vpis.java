@@ -14,16 +14,20 @@ public class Vpis {
     private VpisId vpisId;
 
     @ManyToOne(targetEntity = StudijskiProgram.class)
+    @JoinColumn(name = "studijski_program")
     private StudijskiProgram studijskiProgram;
-
     @ManyToOne(targetEntity = VrstaVpisa.class)
+    @JoinColumn(name = "vrsta_vpisa", nullable = false)
     private VrstaVpisa vrstaVpisa;
     @ManyToOne(targetEntity = NacinStudija.class)
+    @JoinColumn(name = "nacin_studija")
     private NacinStudija nacinStudija;
 
     @ManyToOne(targetEntity = OblikaStudija.class)
+    @JoinColumn(name = "oblika_studija")
     private OblikaStudija oblikaStudija;
     @ManyToOne(targetEntity = Letnik.class)
+    @JoinColumn(name = "letnik")
     private Letnik letnik;
 
     public VpisId getVpisId() {
