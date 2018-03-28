@@ -36,6 +36,7 @@ public class PrijavaVir {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         // Preveri, ce se geslo jema z uporabnikovim geslom iz baze
+        // Todo: hashiraj geslo za prijavo
         if (prijava.getGeslo().equals(osebaVBazi.getGeslo())) {
             return Response.status(Response.Status.OK).build();
         } else {
