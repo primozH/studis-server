@@ -31,14 +31,16 @@ public class PrijavaVir {
     public Response preveriPrijavo(Prijava prijava) {
         logger.info("preveriPrijavo");
         // Preveri, ce oseba obstaja v bazi
-        Uporabnik osebaVBazi = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
-                                          .setParameter("email", prijava.getElektronskaPosta()).getSingleResult();
-        if (osebaVBazi == null) {
+        Uporabnik uporabnikVBazi = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
+                                          .setParameter("email", prijava.getEmail()).getSingleResult();
+        if (uporabnikVBazi == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         // Preveri, ce se geslo jema z uporabnikovim geslom iz baze
         // Todo: hashiraj geslo za prijavo
-        if (prijava.getGeslo().equals(osebaVBazi.getGeslo())) {
+        String hashGesla = "";
+
+        if (hashGesla.equals(uporabnikVBazi.getGeslo())) {
             return Response.status(Response.Status.OK).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -46,18 +48,18 @@ public class PrijavaVir {
     }
 
     @GET
-    public Response posljiGesloNaMail(Uporabnik uporabnik) {
+    public Response posljiGesloNaMail(Prijava prijava) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
-        Uporabnik uporabnikVBazi = (Uporabnik) this.em.createNamedQuery("entitete.Uporabnik.vrniUporabnika")
-                                                      .setParameter("uporabniskoIme", uporabnik.getUporabniskoIme())
+        Uporabnik uporabnikVBazi = (Uporabnik) this.em.createNamedQuery("entitete.Uporabnik.prijava")
+                                                      .setParameter("email", prijava.getEmail())
                                                       .getSingleResult();
         if (uporabnikVBazi != null) return Response.status(Response.Status.NOT_FOUND).build();
 
         // Generiraj geslo in ga shrani v bazo
         // todo { ... to be done ... } -> idea: 10digit random string (numbers + chars)
 
-        // Poslji mail
+        // Poslji mail (https://stackoverflow.com/a/47452/6819938)
         // todo rabimo mail account
 
         // Ce je mail uspesno poslan, status OK
