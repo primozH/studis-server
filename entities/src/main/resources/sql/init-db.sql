@@ -6,7 +6,7 @@ INSERT INTO nacin_studija (sifra, opis, opis_ang) VALUES (1, 'redni', 'full-time
 
 INSERT INTO oblika_studija (sifra, opis, opis_ang) VALUES (1, 'na lokaciji', 'on site'), (2, 'na daljavo', 'distance learning'), (3, 'e-študij', 'e-learning');
 
-INSERT INTO studijski_program (sifra, naziv, sifra_evs, stevilo_semestrov, stopnja) VALUES ('VV', 'Računalništvo in matematika UNI-1.st', 1000407, 6, 2), ('L1', 'Računalništvo in matematika MAG 2.st', 1000471, 4, 3), ('VT', 'Računalništvo in informatika UNI-1.st', 1000468, 6, 2), ('VU', 'Računalništvo in informatika VS-1.st', 1000470, 6, 1), ('X6', 'Računalništvo in informatika DR-3.st', 1000474, 6, 4);
+INSERT INTO studijski_program (sifra, naziv, sifra_evs, stevilo_semestrov, stopnja, klasius) VALUES ('VV', 'Računalništvo in matematika UNI-1.st', 1000407, 6, 2, 16204), ('L1', 'Računalništvo in matematika MAG 2.st', 1000471, 4, 3, 17003), ('VT', 'Računalništvo in informatika UNI-1.st', 1000468, 6, 2, 16204), ('VU', 'Računalništvo in informatika VS-1.st', 1000470, 6, 1, 16203), ('X6', 'Računalništvo in informatika DR-3.st', 1000474, 6, 4, 18202);
 
 INSERT INTO studijsko_leto (studijsko_leto) VALUES ('2016/2017'), ('2017/2018'), ('2018/2019');
 

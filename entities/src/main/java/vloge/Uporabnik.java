@@ -34,6 +34,9 @@ public class Uporabnik {
     @Column(name = "id_uporabnik") private Integer id;
     @Column(name = "email", nullable = false) private String email;
 
+    @Column(name = "ime") private String ime;
+    @Column(name = "priimek") private String priimek;
+
     @XmlTransient
     @Column(name = "geslo", nullable = false)
     private String geslo;
@@ -139,5 +142,21 @@ public class Uporabnik {
         PasswordAuthentication passwordAuthentication = new PasswordAuthenticationImpl();
         geslo = passwordAuthentication.hash(geslo.toCharArray());
         this.geslo = geslo;
+    }
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getPriimek() {
+        return priimek;
+    }
+
+    public void setPriimek(String priimek) {
+        this.priimek = priimek;
     }
 }

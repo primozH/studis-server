@@ -2,10 +2,7 @@ package sifranti;
 
 import vpis.Stopnja;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "studijski_program")
@@ -22,6 +19,10 @@ public class StudijskiProgram {
     private Stopnja stopnja;
     @Column(name = "stevilo_semestrov")
     private Integer stSemestrov;
+
+    @ManyToOne
+    @JoinColumn(name = "klasius")
+    private Klasius klasius;
 
     public String getSifra() {
         return sifra;
@@ -61,5 +62,13 @@ public class StudijskiProgram {
 
     public void setSifraEVS(Integer sigraEVS) {
         this.sifraEVS = sigraEVS;
+    }
+
+    public Klasius getKlasius() {
+        return klasius;
+    }
+
+    public void setKlasius(Klasius klasius) {
+        this.klasius = klasius;
     }
 }

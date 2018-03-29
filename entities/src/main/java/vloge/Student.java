@@ -16,8 +16,6 @@ import java.util.List;
 public class Student extends Uporabnik {
 
     @Column(name = "vpisna_stevilka") private Integer vpisnaStevilka;
-    @Column(name = "ime") private String ime;
-    @Column(name = "priimek") private String priimek;
 
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     @Column(name = "datum_rojstva")
@@ -64,10 +62,11 @@ public class Student extends Uporabnik {
     public Student(String email, String geslo, Integer vpisnaStevilka, String ime, String priimek, LocalDate datumRojstva, String telefonskaStevilka) {
         super(email, geslo);
         this.vpisnaStevilka = vpisnaStevilka;
-        this.ime = ime;
-        this.priimek = priimek;
         this.datumRojstva = datumRojstva;
         this.telefonskaStevilka = telefonskaStevilka;
+
+        this.setIme(ime);
+        this.setPriimek(priimek);
     }
 
     public Integer getVpisnaStevilka() {
@@ -76,22 +75,6 @@ public class Student extends Uporabnik {
 
     public void setVpisnaStevilka(Integer vpisnaStevilka) {
         this.vpisnaStevilka = vpisnaStevilka;
-    }
-
-    public String getIme() {
-        return ime;
-    }
-
-    public void setIme(String ime) {
-        this.ime = ime;
-    }
-
-    public String getPriimek() {
-        return priimek;
-    }
-
-    public void setPriimek(String priimek) {
-        this.priimek = priimek;
     }
 
     public LocalDate getDatumRojstva() {

@@ -60,6 +60,8 @@ public class StudentZrno {
     private String geslo = "123456";
     private String tel_st = "070123123";
 
+    private String EMAIL_DOMENA = "@student.fri.si";
+
     private void createStudents() {
         int vpisnaStart = 63150001;
         int nVpisnih = 20;
@@ -93,6 +95,6 @@ public class StudentZrno {
         em.persist(student);
     }
     private String generateEmail(String ime, String priimek) {
-        return ime.toLowerCase() + "@" + priimek.toLowerCase() + ".si";
+        return ime.toLowerCase() + "." + priimek.toLowerCase() + EMAIL_DOMENA;
     }
 }
