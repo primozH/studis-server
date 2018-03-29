@@ -62,7 +62,7 @@ public class Uporabnik {
 
     public Uporabnik(String email, String geslo) {
         this.email = email;
-        this.geslo = geslo;
+        setGeslo(geslo);
     }
 
     public void setEmail(String email) {
@@ -93,12 +93,12 @@ public class Uporabnik {
         return email;
     }
 
-    public String getGeslo() {
-        return geslo;
-    }
-
     public String getEmso() {
         return emso;
+    }
+
+    public String getGeslo() {
+        return geslo;
     }
 
     public String getDavcnaStevilka() {

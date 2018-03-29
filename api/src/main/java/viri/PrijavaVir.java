@@ -1,6 +1,8 @@
 package viri;
 
 import java.io.UnsupportedEncodingException;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -41,6 +43,7 @@ public class PrijavaVir {
     private static Logger logger = Logger.getLogger(PrijavaVir.class.getSimpleName());
     private static final String STUDIS_MAIL = "studis.info.info@gmail.com";
     private static final String STUDIS_GESLO = "studis123";
+    private static final int EXPIRATION_TIME_MINUTES = 15;
 
     /**
      * Primer responsa: {"jwtToken":"hashedString"}
@@ -63,9 +66,10 @@ public class PrijavaVir {
             try {
                 Algorithm algorithm = Algorithm.HMAC256("secret");
                 token = JWT.create()
-                           .withClaim("tip", uporabnik.getTip())
-                           .withClaim("uid", uporabnik.getId())
-                           .sign(algorithm);
+                            .withClaim("tip", uporabnik.getTip())
+                            .withClaim("uid", uporabnik.getId())
+                            .withExpiresAt(Date.from(ZonedDateTime.now().plusMinutes(EXPIRATION_TIME_MINUTES).toInstant()))
+                            .sign(algorithm);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -73,7 +77,7 @@ public class PrijavaVir {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
-            return Response.ok(new JSONObject().put("jwtToken", token).toString()).build();
+            return Response.ok(new JSONObject().put("access_token", token).toString()).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
