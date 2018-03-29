@@ -3,16 +3,8 @@ package vloge;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateTimeAdapter;
@@ -20,8 +12,9 @@ import helpers.adapters.LocalDateTimeAdapter;
 @Entity
 @Table(name = "uporabnik")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "tip")
 @NamedQueries( value = {
-        @NamedQuery(name = "entities.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
+        @NamedQuery(name = "entitete.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
 })
 public class Uporabnik {
 
@@ -29,9 +22,14 @@ public class Uporabnik {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_uporabnik") private Integer id;
     @Column(name = "email", nullable = false) private String email;
-    @Column(name = "geslo", nullable = false) private String geslo;
+
+    @XmlTransient
+    @Column(name = "geslo", nullable = false)
+    private String geslo;
+
     @Column(name = "emso") private String emso;
-    @Column(name = "DTYPE") private String tip;
+    @Column(name = "tip", updatable = false, insertable = false)
+    private String tip;
 
     @Column(name = "davcna_stevilka")
     private String davcnaStevilka;
@@ -40,11 +38,11 @@ public class Uporabnik {
     @Column(name = "zadnja_prijava")
     private LocalDateTime zadnjaPrijava;
 
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    @XmlTransient
     @Column(name = "spremenjeno", columnDefinition = "DATETIME NULL ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime spremenjeno;
 
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    @XmlTransient
     @Column(name = "ustvarjeno", insertable = false, updatable = false,
     columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime ustvarjeno;
@@ -116,13 +114,7 @@ public class Uporabnik {
         return ustvarjeno;
     }
 
-    public String getTip() {
-        return tip;
-    }
-
-    public void setTip(String tip) {
-        this.tip = tip;
-    }
+    public String getTip() { return this.getClass().getSimpleName(); }
 
     /**
      * Preveri, ce se geslo ujema z uporabnikovim geslom iz baze
@@ -142,7 +134,7 @@ public class Uporabnik {
      * @return hashirano geslo
      */
     private String hashiranjeGesla(String geslo) {
-        return "";
+        return this.geslo;
     }
 
     private static final String ALFANUMERICNI_ZNAKI = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

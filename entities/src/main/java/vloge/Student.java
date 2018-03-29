@@ -194,7 +194,7 @@ public class Student extends Uporabnik {
         return vpisi;
     }
 
-    public void setVpisi(List<Vpis> vpisi) {
-        this.vpisi = vpisi;
+    public void dodajVpis(Vpis vpis) {
+        this.vpisi.add(vpis);
     }
 }

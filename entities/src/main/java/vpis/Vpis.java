@@ -30,6 +30,18 @@ public class Vpis {
     @JoinColumn(name = "letnik")
     private Letnik letnik;
 
+
+    public Vpis() { }
+
+    public Vpis(VpisId vpisId, StudijskiProgram studijskiProgram, VrstaVpisa vrstaVpisa, NacinStudija nacinStudija, OblikaStudija oblikaStudija, Letnik letnik) {
+        this.vpisId = vpisId;
+        this.studijskiProgram = studijskiProgram;
+        this.vrstaVpisa = vrstaVpisa;
+        this.nacinStudija = nacinStudija;
+        this.oblikaStudija = oblikaStudija;
+        this.letnik = letnik;
+    }
+
     public VpisId getVpisId() {
         return vpisId;
     }
