@@ -1,5 +1,6 @@
 package viri;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -20,11 +21,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.json.JSONObject;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import org.json.JSONObject;
 import prijava.Prijava;
 import vloge.Uporabnik;
 
@@ -51,7 +51,7 @@ public class PrijavaVir {
     public Response preveriPrijavo(Prijava prijava) {
         logger.info("preveriPrijavo");
         // Preveri, ce oseba obstaja v bazi
-        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entities.vloge.Uporabnik.prijava")
+        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
                                                  .setParameter("email", prijava.getEmail()).getSingleResult();
         if (uporabnik == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -71,9 +71,8 @@ public class PrijavaVir {
             if (token == null) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
-            JSONObject jsonObj = new JSONObject();
-            jsonObj.put("jwtToken", token);
-            return Response.ok(jsonObj.toString()).build();
+
+            return Response.ok(new JSONObject().put("jwtToken", token).toString()).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -83,7 +82,7 @@ public class PrijavaVir {
     public Response posljiGesloNaMail(Prijava prijava) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
-        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.Uporabnik.prijava")
+        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
                                                  .setParameter("email", prijava.getEmail())
                                                  .getSingleResult();
         if (uporabnik != null) {
