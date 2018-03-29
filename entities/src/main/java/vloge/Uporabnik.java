@@ -1,12 +1,23 @@
 package vloge;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import helpers.PasswordAuthentication;
+import helpers.PasswordAuthenticationImpl;
 import helpers.adapters.LocalDateTimeAdapter;
 
 @Entity
@@ -58,10 +69,6 @@ public class Uporabnik {
         this.email = email;
     }
 
-    public void setGeslo(String geslo) {
-        /* TODO make a hash from password then store it to database */
-    }
-
     public void setEmso(String emso) {
         // TODO verify emso, then store it
     }
@@ -87,10 +94,6 @@ public class Uporabnik {
     }
 
     public String getGeslo() {
-        // Generiraj geslo in ga shrani v bazo
-        String randomGeslo = generirajRandomGeslo();
-        String hashGesla = hashiranjeGesla(randomGeslo);
-        // TODO shrani v bazo
         return geslo;
     }
 
@@ -117,41 +120,24 @@ public class Uporabnik {
     public String getTip() { return this.getClass().getSimpleName(); }
 
     /**
-     * Preveri, ce se geslo ujema z uporabnikovim geslom iz baze
+     * Preveri, ce se geslo ujema z uporabnikovim geslom iz baze.
      *
      * @param geslo
      * @return
      */
-    public boolean primerjajGeslo (String geslo) {
-        String hashGesla = hashiranjeGesla(geslo);
-        return this.geslo.equals(hashGesla);
+    public boolean primerjajGeslo(String geslo) {
+        PasswordAuthentication passwordAuthentication = new PasswordAuthenticationImpl();
+        return passwordAuthentication.authenticate(geslo.toCharArray(), this.geslo);
     }
 
     /**
-     * Se uporablja pri shranjevanju v bazo in pred
-     * primerjanjem gesla iz frontenda z geslom iz baze.
+     * Naredi hash iz gesla ter ga shrani v bazo.
      *
-     * @return hashirano geslo
+     * @param geslo
      */
-    private String hashiranjeGesla(String geslo) {
-        return this.geslo;
-    }
-
-    private static final String ALFANUMERICNI_ZNAKI = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final int DOLZINA_RANDOM_GESLA = 10;
-
-    /**
-     * Se uporablja v kolikor uporabnik pozabi geslo
-     * oz. ob prvi prijavi v sistem.
-     *
-     * @return
-     */
-    private String generirajRandomGeslo() {
-        Random random = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
-            stringBuilder.append(ALFANUMERICNI_ZNAKI.charAt(random.nextInt(ALFANUMERICNI_ZNAKI.length())));
-        }
-        return stringBuilder.toString();
+    public void setGeslo(String geslo) {
+        PasswordAuthentication passwordAuthentication = new PasswordAuthenticationImpl();
+        geslo = passwordAuthentication.hash(geslo.toCharArray());
+        this.geslo = geslo;
     }
 }

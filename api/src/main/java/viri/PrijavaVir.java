@@ -1,8 +1,8 @@
 package viri;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,10 +21,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONObject;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import org.json.JSONObject;
 import prijava.Prijava;
 import vloge.Uporabnik;
 
@@ -89,7 +90,8 @@ public class PrijavaVir {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        String geslo = uporabnik.getGeslo();
+        String geslo = generirajRandomGeslo();
+        uporabnik.setGeslo(geslo);
 
         String subject = "Ponastavljeno geslo - Studis";
         String body = "Spoštovani,\n\nPošiljamo Vam ponastavljeno geslo za sistem Studis,"
@@ -97,8 +99,28 @@ public class PrijavaVir {
                       + geslo
                       + "<b>\n\nLep pozdrav,\nekipa Studis";
 
-        if (!sendFromGMail(uporabnik.getEmail(), subject, body)) return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        if (!sendFromGMail(uporabnik.getEmail(), subject, body)) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
         return Response.status(Response.Status.OK).build();
+    }
+
+    private static final String ALFANUMERICNI_ZNAKI = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final int DOLZINA_RANDOM_GESLA = 10;
+
+    /**
+     * Se uporablja v kolikor uporabnik pozabi geslo
+     * oz. ob prvi prijavi v sistem.
+     *
+     * @return
+     */
+    private String generirajRandomGeslo() {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
+            stringBuilder.append(ALFANUMERICNI_ZNAKI.charAt(random.nextInt(ALFANUMERICNI_ZNAKI.length())));
+        }
+        return stringBuilder.toString();
     }
 
     /**
