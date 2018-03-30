@@ -20,10 +20,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kumuluzee.version>2.5.2</kumuluzee.version>
 
+        <kumuluzee.cors.version>1.0.3</kumuluzee.cors.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
-
 
     <dependencyManagement>
         <dependencies>

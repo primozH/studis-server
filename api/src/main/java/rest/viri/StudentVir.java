@@ -1,4 +1,4 @@
-package viri;
+package rest.viri;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.QueryStringDefaults;

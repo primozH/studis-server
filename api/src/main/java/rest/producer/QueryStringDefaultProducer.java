@@ -1,4 +1,4 @@
-package producer;
+package rest.producer;
 
 import com.kumuluz.ee.rest.utils.QueryStringDefaults;
 
