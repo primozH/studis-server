@@ -3,10 +3,10 @@ Base endpoint:
 localhost:8080/api/v1/
 
 - prijava:
-    - POST: prijava/preveriPrijavo
+    - POST: avtorizacija/prijava
         - json body: {email: "<posta>", geslo: "<geslo_zaenkrat_plain_text>"}
 
-    - GET: prijava/posljiGesloNaMail
+    - GET: avtorizacija/pozabljeno-geslo
         - json body: /   
          
 - podatki o študentih:

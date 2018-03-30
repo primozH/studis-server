@@ -31,7 +31,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import prijava.Prijava;
 import vloge.Uporabnik;
 
-@Path("prijava")
+@Path("avtorizacija")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
@@ -51,6 +51,7 @@ public class PrijavaVir {
      * @param prijava
      * @return json, ki vsebuje token
      */
+    @Path("prijava")
     @POST
     public Response preveriPrijavo(Prijava prijava) {
         logger.info("preveriPrijavo");
@@ -83,14 +84,15 @@ public class PrijavaVir {
         }
     }
 
-    @GET
+    @Path("pozabljeno-geslo")
+    @POST
     public Response posljiGesloNaMail(Prijava prijava) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
         Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
                                                  .setParameter("email", prijava.getEmail())
                                                  .getSingleResult();
-        if (uporabnik != null) {
+        if (uporabnik == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
