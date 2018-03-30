@@ -94,7 +94,17 @@ public class StudentZrno {
     private void storeStudent(Student student) {
         em.persist(student);
     }
+
     private String generateEmail(String ime, String priimek) {
-        return ime.toLowerCase() + "." + priimek.toLowerCase() + EMAIL_DOMENA;
+        return replaceAllNonASCII(ime.toLowerCase())
+                + "." + replaceAllNonASCII(priimek.toLowerCase()) + EMAIL_DOMENA;
+    }
+
+    private String replaceAllNonASCII(String string) {
+        return string
+                .replace("č", "c")
+                .replace("š", "s")
+                .replace("ž", "z")
+                .replace("ć", "c");
     }
 }
