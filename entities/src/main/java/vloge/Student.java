@@ -1,18 +1,30 @@
 package vloge;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import helpers.adapters.LocalDateAdapter;
 import naslov.Drzava;
 import naslov.Obcina;
 import vpis.Vpis;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.LocalDate;
-import java.util.List;
-
 @Entity
 @Table(name = "student")
 @PrimaryKeyJoinColumn(name = "id_uporabnik", referencedColumnName = "id_uporabnik")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoUporabniskemImenu", query = "SELECT s FROM Student s WHERE s.uporabnisko_ime = :uporabniskoIme")
+})
 public class Student extends Uporabnik {
 
     @Column(name = "vpisna_stevilka") private Integer vpisnaStevilka;
@@ -22,6 +34,9 @@ public class Student extends Uporabnik {
     private LocalDate datumRojstva;
 
     @Column(name = "tel_stevilka") private String telefonskaStevilka;
+
+    @Column(name = "uporabnisko_ime")
+    private String uporabniskoIme;
 
     @ManyToOne(targetEntity = Drzava.class)
     @JoinColumn(name = "drzava_stalno")
@@ -59,9 +74,10 @@ public class Student extends Uporabnik {
         super();
     }
 
-    public Student(String email, String geslo, Integer vpisnaStevilka, String ime, String priimek, LocalDate datumRojstva, String telefonskaStevilka) {
+    public Student(String email, String geslo, Integer vpisnaStevilka, String uporabniskoIme, String ime, String priimek, LocalDate datumRojstva, String telefonskaStevilka) {
         super(email, geslo);
         this.vpisnaStevilka = vpisnaStevilka;
+        this.uporabniskoIme = uporabniskoIme;
         this.datumRojstva = datumRojstva;
         this.telefonskaStevilka = telefonskaStevilka;
 
@@ -179,5 +195,13 @@ public class Student extends Uporabnik {
 
     public void dodajVpis(Vpis vpis) {
         this.vpisi.add(vpis);
+    }
+
+    public String getUporabniskoIme() {
+        return uporabniskoIme;
+    }
+
+    public void setUporabniskoIme(String uporabniskoIme) {
+        this.uporabniskoIme = uporabniskoIme;
     }
 }

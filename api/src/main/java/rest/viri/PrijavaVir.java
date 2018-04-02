@@ -130,7 +130,7 @@ public class PrijavaVir {
      *
      * @return
      */
-    private String generirajRandomGeslo() {
+    public static String generirajRandomGeslo() {
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
