@@ -23,8 +23,9 @@ import vpis.Vpis;
 @Table(name = "student")
 @PrimaryKeyJoinColumn(name = "id_uporabnik", referencedColumnName = "id_uporabnik")
 @NamedQueries(value = {
-        @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoUporabniskemImenu", query = "SELECT s FROM Student s WHERE s.uporabnisko_ime = :uporabniskoIme"),
-        @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoVpisniStevilki", query = "SELECT s FROM Student s WHERE s.vpisna_stevilka = :vpisnaStevilka")
+        @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoUporabniskemImenu", query = "SELECT s FROM Student s WHERE s.uporabniskoIme = :uporabniskoIme"),
+        @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoVpisniStevilki", query = "SELECT s FROM Student s WHERE s.vpisnaStevilka = :vpisnaStevilka"),
+        @NamedQuery(name = "entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT s.vpisnaStevilka FROM Student s ORDER BY s.vpisnaStevilka DESC")
 })
 public class Student extends Uporabnik {
 

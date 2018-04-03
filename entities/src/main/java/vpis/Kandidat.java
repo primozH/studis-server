@@ -12,9 +12,8 @@ public class Kandidat extends Uporabnik {
     @Column(name = "vpisna_stevilka")
     private Integer vpisnaStevilka;
 
-    @ManyToOne
-    @JoinColumn(name = "studijski_program")
-    private StudijskiProgram studijskiProgram;
+    @JoinColumn(referencedColumnName = "studijski_program")
+    private Integer studijskiProgram;
 
     @Column(name = "izkoriscen")
     private boolean izkoriscen;
@@ -27,11 +26,11 @@ public class Kandidat extends Uporabnik {
         this.vpisnaStevilka = vpisnaStevilka;
     }
 
-    public StudijskiProgram getStudijskiProgram() {
+    public Integer getStudijskiProgram() {
         return studijskiProgram;
     }
 
-    public void setStudijskiProgram(StudijskiProgram studijskiProgram) {
+    public void setStudijskiProgram(Integer studijskiProgram) {
         this.studijskiProgram = studijskiProgram;
     }
 

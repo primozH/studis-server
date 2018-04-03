@@ -21,6 +21,7 @@ import javax.transaction.UserTransaction;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 
+import orodja.GeneratorPodatkov;
 import vloge.Student;
 
 @ApplicationScoped
@@ -46,6 +47,7 @@ public class StudentZrno {
      * @return
      */
     public List<Student> getStudents(QueryParameters queryParameters) {
+        GeneratorPodatkov.generirajVpisnoStevilko();
         return JPAUtils.queryEntities(em, Student.class, queryParameters);
     }
 
@@ -62,8 +64,6 @@ public class StudentZrno {
     private String geslo = "123456";
     private String tel_st = "070123123";
 
-    private String EMAIL_DOMENA = "@student.fri.si";
-
     private void createStudents() {
         int vpisnaStart = 63150001;
         int nVpisnih = 20;
@@ -74,7 +74,7 @@ public class StudentZrno {
             for (int i = vpisnaStart; i < vpisnaStart + nVpisnih; i++) {
                 String ime = imena.get(r.nextInt(imena.size()));
                 String priimek = priimki.get(r.nextInt(priimki.size()));
-                String email = generateEmail(ime, priimek);
+                String email = GeneratorPodatkov.generirajEmail(ime, priimek);
                 String uporabniskoIme = ime.charAt(0) + priimek.charAt(0) + (1000 + (int)(Math.random() * ((8999) + 1))) + "";
                 storeStudent(new Student(email, geslo, i, uporabniskoIme, ime, priimek,
                         LocalDate.now(), tel_st));
@@ -98,16 +98,4 @@ public class StudentZrno {
         em.persist(student);
     }
 
-    private String generateEmail(String ime, String priimek) {
-        return replaceAllNonASCII(ime.toLowerCase())
-                + "." + replaceAllNonASCII(priimek.toLowerCase()) + EMAIL_DOMENA;
-    }
-
-    private String replaceAllNonASCII(String string) {
-        return string
-                .replace("č", "c")
-                .replace("š", "s")
-                .replace("ž", "z")
-                .replace("ć", "c");
-    }
 }

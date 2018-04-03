@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Properties;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -30,6 +29,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 import prijava.Prijava;
 import vloge.Uporabnik;
+import orodja.GeneratorPodatkov;
 
 @Path("avtorizacija")
 @Produces(MediaType.APPLICATION_JSON)
@@ -107,7 +107,7 @@ public class PrijavaVir {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         logger.info("Uporabnik najden.");
-        String geslo = generirajRandomGeslo();
+        String geslo = GeneratorPodatkov.generirajGeslo();
         uporabnik.setGeslo(geslo);
         em.merge(uporabnik);
         String subject = "Ponastavljeno geslo - Studis";
@@ -119,24 +119,6 @@ public class PrijavaVir {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.status(Response.Status.OK).build();
-    }
-
-    private static final String ALFANUMERICNI_ZNAKI = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final int DOLZINA_RANDOM_GESLA = 10;
-
-    /**
-     * Se uporablja v kolikor uporabnik pozabi geslo
-     * oz. ob prvi prijavi v sistem.
-     *
-     * @return
-     */
-    public static String generirajRandomGeslo() {
-        Random random = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
-            stringBuilder.append(ALFANUMERICNI_ZNAKI.charAt(random.nextInt(ALFANUMERICNI_ZNAKI.length())));
-        }
-        return stringBuilder.toString();
     }
 
     /**
