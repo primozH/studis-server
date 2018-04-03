@@ -8,7 +8,9 @@ import java.util.List;
 public class Obcina {
 
     @Id
+    @Column(name = "sifra")
     private Integer sifra;
+    @Column(name = "ime")
     private String ime;
 
     public Integer getSifra() {

@@ -8,9 +8,9 @@ import java.util.List;
 public class Drzava {
 
     @Id
-    @Column(name = "iso_koda", nullable = false)
+    @Column(name = "iso_koda", nullable = false, length = 2)
     private String dvomestnaKoda;
-    @Column(name = "iso_3_koda", nullable = false)
+    @Column(name = "iso_3_koda", nullable = false, unique = true, length = 3)
     private String trimestnaKoda;
     @Column(name = "numericna_oznaka", nullable = false)
     private Integer numericnaOznaka;
