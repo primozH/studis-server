@@ -15,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -55,11 +56,17 @@ public class PrijavaVir {
     public Response preveriPrijavo(Prijava prijava) {
         logger.info("preveriPrijavo");
         // Preveri, ce oseba obstaja v bazi
-        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
-                                                 .setParameter("email", prijava.getEmail()).getSingleResult();
+        Uporabnik uporabnik;
+        try {
+            uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
+                                                     .setParameter("email", prijava.getEmail()).getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         if (uporabnik == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        logger.info("Uporabnik najden.");
 
         if (uporabnik.primerjajGeslo(prijava.getGeslo())) {
             String token = null;
@@ -85,25 +92,29 @@ public class PrijavaVir {
 
     @Path("pozabljeno-geslo")
     @POST
+    @Transactional
     public Response posljiGesloNaMail(Prijava prijava) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
-        Uporabnik uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
-                                                 .setParameter("email", prijava.getEmail())
-                                                 .getSingleResult();
+        Uporabnik uporabnik;
+        try {
+            uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
+                                           .setParameter("email", prijava.getEmail()).getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         if (uporabnik == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
+        logger.info("Uporabnik najden.");
         String geslo = generirajRandomGeslo();
         uporabnik.setGeslo(geslo);
-
+        em.merge(uporabnik);
         String subject = "Ponastavljeno geslo - Studis";
         String body = "Spoštovani,\n\nPošiljamo Vam ponastavljeno geslo za sistem Studis,"
-                      + " s katerim se poleg vašega elektronskega naslova prijavite v sistem.\n\nGeslo: <b>"
+                      + " s katerim se poleg vašega elektronskega naslova prijavite v sistem.\n\nGeslo:"
                       + geslo
-                      + "<b>\n\nLep pozdrav,\nekipa Studis";
-
+                      + "\n\nLep pozdrav,\nekipa Studis";
         if (!sendFromGMail(uporabnik.getEmail(), subject, body)) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
