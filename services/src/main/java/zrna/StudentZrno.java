@@ -1,25 +1,27 @@
 package zrna;
 
-import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.kumuluz.ee.rest.utils.JPAUtils;
-import vloge.Student;
-import vpis.Vpis;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.*;
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
+
+import vloge.Student;
 
 @ApplicationScoped
 public class StudentZrno {
@@ -73,7 +75,8 @@ public class StudentZrno {
                 String ime = imena.get(r.nextInt(imena.size()));
                 String priimek = priimki.get(r.nextInt(priimki.size()));
                 String email = generateEmail(ime, priimek);
-                storeStudent(new Student(email, geslo, i, ime, priimek,
+                String uporabniskoIme = ime.charAt(0) + priimek.charAt(0) + (1000 + (int)(Math.random() * ((8999) + 1))) + "";
+                storeStudent(new Student(email, geslo, i, uporabniskoIme, ime, priimek,
                         LocalDate.now(), tel_st));
             }
             utx.commit();
