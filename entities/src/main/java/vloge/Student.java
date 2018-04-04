@@ -25,7 +25,7 @@ import vpis.Vpis;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoUporabniskemImenu", query = "SELECT s FROM Student s WHERE s.uporabniskoIme = :uporabniskoIme"),
         @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoVpisniStevilki", query = "SELECT s FROM Student s WHERE s.vpisnaStevilka = :vpisnaStevilka"),
-        @NamedQuery(name = "entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT s.vpisnaStevilka FROM Student s ORDER BY s.vpisnaStevilka DESC")
+        @NamedQuery(name = "entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT s FROM Student s WHERE CONCAT(s.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY s.vpisnaStevilka DESC")
 })
 public class Student extends Uporabnik {
 

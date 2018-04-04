@@ -1,6 +1,9 @@
 package orodja;
 
+import vloge.Student;
+
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -14,20 +17,31 @@ public class GeneratorPodatkov {
     private static Logger logger = Logger.getLogger(GeneratorPodatkov.class.getSimpleName());
     private static final String ALFANUMERICNI_ZNAKI = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int DOLZINA_RANDOM_GESLA = 10;
-    private static final String EMAIL_DOMENA = "student.fri.si";
+    private static final String EMAIL_DOMENA = "@student.fri.si";
 
     @PersistenceContext(unitName = "studis")
-    private static EntityManager em;
+    private EntityManager em;
 
 
-    public static Integer generirajVpisnoStevilko() {
+    /***
+     * Generira vpisno stevilko tipa 63LLXXXX (LL - zadnji stevki leta vpisa (2017 - 17), XXXX - zaporedna stevilka vpisa)
+     * @return vpisnaStevilka
+     */
+    public Integer generirajVpisnoStevilko() {
         int year = LocalDate.now().getYear();
         int lastTwoDigitsYear = year % 100;
         int vpisnaStevilkaBase = 63000000;
 
-        int zapSt = em.createNamedQuery("entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko").getFirstResult();
-        logger.info(Integer.toString(zapSt));
-        return vpisnaStevilkaBase + lastTwoDigitsYear * 10^6 + zapSt + 1;
+        int vpisna = vpisnaStevilkaBase + lastTwoDigitsYear * (int) Math.pow(10, 4);
+        List<Student> s = em.createNamedQuery("entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko")
+                .setParameter("vpisnaStevilka", Integer.toString(vpisna / 10000) + "%")
+                .getResultList();
+
+        if (s.isEmpty()) {
+            return vpisna + 1;
+        }
+
+        return vpisna + s.get(0).getVpisnaStevilka() % 10000 + 1;
     }
 
     /**
@@ -36,7 +50,7 @@ public class GeneratorPodatkov {
      *
      * @return
      */
-    public static String generirajGeslo() {
+    public String generirajGeslo() {
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
@@ -46,12 +60,12 @@ public class GeneratorPodatkov {
     }
 
 
-    public static String generirajEmail(String ime, String priimek) {
+    public String generirajEmail(String ime, String priimek) {
         return replaceAllNonASCII(ime.toLowerCase())
                 + "." + replaceAllNonASCII(priimek.toLowerCase()) + EMAIL_DOMENA;
     }
 
-    private static String replaceAllNonASCII(String string) {
+    private String replaceAllNonASCII(String string) {
         return string
                 .replace("č", "c")
                 .replace("š", "s")

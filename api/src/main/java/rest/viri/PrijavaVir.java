@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -27,9 +28,9 @@ import org.json.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import orodja.GeneratorPodatkov;
 import prijava.Prijava;
 import vloge.Uporabnik;
-import orodja.GeneratorPodatkov;
 
 @Path("avtorizacija")
 @Produces(MediaType.APPLICATION_JSON)
@@ -39,6 +40,9 @@ public class PrijavaVir {
 
     @PersistenceContext(unitName = "studis")
     private EntityManager em;
+
+    @Inject
+    private GeneratorPodatkov generator;
 
     private static Logger logger = Logger.getLogger(PrijavaVir.class.getSimpleName());
     private static final String STUDIS_MAIL = "studis.info.info@gmail.com";
@@ -107,7 +111,7 @@ public class PrijavaVir {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         logger.info("Uporabnik najden.");
-        String geslo = GeneratorPodatkov.generirajGeslo();
+        String geslo = generator.generirajGeslo();
         uporabnik.setGeslo(geslo);
         em.merge(uporabnik);
         String subject = "Ponastavljeno geslo - Studis";

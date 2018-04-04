@@ -11,12 +11,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import javax.transaction.*;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
@@ -33,6 +28,9 @@ public class StudentZrno {
     @Inject
     UserTransaction utx;
 
+    @Inject
+    GeneratorPodatkov generator;
+
     public void init(@Observes @Initialized(ApplicationScoped.class) Object o) {
         createStudents();
     }
@@ -47,7 +45,7 @@ public class StudentZrno {
      * @return
      */
     public List<Student> getStudents(QueryParameters queryParameters) {
-        GeneratorPodatkov.generirajVpisnoStevilko();
+        generator.generirajVpisnoStevilko();
         return JPAUtils.queryEntities(em, Student.class, queryParameters);
     }
 
@@ -65,21 +63,22 @@ public class StudentZrno {
     private String tel_st = "070123123";
 
     private void createStudents() {
-        int vpisnaStart = 63150001;
         int nVpisnih = 20;
         Random r = new Random();
 
         try {
-            utx.begin();
-            for (int i = vpisnaStart; i < vpisnaStart + nVpisnih; i++) {
+            for (int i = 0; i < nVpisnih; i++) {
+                utx.begin();
                 String ime = imena.get(r.nextInt(imena.size()));
                 String priimek = priimki.get(r.nextInt(priimki.size()));
-                String email = GeneratorPodatkov.generirajEmail(ime, priimek);
+                String email = generator.generirajEmail(ime, priimek);
                 String uporabniskoIme = ime.charAt(0) + priimek.charAt(0) + (1000 + (int)(Math.random() * ((8999) + 1))) + "";
-                storeStudent(new Student(email, geslo, i, uporabniskoIme, ime, priimek,
+                int vpisnaStevilka = generator.generirajVpisnoStevilko();
+
+                storeStudent(new Student(email, geslo, vpisnaStevilka, uporabniskoIme, ime, priimek,
                         LocalDate.now(), tel_st));
+                utx.commit();
             }
-            utx.commit();
         } catch (NotSupportedException e) {
             e.printStackTrace();
         } catch (SystemException e) {
@@ -94,6 +93,7 @@ public class StudentZrno {
 
     }
 
+    @Transactional
     private void storeStudent(Student student) {
         em.persist(student);
     }

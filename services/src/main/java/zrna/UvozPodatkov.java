@@ -4,6 +4,7 @@ import orodja.GeneratorPodatkov;
 import vpis.Kandidat;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.*;
@@ -15,8 +16,14 @@ public class UvozPodatkov {
     @PersistenceContext(name = "studis")
     private static EntityManager em;
 
-    public static void parseFile(File file) {
+    @Inject
+    private GeneratorPodatkov generator;
+
+    public void parseFile(File file) {
         String ime, priimek, program, email;
+        if (em == null) {
+            return;
+        }
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -35,13 +42,13 @@ public class UvozPodatkov {
         }
     }
 
-    private static Kandidat createKandidat(String ime, String priimek, String program, String email) {
+    private Kandidat createKandidat(String ime, String priimek, String program, String email) {
         Kandidat k = new Kandidat();
         k.setIme(ime);
         k.setPriimek(priimek);
         k.setEmail(email);
-        k.setGeslo(GeneratorPodatkov.generirajGeslo());
-        k.setVpisnaStevilka(GeneratorPodatkov.generirajVpisnoStevilko());
+        k.setGeslo(generator.generirajGeslo());
+        k.setVpisnaStevilka(generator.generirajVpisnoStevilko());
 
         k.setStudijskiProgram(Integer.parseInt(program));
 
