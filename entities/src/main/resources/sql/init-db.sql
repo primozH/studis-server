@@ -11,3 +11,6 @@ INSERT INTO studijski_program (sifra, naziv, sifra_evs, stevilo_semestrov, stopn
 INSERT INTO studijsko_leto (studijsko_leto) VALUES ('2016/2017'), ('2017/2018'), ('2018/2019');
 
 INSERT INTO letnik (letnik) VALUES (1), (2), (3);
+
+INSERT INTO zeton (prosta_izbira, student, vrsta_vpisa, letnik, nacin_studija, oblika_studija, studijski_program, studijsko_leto) VALUES (true, 63150001, 1, 2, 1, 1, 1000471, 1);
+INSERT INTO zeton (prosta_izbira, student, vrsta_vpisa, letnik, nacin_studija, oblika_studija, studijski_program, studijsko_leto) VALUES (true, 63150002, 2, 1, 1, 1, 1000471, 1);

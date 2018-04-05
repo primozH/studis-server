@@ -8,6 +8,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "zeton")
+@NamedQueries( value = {
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z")
+        }
+)
 public class Zeton {
 
     @EmbeddedId
@@ -37,7 +41,7 @@ public class Zeton {
     private boolean prostaIzbira;
 
     @Column(name = "izkoriscen")
-    private boolean izkoriscen;
+    private boolean izkoriscen = false;
 
     public ZetonId getZetonId() {
         return zetonId;
