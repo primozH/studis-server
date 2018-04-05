@@ -83,7 +83,9 @@ public class UvozPodatkov {
         k.setIme(ime);
         k.setPriimek(priimek);
         k.setEmail(email);
-        k.setGeslo(generator.generirajGeslo());
+        String geslo = generator.generirajGeslo();
+        k.setGesloPlain(geslo);
+        k.setGeslo(geslo);
         k.setUporabniskoIme(generator.generirajUporabniskoIme(ime, priimek));
         k.setVpisnaStevilka(generator.generirajVpisnoStevilko());
 

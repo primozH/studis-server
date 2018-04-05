@@ -28,6 +28,9 @@ public class Kandidat extends Uporabnik {
     @Column(name = "izkoriscen")
     private boolean izkoriscen;
 
+    @Column(name = "geslo_plain")
+    private String gesloPlain;
+
     public Integer getVpisnaStevilka() {
         return vpisnaStevilka;
     }
@@ -50,5 +53,13 @@ public class Kandidat extends Uporabnik {
 
     public void setIzkoriscen(boolean izkoriscen) {
         this.izkoriscen = izkoriscen;
+    }
+
+    public String getGesloPlain() {
+        return gesloPlain;
+    }
+
+    public void setGesloPlain(String gesloPlain) {
+        this.gesloPlain = gesloPlain;
     }
 }
