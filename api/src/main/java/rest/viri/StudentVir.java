@@ -40,10 +40,8 @@ public class StudentVir {
     }
 
     @GET
-    public Response getStudents() {
-        QueryParameters query = qsd.builder().queryEncoded(uriInfo.getRequestUri().getRawQuery()).build();
-        List<Student> students = studentZrno.getStudents(query);
-        Long studentsCount = studentZrno.getStudentsCount(query);
-        return Response.ok(students).header("X-Total-Count", studentsCount).build();
+    public Response getStudentsByNameSurnameEnrollmentNumber(@QueryParam("filter") String searchParam) {
+        List<Student> students = studentZrno.getStudentsByNSN(searchParam);
+        return Response.ok(students).header("X-Total-Count", students.size()).build();
     }
 }

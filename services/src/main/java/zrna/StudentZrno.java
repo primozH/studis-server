@@ -41,11 +41,17 @@ public class StudentZrno {
 
     /***
      * Returns list of Students that match given criteria
-     * @param queryParameters
+     * @param param
      * @return
      */
-    public List<Student> getStudents(QueryParameters queryParameters) {
-        return JPAUtils.queryEntities(em, Student.class, queryParameters);
+    public List<Student> getStudentsByNSN(String param) {
+        if (param == null || param.length() == 0)
+            return em.createNamedQuery("entitete.vloge.Student.vrniVse")
+                    .getResultList();
+
+        return em.createNamedQuery("entitete.vloge.Student.isciStudentaPoImenuPriimkuVpisni")
+                .setParameter("parameter", param + "%")
+                .getResultList();
     }
 
     public Long getStudentsCount(QueryParameters queryParameters) {

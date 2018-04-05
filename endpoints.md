@@ -10,7 +10,7 @@ localhost:8080/api/v1/
         - json body: {email: "<email>"}
          
 - podatki o študentih:
-    - GET student[?limit=10&offset=20&order=...] [Dokumentacija](https://github.com/kumuluz/kumuluzee-rest)
+    - GET student[?filter=]
         - vsi podatki o študentih (glede na filter)
     - GET student/{id}
 
