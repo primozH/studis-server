@@ -6,10 +6,7 @@ import zrna.ZetonZrno;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -30,9 +27,9 @@ public class ZetonVir {
     }
 
     @GET
-    @Path("{id}")
-    public Response getToken(ZetonId id) {
-        Zeton zeton = zetonZrno.getToken(id);
+    @Path("{student}/{vpis}")
+    public Response getToken(@PathParam("student") Integer student, @PathParam("vpis") Integer vpis) {
+        Zeton zeton = zetonZrno.getToken(student, vpis);
         return Response.ok(zeton).build();
     }
 }

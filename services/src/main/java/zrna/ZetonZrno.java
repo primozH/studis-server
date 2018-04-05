@@ -19,7 +19,9 @@ public class ZetonZrno {
                 .getResultList();
     }
 
-    public Zeton getToken(ZetonId id) {
-        return em.find(Zeton.class, id);
+    public Zeton getToken(Integer student, Integer vrstaVpisa) {
+
+        ZetonId zetonId = new ZetonId(student, vrstaVpisa);
+        return em.find(Zeton.class, zetonId);
     }
 }

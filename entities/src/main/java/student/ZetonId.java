@@ -1,28 +1,30 @@
 package student;
 
-import sifranti.VrstaVpisa;
-import vloge.Student;
-
 import java.io.Serializable;
 import java.util.Objects;
 
 public class ZetonId implements Serializable {
-    private VrstaVpisa vrstaVpisa;
-    private Student student;
+    private Integer vrstaVpisa;
+    private Integer student;
 
-    public VrstaVpisa getVrstaVpisa() {
-        return vrstaVpisa;
-    }
-
-    public void setVrstaVpisa(VrstaVpisa vrstaVpisa) {
+    public ZetonId(Integer student, Integer vrstaVpisa) {
+        this.student = student;
         this.vrstaVpisa = vrstaVpisa;
     }
 
-    public Student getStudent() {
+    public Integer getVrstaVpisa() {
+        return vrstaVpisa;
+    }
+
+    public void setVrstaVpisa(Integer vrstaVpisa) {
+        this.vrstaVpisa = vrstaVpisa;
+    }
+
+    public Integer getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(Integer student) {
         this.student = student;
     }
 

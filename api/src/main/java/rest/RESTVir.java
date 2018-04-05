@@ -5,6 +5,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import rest.viri.KandidatVir;
 import rest.viri.PrijavaVir;
 import rest.viri.StudentVir;
+import rest.viri.ZetonVir;
 import zrna.UvozPodatkov;
 
 import javax.ws.rs.ApplicationPath;
@@ -23,6 +24,7 @@ public class RESTVir extends Application {
         resources.add(KandidatVir.class);
         resources.add(StudentVir.class);
         resources.add(PrijavaVir.class);
+        resources.add(ZetonVir.class);
 
         resources.add(MultiPartFeature.class);
 
