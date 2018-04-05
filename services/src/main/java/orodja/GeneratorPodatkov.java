@@ -1,7 +1,5 @@
 package orodja;
 
-import vloge.Student;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +8,9 @@ import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import vloge.Student;
+import vpis.Kandidat;
 
 @ApplicationScoped
 public class GeneratorPodatkov {
@@ -37,11 +38,22 @@ public class GeneratorPodatkov {
                 .setParameter("vpisnaStevilka", Integer.toString(vpisna / 10000) + "%")
                 .getResultList();
 
-        if (s.isEmpty()) {
-            return vpisna + 1;
-        }
+        List<Kandidat> k = em.createNamedQuery("entitete.vloge.Kandidat.vrniNajvisjoZaporednoVpisnoStevilko")
+                             .setParameter("vpisnaStevilka", Integer.toString(vpisna / 10000) + "%")
+                             .getResultList();
 
-        return vpisna + s.get(0).getVpisnaStevilka() % 10000 + 1;
+        if (s != null && !s.isEmpty()) {
+            int vpisnaStudenta = s.get(0).getVpisnaStevilka() % 10000;
+            if (k != null && !k.isEmpty()) {
+                int vpisnaKandidata = k.get(0).getVpisnaStevilka() % 10000;
+                vpisna = vpisna + (vpisnaStudenta > vpisnaKandidata ? vpisnaStudenta : vpisnaKandidata);
+            } else {
+                vpisna = vpisna + vpisnaStudenta;
+            }
+        } else if (k != null && !k.isEmpty()) {
+            vpisna = vpisna + k.get(0).getVpisnaStevilka() % 10000;
+        }
+        return vpisna + 1;
     }
 
     /**
