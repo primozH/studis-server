@@ -1,5 +1,6 @@
 package rest.viri;
 
+import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import vpis.Kandidat;
@@ -34,11 +35,11 @@ public class KandidatVir {
     }
 
     @GET
-    @Path("neuvozeni")
+    @Path("neuspesni")
     @Produces(MediaType.TEXT_PLAIN)
     public Response downloadImportedCandidates() {
         File file = new File(FILE_LOCATION + ERROR_FILE_NAME);
-        return Response.ok(file).build();
+        return Response.ok(file).header("Content-Disposition", "attachment; filename=\"neuspesno_uvozeni.txt\"").build();
     }
 
     @POST
@@ -67,7 +68,7 @@ public class KandidatVir {
 
         List<Kandidat> kandidatList = uvozPodatkov.parseFile(new File(fileName));
 
-        return Response.accepted(kandidatList).build();
+        return Response.accepted(kandidatList).header("X-Total-Count", kandidatList.size()).build();
 
     }
 }
