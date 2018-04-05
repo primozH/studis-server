@@ -73,7 +73,8 @@ public class GeneratorPodatkov {
     }
 
     public String generirajUporabniskoIme(String ime, String priimek) {
-        return ime.substring(0, 1).toLowerCase() + priimek.substring(0, 1).toLowerCase() + (1000 + (int)(Math.random() * ((8999) + 1)));
+        return replaceAllNonASCII(ime.substring(0, 1).toLowerCase()
+                + priimek.substring(0, 1).toLowerCase() + (1000 + (int)(Math.random() * ((8999) + 1))));
     }
 
 
