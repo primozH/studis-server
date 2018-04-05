@@ -45,7 +45,6 @@ public class StudentZrno {
      * @return
      */
     public List<Student> getStudents(QueryParameters queryParameters) {
-        generator.generirajVpisnoStevilko();
         return JPAUtils.queryEntities(em, Student.class, queryParameters);
     }
 
@@ -72,7 +71,7 @@ public class StudentZrno {
                 String ime = imena.get(r.nextInt(imena.size()));
                 String priimek = priimki.get(r.nextInt(priimki.size()));
                 String email = generator.generirajEmail(ime, priimek);
-                String uporabniskoIme = ime.charAt(0) + priimek.charAt(0) + (1000 + (int)(Math.random() * ((8999) + 1))) + "";
+                String uporabniskoIme = generator.generirajUporabniskoIme(ime, priimek);
                 int vpisnaStevilka = generator.generirajVpisnoStevilko();
 
                 storeStudent(new Student(email, geslo, vpisnaStevilka, uporabniskoIme, ime, priimek,

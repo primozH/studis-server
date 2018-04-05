@@ -37,9 +37,6 @@ public class Student extends Uporabnik {
 
     @Column(name = "tel_stevilka") private String telefonskaStevilka;
 
-    @Column(name = "uporabnisko_ime")
-    private String uporabniskoIme;
-
     @ManyToOne(targetEntity = Drzava.class)
     @JoinColumn(name = "drzava_stalno")
     private Drzava drzavaStalno;
@@ -77,9 +74,8 @@ public class Student extends Uporabnik {
     }
 
     public Student(String email, String geslo, Integer vpisnaStevilka, String uporabniskoIme, String ime, String priimek, LocalDate datumRojstva, String telefonskaStevilka) {
-        super(email, geslo);
+        super(email, geslo, uporabniskoIme);
         this.vpisnaStevilka = vpisnaStevilka;
-        this.uporabniskoIme = uporabniskoIme;
         this.datumRojstva = datumRojstva;
         this.telefonskaStevilka = telefonskaStevilka;
 
@@ -197,13 +193,5 @@ public class Student extends Uporabnik {
 
     public void dodajVpis(Vpis vpis) {
         this.vpisi.add(vpis);
-    }
-
-    public String getUporabniskoIme() {
-        return uporabniskoIme;
-    }
-
-    public void setUporabniskoIme(String uporabniskoIme) {
-        this.uporabniskoIme = uporabniskoIme;
     }
 }

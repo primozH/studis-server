@@ -2,17 +2,7 @@ package vloge;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -25,7 +15,8 @@ import helpers.adapters.LocalDateTimeAdapter;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tip")
 @NamedQueries( value = {
-        @NamedQuery(name = "entitete.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
+        @NamedQuery(name = "entitete.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.uporabniskoIme = :uporabniskoIme"),
+        @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
 })
 public class Uporabnik {
 
@@ -36,6 +27,9 @@ public class Uporabnik {
 
     @Column(name = "ime") private String ime;
     @Column(name = "priimek") private String priimek;
+
+    @Column(name = "uporabnisko_ime", nullable = false)
+    private String uporabniskoIme;
 
     @XmlTransient
     @Column(name = "geslo", nullable = false)
@@ -53,18 +47,30 @@ public class Uporabnik {
     private LocalDateTime zadnjaPrijava;
 
     @XmlTransient
-    @Column(name = "spremenjeno", columnDefinition = "DATETIME NULL ON UPDATE CURRENT_TIMESTAMP")
+    @Column(name = "spremenjeno")
     private LocalDateTime spremenjeno;
 
     @XmlTransient
-    @Column(name = "ustvarjeno", insertable = false, updatable = false,
-    columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "ustvarjeno", updatable = false)
     private LocalDateTime ustvarjeno;
+
+    @PrePersist
+    public void timestamp() {
+        if (ustvarjeno == null){
+            ustvarjeno = LocalDateTime.now();
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        spremenjeno = LocalDateTime.now();
+    }
 
     public Uporabnik() { }
 
-    public Uporabnik(String email, String geslo) {
+    public Uporabnik(String email, String geslo, String uporabniskoIme) {
         this.email = email;
+        this.uporabniskoIme = uporabniskoIme;
         setGeslo(geslo);
     }
 
@@ -158,5 +164,13 @@ public class Uporabnik {
 
     public void setPriimek(String priimek) {
         this.priimek = priimek;
+    }
+
+    public String getUporabniskoIme() {
+        return uporabniskoIme;
+    }
+
+    public void setUporabniskoIme(String uporabniskoIme) {
+        this.uporabniskoIme = uporabniskoIme;
     }
 }

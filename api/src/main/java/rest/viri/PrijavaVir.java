@@ -63,7 +63,7 @@ public class PrijavaVir {
         Uporabnik uporabnik;
         try {
             uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
-                                                     .setParameter("email", prijava.getEmail()).getSingleResult();
+                                                     .setParameter("uporabniskoIme", prijava.getUporabniskoIme()).getSingleResult();
         } catch (javax.persistence.NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -97,13 +97,13 @@ public class PrijavaVir {
     @Path("pozabljeno-geslo")
     @POST
     @Transactional
-    public Response posljiGesloNaMail(Prijava prijava) {
+    public Response posljiGesloNaMail(String email) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
         Uporabnik uporabnik;
         try {
-            uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
-                                           .setParameter("email", prijava.getEmail()).getSingleResult();
+            uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.pozabljeno.geslo")
+                                           .setParameter("email", email).getSingleResult();
         } catch (javax.persistence.NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

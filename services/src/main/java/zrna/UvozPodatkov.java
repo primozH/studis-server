@@ -62,7 +62,6 @@ public class UvozPodatkov {
                 program = line.substring(IME_L + PRIIMEK_L, IME_L + PRIIMEK_L + PROGRAM_L);
                 email = line.substring(IME_L + PRIIMEK_L + PROGRAM_L, length).trim();
 
-                logger.info(Integer.toString(length));
                 Kandidat k;
                 if ((k = createKandidat(ime, priimek, program, email, out)) != null) {
                     kandidati.add(k);
@@ -85,6 +84,7 @@ public class UvozPodatkov {
         k.setPriimek(priimek);
         k.setEmail(email);
         k.setGeslo(generator.generirajGeslo());
+        k.setUporabniskoIme(generator.generirajUporabniskoIme(ime, priimek));
         k.setVpisnaStevilka(generator.generirajVpisnoStevilko());
 
         try {

@@ -10,7 +10,4 @@ public class Referent extends Uporabnik {
     public Referent() {
     }
 
-    public Referent(String email, String geslo) {
-        super(email, geslo);
-    }
 }
