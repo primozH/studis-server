@@ -22,6 +22,8 @@ public class GeneratorPodatkov {
     @PersistenceContext(unitName = "studis")
     private EntityManager em;
 
+    private Random random = new Random();
+
 
     /***
      * Generira vpisno stevilko tipa 63LLXXXX (LL - zadnji stevki leta vpisa (2017 - 17), XXXX - zaporedna stevilka vpisa)
@@ -51,12 +53,15 @@ public class GeneratorPodatkov {
      * @return
      */
     public String generirajGeslo() {
-        Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < DOLZINA_RANDOM_GESLA; i++) {
             stringBuilder.append(ALFANUMERICNI_ZNAKI.charAt(random.nextInt(ALFANUMERICNI_ZNAKI.length())));
         }
         return stringBuilder.toString();
+    }
+
+    public String generirajUporabniskoIme(String ime, String priimek) {
+        return ime.substring(0, 1).toLowerCase() + priimek.substring(0, 1).toLowerCase() + (1000 + (int)(Math.random() * ((8999) + 1)));
     }
 
 

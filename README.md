@@ -33,6 +33,6 @@ cd api/target
 java -jar api-0.0.1.jar
 ```
 
-### Test data
+### Test data `testniPodatki`
 
-- `testniPodatki/kandidati.txt` (test candidates import as [#4](https://github.com/primozH/studis-server/issues/4))
+- `kandidati.txt` (test candidates import as [#4](https://github.com/primozH/studis-server/issues/4))

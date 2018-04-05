@@ -11,7 +11,4 @@ public class Skrbnik extends Uporabnik {
         super();
     }
 
-    public Skrbnik(String email, String geslo) {
-        super(email, geslo);
-    }
 }

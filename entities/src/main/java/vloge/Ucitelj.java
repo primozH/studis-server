@@ -10,7 +10,4 @@ public class Ucitelj extends Uporabnik {
     public Ucitelj() {
     }
 
-    public Ucitelj(String email, String geslo) {
-        super(email, geslo);
-    }
 }

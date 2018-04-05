@@ -7,12 +7,7 @@ import zrna.UvozPodatkov;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
@@ -39,10 +34,10 @@ public class KandidatVir {
     }
 
     @GET
-    @Path("uvozeni")
+    @Path("neuvozeni")
     @Produces(MediaType.TEXT_PLAIN)
     public Response downloadImportedCandidates() {
-        File file = new File(FILE_LOCATION);
+        File file = new File(FILE_LOCATION + ERROR_FILE_NAME);
         return Response.ok(file).build();
     }
 
