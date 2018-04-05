@@ -16,6 +16,7 @@ public class StudijskiProgram {
     @Column(name = "naziv")
     private String naziv;
     @Column(name = "stopnja")
+    @Enumerated(EnumType.ORDINAL)
     private Stopnja stopnja;
     @Column(name = "stevilo_semestrov")
     private Integer stSemestrov;

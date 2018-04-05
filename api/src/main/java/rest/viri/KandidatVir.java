@@ -2,6 +2,7 @@ package rest.viri;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import vpis.Kandidat;
 import zrna.UvozPodatkov;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,15 +16,18 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Path("/kandidat")
+@Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 public class KandidatVir {
 
     private static final Logger logger = Logger.getLogger(KandidatVir.class.getName());
 
-    private static final String FILE_LOCATION = "./podatki_kandidat.txt";
+    private static final String FILE_LOCATION = "./kandidati/";
+    private static final String ERROR_FILE_NAME = "napaka_uvoz.txt";
 
     @Inject
     private UvozPodatkov uvozPodatkov;
@@ -45,14 +49,16 @@ public class KandidatVir {
     @POST
     @Path("/nalozi")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response postOctetStream(@FormDataParam("file") InputStream content,
-                                    @FormDataParam("file")FormDataContentDisposition fdcd) {
+    public Response uploadFile(
+            @FormDataParam("file") InputStream content,
+            @FormDataParam("file") FormDataContentDisposition fdcd) {
 
+        String fileName = FILE_LOCATION + fdcd.getFileName();
         InputStreamReader reader = new InputStreamReader(content);
         int count = 0;
         char [] buffer = new char[1024];
         try {
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(FILE_LOCATION));
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName));
 
             while ( (count = reader.read(buffer)) > 0) {
                 out.write(buffer);
@@ -64,9 +70,9 @@ public class KandidatVir {
             e.printStackTrace();
         }
 
-        uvozPodatkov.parseFile(new File(FILE_LOCATION));
+        List<Kandidat> kandidatList = uvozPodatkov.parseFile(new File(fileName));
 
-        return Response.accepted().build();
+        return Response.accepted(kandidatList).build();
 
     }
 }
