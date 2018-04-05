@@ -12,10 +12,18 @@ import java.io.Serializable;
             @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z")
         }
 )
+@IdClass(ZetonId.class)
 public class Zeton {
 
-    @EmbeddedId
-    private ZetonId zetonId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "vrsta_vpisa")
+    private VrstaVpisa vrstaVpisa;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "student")
+    private Student student;
 
     @ManyToOne
     @JoinColumn(name = "studijski_program")
@@ -43,12 +51,20 @@ public class Zeton {
     @Column(name = "izkoriscen")
     private boolean izkoriscen = false;
 
-    public ZetonId getZetonId() {
-        return zetonId;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setZetonId(ZetonId zetonId) {
-        this.zetonId = zetonId;
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public VrstaVpisa getVrstaVpisa() {
+        return vrstaVpisa;
+    }
+
+    public void setVrstaVpisa(VrstaVpisa vrstaVpisa) {
+        this.vrstaVpisa = vrstaVpisa;
     }
 
     public StudijskiProgram getStudijskiProgram() {
@@ -105,32 +121,5 @@ public class Zeton {
 
     public void setIzkoriscen(boolean izkoriscen) {
         this.izkoriscen = izkoriscen;
-    }
-}
-
-
-@Embeddable
-class ZetonId implements Serializable {
-
-    @Column(name = "student")
-    private Integer student;
-
-    @Column(name = "vrsta_vpisa")
-    private Integer vrstaVpisa;
-
-    public Integer getStudent() {
-        return student;
-    }
-
-    public void setStudent(Integer student) {
-        this.student = student;
-    }
-
-    public Integer getVrstaVpisa() {
-        return vrstaVpisa;
-    }
-
-    public void setVrstaVpisa(Integer vrstaVpisa) {
-        this.vrstaVpisa = vrstaVpisa;
     }
 }

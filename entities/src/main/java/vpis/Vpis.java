@@ -4,14 +4,20 @@ import sifranti.*;
 import vloge.Student;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "vpis")
 public class Vpis {
 
-    @EmbeddedId
-    private VpisId vpisId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "student")
+    private Student student;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "studijsko_leto")
+    private StudijskoLeto studijskoLeto;
 
     @ManyToOne(targetEntity = StudijskiProgram.class)
     @JoinColumn(name = "studijski_program")
@@ -33,8 +39,9 @@ public class Vpis {
 
     public Vpis() { }
 
-    public Vpis(VpisId vpisId, StudijskiProgram studijskiProgram, VrstaVpisa vrstaVpisa, NacinStudija nacinStudija, OblikaStudija oblikaStudija, Letnik letnik) {
-        this.vpisId = vpisId;
+    public Vpis(Student student, StudijskoLeto studijskoLeto, StudijskiProgram studijskiProgram, VrstaVpisa vrstaVpisa, NacinStudija nacinStudija, OblikaStudija oblikaStudija, Letnik letnik) {
+        this.student = student;
+        this.studijskoLeto = studijskoLeto;
         this.studijskiProgram = studijskiProgram;
         this.vrstaVpisa = vrstaVpisa;
         this.nacinStudija = nacinStudija;
@@ -42,12 +49,20 @@ public class Vpis {
         this.letnik = letnik;
     }
 
-    public VpisId getVpisId() {
-        return vpisId;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setVpisId(VpisId vpisId) {
-        this.vpisId = vpisId;
+    public void setStudent(Student studentId) {
+        this.student = studentId;
+    }
+
+    public StudijskoLeto getStudijskoLeto() {
+        return studijskoLeto;
+    }
+
+    public void setStudijskoLeto(StudijskoLeto studijskoLetoId) {
+        this.studijskoLeto = studijskoLetoId;
     }
 
     public StudijskiProgram getStudijskiProgram() {
@@ -90,29 +105,3 @@ public class Vpis {
         this.letnik = letnik;
     }
 }
-
-@Embeddable
-class VpisId implements Serializable {
-    @Column(name = "student")
-    private Integer studentId;
-    @Column(name = "studijsko_leto")
-    private Integer studijskoLetoId;
-
-
-    public Integer getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-    }
-
-    public Integer getStudijskoLetoId() {
-        return studijskoLetoId;
-    }
-
-    public void setStudijskoLetoId(Integer studijskoLetoId) {
-        this.studijskoLetoId = studijskoLetoId;
-    }
-}
-

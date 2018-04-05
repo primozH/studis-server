@@ -1,6 +1,7 @@
 package zrna;
 
 import student.Zeton;
+import student.ZetonId;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -16,5 +17,9 @@ public class ZetonZrno {
     public List<Zeton> getTokens() {
         return em.createNamedQuery("entitete.vpis.Zeton.vrniVse")
                 .getResultList();
+    }
+
+    public Zeton getToken(ZetonId id) {
+        return em.find(Zeton.class, id);
     }
 }

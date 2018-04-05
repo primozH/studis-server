@@ -17,7 +17,10 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 
 import orodja.GeneratorPodatkov;
+import vloge.Referent;
+import vloge.Skrbnik;
 import vloge.Student;
+import vloge.Ucitelj;
 
 @ApplicationScoped
 public class StudentZrno {
@@ -31,9 +34,9 @@ public class StudentZrno {
     @Inject
     GeneratorPodatkov generator;
 
-    public void init(@Observes @Initialized(ApplicationScoped.class) Object o) {
-        createStudents();
-    }
+//    public void init(@Observes @Initialized(ApplicationScoped.class) Object o) {
+//        createStudents();
+//    }
 
     public Student getStudent(Integer id) {
         return em.find(Student.class, id);
@@ -67,8 +70,12 @@ public class StudentZrno {
     private String geslo = "123456";
     private String tel_st = "070123123";
 
+
+    /**
+     * Helper method for populating users
+     */
     private void createStudents() {
-        int nVpisnih = 20;
+        int nVpisnih = 50;
         Random r = new Random();
 
         try {
@@ -80,8 +87,17 @@ public class StudentZrno {
                 String uporabniskoIme = generator.generirajUporabniskoIme(ime, priimek);
                 int vpisnaStevilka = generator.generirajVpisnoStevilko();
 
-                storeStudent(new Student(email, geslo, vpisnaStevilka, uporabniskoIme, ime, priimek,
+                if (i >= 30)
+                    storeOseba(new Student(email, geslo, vpisnaStevilka, uporabniskoIme, ime, priimek,
                         LocalDate.now(), tel_st));
+                else if (i < 1)
+                    storeOseba(new Skrbnik(email, geslo, uporabniskoIme, ime, priimek));
+                else if (i < 5) {
+                    storeOseba(new Referent(email, geslo, uporabniskoIme, ime, priimek));
+                }
+                else
+                    storeOseba(new Ucitelj(email, geslo, uporabniskoIme, ime, priimek));
+
                 utx.commit();
             }
         } catch (NotSupportedException e) {
@@ -99,8 +115,8 @@ public class StudentZrno {
     }
 
     @Transactional
-    private void storeStudent(Student student) {
-        em.persist(student);
+    private void storeOseba(Object oseba) {
+        em.persist(oseba);
     }
 
 }

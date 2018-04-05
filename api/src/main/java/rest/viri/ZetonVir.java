@@ -1,6 +1,7 @@
 package rest.viri;
 
 import student.Zeton;
+import student.ZetonId;
 import zrna.ZetonZrno;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -25,6 +26,13 @@ public class ZetonVir {
     @GET
     public Response getTokens() {
         List<Zeton> zetoni = zetonZrno.getTokens();
-        return Response.ok().build();
+        return Response.ok(zetoni).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getToken(ZetonId id) {
+        Zeton zeton = zetonZrno.getToken(id);
+        return Response.ok(zeton).build();
     }
 }

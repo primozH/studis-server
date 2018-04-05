@@ -10,4 +10,10 @@ public class Referent extends Uporabnik {
     public Referent() {
     }
 
+    public Referent(String email, String geslo, String uporabniskoIme,
+                   String ime, String priimek) {
+        super(email, geslo, uporabniskoIme);
+        this.setIme(ime);
+        this.setPriimek(priimek);
+    }
 }
