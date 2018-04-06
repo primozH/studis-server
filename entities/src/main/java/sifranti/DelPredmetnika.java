@@ -12,6 +12,7 @@ public class DelPredmetnika {
     @Id
     @Column(name = "sifra")
     private Integer sifra;
+
     @Column(name = "tip")
     private String tip;
 

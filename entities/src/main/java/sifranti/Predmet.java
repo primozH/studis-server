@@ -2,10 +2,7 @@ package sifranti;
 
 import vpis.Semester;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "predmet")
@@ -17,6 +14,7 @@ public class Predmet {
     @Column(name = "naziv")
     private String naziv;
     @Column(name = "semester")
+    @Enumerated
     private Semester semester;
     @Column(name = "ects")
     private Integer ECTS;

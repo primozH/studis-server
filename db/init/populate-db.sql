@@ -67,12 +67,12 @@ VALUES
 /*
   Studijsko leto
  */
-INSERT INTO studijsko_leto (studijsko_leto)
+INSERT INTO studijsko_leto (sifra, studijsko_leto)
 VALUES
-  ('2015/2016'),
-  ('2016/2017'),
-  ('2017/2018'),
-  ('2018/2019');
+  (2015, '2015/2016'),
+  (2016, '2016/2017'),
+  (2017, '2017/2018'),
+  (2018, '2018/2019');
 
 /*
   Letnik
@@ -1033,6 +1033,124 @@ INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (2287, 'Žetale');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (4226, 'Žiri');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (4274, 'Žirovnica');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (8360, 'Žužemberk');
+
+/**
+Sifrant PREDMET
+ */
+
+INSERT INTO predmet (sifra, naziv, semester, ects) VALUES
+
+  /*
+  BUN-RI
+   */
+  (63277, 'Programiranje 1', 0, 6),
+  (63202, 'Osnove matematične analize', 0, 6),
+  (63203, 'Diskretne strukture', 0, 6),
+  (63204, 'Osnove digitalnih vezij', 0, 6),
+  (63205, 'Fizika', 0, 6),
+  (63278, 'Programiranje 2', 1, 6),
+  (63207, 'Linearna algebra', 1, 6),
+  (63212, 'Arhitektura računalniških sistemov', 1, 6),
+  (63209, 'Računalniške komunikacije', 1, 6),
+  (63215, 'Osnove informacijskih sistemov', 1, 6),
+
+  (63279, 'Algoritmi in podatkovne strukture 1', 0, 6),
+  (63208, 'Osnove podatkovnih baz', 0, 6),
+  (63213, 'Verjetnost in statistika', 0, 6),
+  (63218, 'Organizacija računalniških sistemov', 0, 6),
+  (63283, 'Izračunljivost in računska zahtevnost', 0, 6),
+  (63216, 'Teorija informacij in sistemov', 1, 6),
+  (63280, 'Algoritmi in podatkovne strukture 2', 1, 6),
+  (63217, 'Operacijski sistemi', 1, 6),
+
+  (63214, 'Osnove umetne inteligence', 0, 6),
+  (63256, 'Tehnologije programske opreme', 1, 6),
+  (63281, 'Diplomski seminar', 1, 6),
+
+  (63219, 'Matematično modeliranje', 1, 6),
+  (63220, 'Principi programskih jezikov', 1, 6),
+  (63221, 'Računalniške tehnologije', 1, 6),
+
+  (63249, 'Elektronsko poslovanje', 0, 6),
+  (63250, 'Organizacija in management', 1, 6),
+  (63251, 'Uvod v odkrivanje znanj iz podatkov', 0, 6),
+
+  (63252, 'Razvoj informacijskih sistemov', 0, 6),
+  (63226, 'Tehnologija upravljanja podatkov', 0, 6),
+  (63253, 'Planiranje in upravljanje informatike', 1, 6),
+
+  (63254, 'Postopki razvoja programske opreme', 0, 6),
+  (63255, 'Spletno programiranje', 0, 6),
+  (63287, 'Programiranje specifičnih platform', 1, 6),
+
+  (63257, 'Modeliranje računalniških omrežij', 0, 6),
+  (63258, 'Komunikacijski protokoli', 0, 6),
+  (63259, 'Brezžična in mobilna omrežja', 1, 6),
+
+  (63260, 'Digitalno načrtovanje', 0, 6),
+  (63261, 'Porazdeljeni sistemi', 0, 6),
+  (63262, 'Zanesljivost in zmogljivost računalniških sistemov', 1, 6),
+
+  (63263, 'Analiza algoritmov in hevristično reševanje problemov', 0, 6),
+  (63264, 'Sistemska programska oprema', 0, 6),
+  (63265, 'Prevajalniki', 1, 6),
+
+  (63266, 'Inteligentni sistemi', 0, 6),
+  (63267, 'Umetno zaznavanje', 0, 6),
+  (63268, 'Razvoj inteligentnih sistemov', 1, 6),
+
+  (63269, 'Računalniška grafika in tehnologija iger', 0, 6),
+  (63270, 'Multimedijski sistemi', 0, 6),
+  (63271, 'Osnove oblikovanja', 1, 6),
+
+  (63222, 'Angleški jezik nivo A', 1, 3),
+  (63223, 'Angleški jezik nivo B', 0, 3),
+  (63224, 'Angleški jezik nivo C', 1, 3),
+  (63225, 'Izbrana poglavja iz računalništva in informatike', 0, 6),
+  (63241, 'Računalništvo v praksi 1', 0, 3),
+  (63242, 'Računalništvo v praksi 2', 1, 3),
+  (63284, 'Tehnične veščine', 0, 3),
+  (63248, 'Ekonomika in podjetništvo', 1, 6),
+
+
+  (63701, 'Uvod v računalništvo', 0, 6),
+  (63702, 'Programiranje 1', 0, 6),
+  (63703, 'Računalniška arhitektura', 0, 6),
+  (63704, 'Matematika', 0, 6),
+  (63705, 'Diskretne strukture', 0, 6),
+  (63706, 'Programiranje 2', 1, 6),
+  (63707, 'Podatkovne baze', 1, 6),
+  (63708, 'Računalniške komunikacije', 1, 6),
+  (63709, 'Operacijski sistemi', 1, 6),
+  (53710, 'Osnove verjetnosti in statistike', 1, 6),
+
+  (63711, 'Algoritmi in podatkovne strukture 1', 0, 6),
+  (63712, 'Elektronsko in mobilno poslovanje', 0, 6),
+  (63713, 'Podatkovne baze 2', 0, 6),
+  (63714, 'Informacijski sistemi', 0, 6),
+  (63715, 'Grafično oblikovanje', 0, 6),
+  (63716, 'Komunikacijsko protokoli in omrežna varnost', 0, 6),
+  (63717, 'Organizacija računalnikov', 0, 6),
+  (63718, 'Digitalna vezja', 0, 6),
+  (63719, 'Računalniška grafika', 0, 6),
+  (63720, 'Umetna inteligenca', 0, 6),
+  (63721, 'Uporabniški vmesniki', 1, 6),
+  (63722, ' Prevajalniki in navidezni stroji', 1, 6),
+  (63723, 'Algoritmi in podatkovne strukture 2', 1, 6),
+  (63724, 'Testiranje in kakovost', 1, 6),
+  (63725, 'Razvoj informacijskih sistemov', 1, 6),
+  (63726, 'Produkcija multimedijskih gradiv', 1, 6),
+  (63744, 'Digitalno procesiranje signalov', 0, 6),
+  (63727, 'Spletne tehnologije', 1, 6),
+  (63728, 'Vhodno-izhodne naprave', 1, 6),
+  (63729, 'Načrtovanje digitalnih naprav', 1, 6),
+  (63765, 'Podatkovno rudarjenje', 1, 6),
+  (63769, 'Programski jezik C', 0, 6),
+  (63767, 'Tehnične veščine', 0, 3),
+  (63766, 'Tehnične veščine 2', 1, 3),
+  (63749, 'Izbrana poglavja iz računalništva in informatike', 0, 6),
+  (63732, 'Tehnologija programske opreme', 0, 6),
+  (63770, 'Diplomski seminar', 1, 6);
 
 /*
   Uporabniki

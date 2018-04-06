@@ -10,49 +10,64 @@ import java.util.List;
 @Table(name = "predmetnik")
 public class Predmetnik {
 
-    @Id private Integer delPredmetnika;
-    @Id private Integer predmet;
-    @Id private Integer letnik;
-    @Id private Integer studijskiProgram;
-    @Id private Integer studijskoLeto;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "del_predmetnika")
+    private DelPredmetnika delPredmetnika;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "predmet")
+    private Predmet predmet;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "letnik")
+    private Letnik letnik;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "studijski_program")
+    private StudijskiProgram studijskiProgram;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "studijsko_leto")
+    private StudijskoLeto studijskoLeto;
 
-    public Integer getDelPredmetnika() {
+    public DelPredmetnika getDelPredmetnika() {
         return delPredmetnika;
     }
 
-    public void setDelPredmetnika(Integer delPredmetnika) {
+    public void setDelPredmetnika(DelPredmetnika delPredmetnika) {
         this.delPredmetnika = delPredmetnika;
     }
 
-    public Integer getPredmet() {
+    public Predmet getPredmet() {
         return predmet;
     }
 
-    public void setPredmet(Integer predmet) {
+    public void setPredmet(Predmet predmet) {
         this.predmet = predmet;
     }
 
-    public Integer getLetnik() {
+    public Letnik getLetnik() {
         return letnik;
     }
 
-    public void setLetnik(Integer letnik) {
+    public void setLetnik(Letnik letnik) {
         this.letnik = letnik;
     }
 
-    public Integer getStudijskiProgram() {
+    public StudijskiProgram getStudijskiProgram() {
         return studijskiProgram;
     }
 
-    public void setStudijskiProgram(Integer studijskiProgram) {
+    public void setStudijskiProgram(StudijskiProgram studijskiProgram) {
         this.studijskiProgram = studijskiProgram;
     }
 
-    public Integer getStudijskoLeto() {
+    public StudijskoLeto getStudijskoLeto() {
         return studijskoLeto;
     }
 
-    public void setStudijskoLeto(Integer studijskoLeto) {
+    public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
         this.studijskoLeto = studijskoLeto;
     }
 }

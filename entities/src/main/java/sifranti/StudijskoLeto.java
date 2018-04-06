@@ -12,7 +12,6 @@ import javax.persistence.*;
 public class StudijskoLeto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sifra")
     private Integer id;
     @Column(name = "studijsko_leto")

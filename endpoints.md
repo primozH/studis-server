@@ -20,3 +20,20 @@ localhost:8080/api/v1/
         na število uspešno uvoženih
     - GET: kandidat/neuspesni
         - vrne .txt datoteko z neuspešnimo uvoženimi kandidati
+
+- žeton:
+    - GET: zeton
+        - vrne vse izdane žetone
+    - GET: zeton/{student}/{vrsta_vpisa}
+        - vrne žeton za izbranega študenta in vrsto vpisa, če obstaja.
+            Primer: 
+            `localhost:8080/api/v1/zeton/31/1`
+    - POST: zeton/{student}
+        - ustvari žeton za izbranega študenta. Vrne ustvarjeni žeton.
+    - PUT: zeton
+        - posodobi žeton
+        - body: zeton
+    - DELETE: zeton?student={student}&vrsta-vpisa={vrsta-vpisa}
+        - izbriše žeton.
+            Primer: 
+            `localhost:8080/api/v1/zeton?student=33&vrsta-vpisa=1`
