@@ -7,6 +7,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "vpis")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.vpis.Vpis.zadnjiVpisZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId" +
+                " ORDER BY v.studijskoLeto.id DESC")
+})
 public class Vpis {
 
     @Id

@@ -4,6 +4,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "studijsko_leto")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.sifranti.StudijskoLeto.vrniStudijkoLeto", query = "SELECT s FROM StudijskoLeto s WHERE " +
+                "s.studijskoLeto LIKE :studijskoLeto")
+}
+)
 public class StudijskoLeto {
 
     @Id
