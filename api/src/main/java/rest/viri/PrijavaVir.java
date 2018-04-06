@@ -1,5 +1,6 @@
 package rest.viri;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -23,6 +24,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonParser;
+import common.Email;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONObject;
 
 import com.auth0.jwt.JWT;
@@ -97,13 +101,14 @@ public class PrijavaVir {
     @Path("pozabljeno-geslo")
     @POST
     @Transactional
-    public Response posljiGesloNaMail(String email) {
+    public Response posljiGesloNaMail(Email emailObj) {
         logger.info("posljiGesloNaMail");
         // Vrni uporabnika iz baze (ce ga ni, error)
         Uporabnik uporabnik;
+
         try {
             uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.pozabljeno.geslo")
-                                           .setParameter("email", email).getSingleResult();
+                                           .setParameter("email", emailObj.getEmail()).getSingleResult();
         } catch (javax.persistence.NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
