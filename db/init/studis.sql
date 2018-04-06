@@ -178,7 +178,6 @@ CREATE TABLE IF NOT EXISTS `student` (
   `obcina_rojstva` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `spol` int(11) DEFAULT NULL,
   `tel_stevilka` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
-  `uporabnisko_ime` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `vpisna_stevilka` int(11) DEFAULT NULL,
   `drzava_stalno` varchar(2) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `drzava_zacasno` varchar(2) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -259,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   `ustvarjeno` datetime DEFAULT NULL,
   `zadnja_prijava` datetime DEFAULT NULL,
   PRIMARY KEY (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis

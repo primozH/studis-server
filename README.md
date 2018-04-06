@@ -6,7 +6,7 @@ Database: MariaDB
 username: studis
 password: studisIS
 
-Database can be created with `create-db.sql` script found in `entities/src/main/resources/sql`.
+SQL scripts and instructions are available in [db](./db) folder.
 
 ## Requirements
 1. Maven

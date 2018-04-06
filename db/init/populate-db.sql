@@ -1182,5 +1182,5 @@ INSERT INTO zeton (prosta_izbira, student, vrsta_vpisa, letnik, nacin_studija, o
 VALUES
   (false, 31, 1, 2, 1, 1, 1000468, 2),
   (false, 31, 2, 2, 1, 1, 1000468, 3),
-  (false, 32, 2, 1, 1, 1, 1000468, 2);
+  (false, 32, 2, 1, 1, 1, 1000468, 2),
   (true, 33, 1, 3, 1, 1, 1000468, 3);
