@@ -3,6 +3,8 @@ package sifranti;
 import vpis.Stopnja;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 
 @Entity
 @Table(name = "studijski_program")
@@ -10,6 +12,8 @@ public class StudijskiProgram {
 
     @Id
     @Column(name = "sifra_evs")
+    @XmlElement
+    @XmlID
     private Integer sifraEVS;
     @Column(name = "sifra")
     private String sifra;

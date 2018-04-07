@@ -16,28 +16,28 @@ localhost:8080/api/v1/
     - PUT: /student/{id}
         - posodobi podatke o studentu. Obvezen je ujemanje idja v JSON in v poti. Podatki, ki jih lahko spreminjamo:
         ```json 
-            {
-                "id": 31, // se ne spreminja
-                "ime": "Primož",
-                "priimek": "Hrovat",
-                "emso": "2301996500052", // veljaven emšo, skladen z datumom rojstva in spolom
-                "davcnaStevilka": "12345678", //
-                "datumRojstva": "1996-01-23",
-                "spol": "MOSKI",
-                "telefonskaStevilka": "070123123",
-                "drzavaRojstva": "Slovenija", // prost vnos
-                "krajRojstva": "Novo mesto", // prost vnos
-                "obcinaRojstva": "Novo mesto", // prost vnos
-                "drzavaStalno": 705, // numericna oznaka drzave
-                "postaStalno": 8000, // postna stevilka
-                "obcinaStalno": 85, // sifra obcine
-                "naslovStalno": "Krajčeva ulica 15", // prost vnos
-                "drzavaZacasno": 705, 
-                "postaZacasno": 1000,
-                "obcinaZacasno": 61,
-                "naslovZacasno": "Gosposvetska 12",
-                "naslovZaPosiljanjePoste": "ZACASNI"
-            } 
+        {
+            "id": 31, // se ne spreminja
+            "ime": "Primož",
+            "priimek": "Hrovat",
+            "emso": "2301996500052", // veljaven emšo, skladen z datumom rojstva in spolom
+            "davcnaStevilka": "12345678", //
+            "datumRojstva": "1996-01-23",
+            "spol": "MOSKI",
+            "telefonskaStevilka": "070123123",
+            "drzavaRojstva": "Slovenija", // prost vnos
+            "krajRojstva": "Novo mesto", // prost vnos
+            "obcinaRojstva": "Novo mesto", // prost vnos
+            "drzavaStalno": 705, // numericna oznaka drzave
+            "postaStalno": 8000, // postna stevilka
+            "obcinaStalno": 85, // sifra obcine
+            "naslovStalno": "Krajčeva ulica 15", // prost vnos
+            "drzavaZacasno": 705, 
+            "postaZacasno": 1000,
+            "obcinaZacasno": 61,
+            "naslovZacasno": "Gosposvetska 12",
+            "naslovZaPosiljanjePoste": "ZACASNI"
+        } 
         ```
         
         naslovZaPosiljanjePoste: [STALNI|ZACASNI]
@@ -53,16 +53,42 @@ localhost:8080/api/v1/
 - žeton:
     - GET: zeton
         - vrne vse izdane žetone
-    - GET: zeton/{student}/{vrsta_vpisa}
-        - vrne žeton za izbranega študenta in vrsto vpisa, če obstaja.
+    - GET: zeton/{student}[?vrsta-vpisa={vrsta-vpisa}]
+        - vrne vse žetone za izbranega študenta in vrsto vpisa, če obstaja (če je query parameter podan, vrne samo enega).
             Primer: 
-            `localhost:8080/api/v1/zeton/31/1`
+            `localhost:8080/api/v1/zeton/31?vrsta-vpisa=1`
     - POST: zeton/{student}
         - ustvari žeton za izbranega študenta. Vrne ustvarjeni žeton.
-    - PUT: zeton
+    - PUT: http://localhost:8080/api/v1/zeton/32
         - posodobi žeton
-        - body: zeton
-    - DELETE: zeton?student={student}&vrsta-vpisa={vrsta-vpisa}
+        - body: 
+        ```json
+        {
+            "vrstaVpisa": {
+                "sifraVpisa": 2 // sifrant
+            },
+            "student": {
+                "id": 32 
+            },
+            "studijskiProgram": {
+                "sifraEVS": 1000470 // sifrant
+            },
+            "letnik": {
+                "letnik": 1
+            },
+            "studijskoLeto": {
+            	"id": 2018 // studijsko leto - sifrant v bazi
+            },
+            "nacinStudija": {
+                "sifra": 2 // sifrant
+            },
+            "oblikaStudija": {
+                "sifra": 2 // sifrant
+            },
+            "prostaIzbira": false
+        }
+        ```
+    - DELETE: zeton/{student}?vrsta-vpisa={vrsta-vpisa}
         - izbriše žeton.
             Primer: 
             `localhost:8080/api/v1/zeton?student=33&vrsta-vpisa=1`

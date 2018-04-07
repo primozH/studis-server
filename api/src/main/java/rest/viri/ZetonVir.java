@@ -24,13 +24,18 @@ public class ZetonVir {
 
     @GET
     public Response getTokens() {
-        List<Zeton> zetoni = zetonZrno.getTokens();
+        List<Zeton> zetoni = zetonZrno.getTokens(null);
         return Response.ok(zetoni).build();
     }
 
     @GET
-    @Path("{student}/{vpis}")
-    public Response getToken(@PathParam("student") Integer student, @PathParam("vpis") Integer vrstaVpisa) {
+    @Path("{student}")
+    public Response getToken(@PathParam("student") Integer student, @QueryParam("vrsta-vpisa") Integer vrstaVpisa) {
+        if (vrstaVpisa == null) {
+            List<Zeton> zetoni = zetonZrno.getTokens(student);
+            return Response.ok(zetoni).build();
+        }
+
         Zeton zeton = zetonZrno.getToken(student, vrstaVpisa);
         return Response.ok(zeton).build();
     }
@@ -48,13 +53,19 @@ public class ZetonVir {
     }
 
     @PUT
-    public Response modifyToken(Zeton zeton) {
+    @Path("{id}")
+    public Response modifyToken(@PathParam("id") Integer studentId,
+                                Zeton zeton) {
+        if (!studentId.equals(zeton.getStudent().getId()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
         Zeton updatedToken = zetonZrno.updateToken(zeton);
         return Response.ok(updatedToken).build();
     }
 
     @DELETE
-    public Response deleteToken(@QueryParam("student") Integer student,
+    @Path("{student}")
+    public Response deleteToken(@PathParam("student") Integer student,
                                 @QueryParam("vrsta-vpisa") Integer vpis) {
         zetonZrno.deleteToken(student, vpis);
 

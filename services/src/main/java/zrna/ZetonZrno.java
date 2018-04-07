@@ -20,13 +20,17 @@ public class ZetonZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
-    public List<Zeton> getTokens() {
+    public List<Zeton> getTokens(Integer student) {
+        if (student != null) {
+            return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudenta")
+                    .setParameter("student", student)
+                    .getResultList();
+        }
         return em.createNamedQuery("entitete.vpis.Zeton.vrniVse")
                 .getResultList();
     }
 
     public Zeton getToken(Integer student, Integer vrstaVpisa) {
-
         ZetonId zetonId = new ZetonId(student, vrstaVpisa);
         return em.find(Zeton.class, zetonId);
     }
@@ -69,7 +73,26 @@ public class ZetonZrno {
 
     @Transactional
     public Zeton updateToken(Zeton zeton) {
-        zeton = em.merge(zeton);
+        ZetonId zetonId = new ZetonId(zeton.getStudent().getId(), zeton.getVrstaVpisa().getSifraVpisa());
+        Zeton newZeton = em.find(Zeton.class, zetonId);
+
+        if (zeton.getVrstaVpisa() != null) {
+            newZeton.setVrstaVpisa(zeton.getVrstaVpisa());
+        }
+        if (zeton.getStudijskoLeto() != null) {
+            newZeton.setStudijskoLeto(zeton.getStudijskoLeto());
+        }
+        if (zeton.getStudijskiProgram() != null) {
+            newZeton.setStudijskiProgram(zeton.getStudijskiProgram());
+        }
+        if (zeton.getOblikaStudija() != null) {
+            newZeton.setOblikaStudija(zeton.getOblikaStudija());
+        }
+        if (zeton.getLetnik() != null) {
+            newZeton.setLetnik(zeton.getLetnik());
+        }
+
+        zeton = em.merge(newZeton);
         return zeton;
     }
 

@@ -4,15 +4,21 @@ import sifranti.*;
 import vloge.Student;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "zeton")
 @NamedQueries( value = {
-            @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z")
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z"),
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudenta", query = "SELECT z FROM Zeton z WHERE z.student.id = :student")
         }
 )
 @IdClass(ZetonId.class)
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Zeton {
 
     @Id
