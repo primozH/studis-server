@@ -1,4 +1,4 @@
-package vpis;
+package predmetnik;
 
 import sifranti.*;
 import vloge.Student;
@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "predmetnik")
+@IdClass(PredmetnikId.class)
 public class Predmetnik {
 
     @Id
