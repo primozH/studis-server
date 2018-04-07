@@ -2,8 +2,12 @@ package rest.viri;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.QueryStringDefaults;
+import student.Zeton;
 import vloge.Student;
+import vpis.Vpis;
+import vpis.VpisniList;
 import zrna.StudentZrno;
+import zrna.VpisZrno;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,9 +29,8 @@ public class StudentVir {
 
     @Inject
     private StudentZrno studentZrno;
-
     @Inject
-    private QueryStringDefaults qsd;
+    private VpisZrno vpisZrno;
 
     @Context
     private UriInfo uriInfo;
@@ -43,5 +46,31 @@ public class StudentVir {
     public Response getStudentsByNameSurnameEnrollmentNumber(@QueryParam("filter") String searchParam) {
         List<Student> students = studentZrno.getStudentsByNSN(searchParam);
         return Response.ok(students).header("X-Total-Count", students.size()).build();
+    }
+
+    @POST
+    @Path("{id}")
+    public Response updateStudentData(@PathParam("id") Integer studentId, Student student) {
+        try {
+            student = studentZrno.updateStudent(student);
+        } catch (Exception e){
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+        return Response.ok(student).build();
+    }
+
+    @POST
+    @Path("{id}/vpis")
+    public Response vpisiStudenta(@PathParam("id") Integer studentId, Zeton zeton) {
+        if (studentId.equals(zeton.getStudent().getId()))
+            return Response.status(Response.Status.CONFLICT).build();
+
+        Vpis vpis;
+        try {
+            vpis = vpisZrno.vpisiStudenta(zeton);
+        } catch (Exception e) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+        return Response.ok(vpis).build();
     }
 }

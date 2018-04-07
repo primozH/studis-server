@@ -1,22 +1,16 @@
 package vloge;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateAdapter;
 import naslov.Drzava;
 import naslov.Obcina;
+import naslov.Posta;
 import vpis.Vpis;
 
 @Entity
@@ -35,18 +29,17 @@ public class Student extends Uporabnik {
 
     @Column(name = "vpisna_stevilka") private Integer vpisnaStevilka;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    @Column(name = "datum_rojstva")
-    private LocalDate datumRojstva;
-
     @Column(name = "tel_stevilka") private String telefonskaStevilka;
 
-    @ManyToOne(targetEntity = Drzava.class)
+    @ManyToOne
     @JoinColumn(name = "drzava_stalno")
     private Drzava drzavaStalno;
     @ManyToOne(targetEntity = Obcina.class)
     @JoinColumn(name = "obcina_stalno")
     private Obcina obcinaStalno;
+    @ManyToOne
+    @JoinColumn(name = "posta_stalno")
+    private Posta postaStalno;
     @Column(name = "naslov_stalno")
     private String naslovStalno;
 
@@ -56,6 +49,9 @@ public class Student extends Uporabnik {
     @ManyToOne(targetEntity = Obcina.class)
     @JoinColumn(name = "obcina_zacasno")
     private Obcina obcinaZacasno;
+    @ManyToOne
+    @JoinColumn(name = "posta_zacasno")
+    private Posta postaZacasno;
     @Column(name = "naslov_zacasno")
     private String naslovZacasno;
 
@@ -66,22 +62,17 @@ public class Student extends Uporabnik {
     @Column(name = "kraj_rojstva")
     private String krajRojstva;
 
-    @Column(name = "spol")
-    private Spol spol;
-
-    @OneToMany(targetEntity = Vpis.class)
-    private List<Vpis> vpisi;
+    @OneToMany(mappedBy = "student")
+    private List<Vpis> vpisi = new ArrayList<>();
 
 
     public Student() {
         super();
     }
 
-    public Student(String email, String geslo, Integer vpisnaStevilka, String uporabniskoIme, String ime, String priimek, LocalDate datumRojstva, String telefonskaStevilka) {
+    public Student(String email, String geslo, Integer vpisnaStevilka, String uporabniskoIme, String ime, String priimek) {
         super(email, geslo, uporabniskoIme);
         this.vpisnaStevilka = vpisnaStevilka;
-        this.datumRojstva = datumRojstva;
-        this.telefonskaStevilka = telefonskaStevilka;
 
         this.setIme(ime);
         this.setPriimek(priimek);
@@ -93,14 +84,6 @@ public class Student extends Uporabnik {
 
     public void setVpisnaStevilka(Integer vpisnaStevilka) {
         this.vpisnaStevilka = vpisnaStevilka;
-    }
-
-    public LocalDate getDatumRojstva() {
-        return datumRojstva;
-    }
-
-    public void setDatumRojstva(LocalDate datumRojstva) {
-        this.datumRojstva = datumRojstva;
     }
 
     public String getTelefonskaStevilka() {
@@ -183,19 +166,27 @@ public class Student extends Uporabnik {
         this.krajRojstva = krajRojstva;
     }
 
-    public Spol getSpol() {
-        return spol;
-    }
-
-    public void setSpol(Spol spol) {
-        this.spol = spol;
-    }
-
     public List<Vpis> getVpisi() {
         return vpisi;
     }
 
     public void dodajVpis(Vpis vpis) {
         this.vpisi.add(vpis);
+    }
+
+    public Posta getPostaStalno() {
+        return postaStalno;
+    }
+
+    public void setPostaStalno(Posta postaStalno) {
+        this.postaStalno = postaStalno;
+    }
+
+    public Posta getPostaZacasno() {
+        return postaZacasno;
+    }
+
+    public void setPostaZacasno(Posta postaZacasno) {
+        this.postaZacasno = postaZacasno;
     }
 }

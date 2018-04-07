@@ -57,8 +57,67 @@ public class StudentZrno {
                 .getResultList();
     }
 
-    public Long getStudentsCount(QueryParameters queryParameters) {
-        return JPAUtils.queryEntitiesCount(em, Student.class, queryParameters);
+    @Transactional
+    public Student updateStudent(Student newStudent) throws Exception{
+        Student student = em.find(Student.class, newStudent.getId());
+
+        if (newStudent.getSpol() != null) {
+            student.setSpol(newStudent.getSpol());
+        }
+        if (newStudent.getDatumRojstva() != null) {
+            student.setDatumRojstva(newStudent.getDatumRojstva());
+        }
+        if (newStudent.getEmso() != null) {
+            student.setEmso(newStudent.getEmso());
+        }
+
+        /*
+        Kraj, obcina, drzava rojstva
+         */
+        if (newStudent.getDrzavaRojstva() != null) {
+            student.setDrzavaRojstva(newStudent.getDrzavaRojstva());
+        }
+        if (newStudent.getKrajRojstva() != null) {
+            student.setKrajRojstva(newStudent.getKrajRojstva());
+        }
+        if (newStudent.getObcinaRojstva() != null) {
+            student.setObcinaRojstva(newStudent.getObcinaRojstva());
+        }
+
+        /*
+        Stalno prebivalisce
+         */
+        if (newStudent.getDrzavaStalno() != null) {
+            student.setDrzavaStalno(newStudent.getDrzavaStalno());
+        }
+        if (newStudent.getObcinaStalno() != null) {
+            student.setObcinaStalno(newStudent.getObcinaStalno());
+        }
+        if (newStudent.getNaslovStalno() != null) {
+            student.setNaslovStalno(newStudent.getNaslovStalno());
+        }
+        if (newStudent.getPostaStalno() != null) {
+            student.setPostaStalno(newStudent.getPostaStalno());
+        }
+
+        /*
+        Zacasno prebivalisce
+         */
+        if (newStudent.getDrzavaZacasno() != null) {
+            student.setDrzavaZacasno(newStudent.getDrzavaZacasno());
+        }
+        if (newStudent.getObcinaZacasno() != null) {
+            student.setObcinaZacasno(newStudent.getObcinaZacasno());
+        }
+        if (newStudent.getPostaZacasno() != null) {
+            student.setPostaZacasno(newStudent.getPostaZacasno());
+        }
+        if (newStudent.getNaslovZacasno() != null) {
+            student.setNaslovZacasno(newStudent.getNaslovZacasno());
+        }
+
+        em.merge(student);
+        return student;
     }
 
     private List<String> imena = Arrays.asList(
@@ -74,45 +133,45 @@ public class StudentZrno {
     /**
      * Helper method for populating users
      */
-    private void createStudents() {
-        int nVpisnih = 50;
-        Random r = new Random();
-
-        try {
-            for (int i = 0; i < nVpisnih; i++) {
-                utx.begin();
-                String ime = imena.get(r.nextInt(imena.size()));
-                String priimek = priimki.get(r.nextInt(priimki.size()));
-                String email = generator.generirajEmail(ime, priimek);
-                String uporabniskoIme = generator.generirajUporabniskoIme(ime, priimek);
-                int vpisnaStevilka = generator.generirajVpisnoStevilko();
-
-                if (i >= 30)
-                    storeOseba(new Student(email, geslo, vpisnaStevilka, uporabniskoIme, ime, priimek,
-                        LocalDate.now(), tel_st));
-                else if (i < 1)
-                    storeOseba(new Skrbnik(email, geslo, uporabniskoIme, ime, priimek));
-                else if (i < 5) {
-                    storeOseba(new Referent(email, geslo, uporabniskoIme, ime, priimek));
-                }
-                else
-                    storeOseba(new Ucitelj(email, geslo, uporabniskoIme, ime, priimek));
-
-                utx.commit();
-            }
-        } catch (NotSupportedException e) {
-            e.printStackTrace();
-        } catch (SystemException e) {
-            e.printStackTrace();
-        } catch (HeuristicMixedException e) {
-            e.printStackTrace();
-        } catch (HeuristicRollbackException e) {
-            e.printStackTrace();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    private void createStudents() {
+//        int nVpisnih = 50;
+//        Random r = new Random();
+//
+//        try {
+//            for (int i = 0; i < nVpisnih; i++) {
+//                utx.begin();
+//                String ime = imena.get(r.nextInt(imena.size()));
+//                String priimek = priimki.get(r.nextInt(priimki.size()));
+//                String email = generator.generirajEmail(ime, priimek);
+//                String uporabniskoIme = generator.generirajUporabniskoIme(ime, priimek);
+//                int vpisnaStevilka = generator.generirajVpisnoStevilko();
+//
+//                if (i >= 30)
+//                    storeOseba(new Student(email, geslo, vpisnaStevilka, uporabniskoIme, ime, priimek,
+//                        LocalDate.now(), tel_st));
+//                else if (i < 1)
+//                    storeOseba(new Skrbnik(email, geslo, uporabniskoIme, ime, priimek));
+//                else if (i < 5) {
+//                    storeOseba(new Referent(email, geslo, uporabniskoIme, ime, priimek));
+//                }
+//                else
+//                    storeOseba(new Ucitelj(email, geslo, uporabniskoIme, ime, priimek));
+//
+//                utx.commit();
+//            }
+//        } catch (NotSupportedException e) {
+//            e.printStackTrace();
+//        } catch (SystemException e) {
+//            e.printStackTrace();
+//        } catch (HeuristicMixedException e) {
+//            e.printStackTrace();
+//        } catch (HeuristicRollbackException e) {
+//            e.printStackTrace();
+//        } catch (RollbackException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     @Transactional
     private void storeOseba(Object oseba) {
