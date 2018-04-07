@@ -26,6 +26,13 @@ public class PredmetStudent {
     @JoinColumn(name = "studijsko_leto")
     private StudijskoLeto studijskoLeto;
 
+    public PredmetStudent() { }
+
+    public PredmetStudent(Student student, Predmet predmet, StudijskoLeto studijskoLeto) {
+        this.student = student;
+        this.predmet = predmet;
+        this.studijskoLeto = studijskoLeto;
+    }
     public Student getStudent() {
         return student;
     }

@@ -29,7 +29,6 @@ public class Vpis {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studijsko_leto")
-    @XmlTransient
     private StudijskoLeto studijskoLeto;
 
     @ManyToOne(targetEntity = StudijskiProgram.class)

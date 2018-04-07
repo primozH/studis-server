@@ -8,6 +8,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "predmetnik")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.predmetiZaProgram", query = "SELECT p.predmet FROM Predmetnik p" +
+                " WHERE p.studijskoLeto = :studijskoLeto AND p.letnik = :letnik AND p.studijskiProgram = :studijskiProgram AND " +
+                "p.delPredmetnika = :delPredmetnika")
+})
 @IdClass(PredmetnikId.class)
 public class Predmetnik {
 

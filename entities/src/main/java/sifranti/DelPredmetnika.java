@@ -1,12 +1,13 @@
 package sifranti;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "del_predmetnika")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.sifranti.DelPredmetnika.vrniDelPredmetnika", query = "SELECT d FROM DelPredmetnika d WHERE " +
+                "d.tip LIKE :tip")
+})
 public class DelPredmetnika {
 
     @Id

@@ -34,6 +34,7 @@ public class VpisZrno {
         Student student = vpis.getStudent();
 
         Vpis vpisPotrjen = new Vpis(student, studijskoLeto, studijskiProgram, vrstaVpisa, nacinStudija, oblikaStudija, letnik);
+
         return vpisPotrjen;
     }
 
@@ -41,6 +42,23 @@ public class VpisZrno {
         return em.createNamedQuery("entitete.vpis.Vpis.vrniVpiseZaStudenta")
                 .setParameter("studentId", studentId)
                 .getResultList();
+    }
+
+    public void zakljuciVpis(Vpis vpis) {
+        Student student = vpis.getStudent();
+        em.persist(vpis);
+        em.createNamedQuery("entitete.vpis.Zeton.nastaviIzkoriscenostZetona")
+                .setParameter("student", student)
+                .setParameter("izkoriscen", true)
+                .executeUpdate();
+    }
+
+    public void enrollment() {
+        // obvezni predmeti
+        String naziv = "%obvezen%";
+        DelPredmetnika delPredmetnika = (DelPredmetnika) em.createNamedQuery("entitete.sifranti.DelPredmetnika.vrniDelPredmetnika")
+                .setParameter("tip", naziv)
+                .getSingleResult();
     }
 
 

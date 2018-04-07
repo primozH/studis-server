@@ -14,7 +14,9 @@ import java.io.Serializable;
 @Table(name = "zeton")
 @NamedQueries( value = {
             @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z"),
-            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudenta", query = "SELECT z FROM Zeton z WHERE z.student.id = :student")
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudenta", query = "SELECT z FROM Zeton z WHERE z.student.id = :student"),
+            @NamedQuery(name = "entitete.vpis.Zeton.nastaviIzkoriscenostZetona", query = "UPDATE Zeton z " +
+                    "SET z.izkoriscen = :izkoriscen WHERE z.student = :student")
         }
 )
 @IdClass(ZetonId.class)
