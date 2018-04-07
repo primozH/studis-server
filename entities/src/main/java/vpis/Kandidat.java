@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import sifranti.StudijskiProgram;
 import vloge.Uporabnik;
@@ -16,6 +18,7 @@ import vloge.Uporabnik;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.vloge.Kandidat.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT k FROM Kandidat k WHERE CONCAT(k.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY k.vpisnaStevilka DESC")
 })
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Kandidat extends Uporabnik {
 
     @Column(name = "vpisna_stevilka")

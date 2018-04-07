@@ -1,26 +1,35 @@
 package vpis;
 
 import sifranti.*;
+import student.Zeton;
 import vloge.Student;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "vpis")
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.vpis.Vpis.zadnjiVpisZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId" +
-                " ORDER BY v.studijskoLeto.id DESC")
+                " ORDER BY v.studijskoLeto.id DESC"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniVpiseZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student = :student")
 })
+@IdClass(VpisId.class)
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Vpis {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student")
+    @XmlTransient
     private Student student;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studijsko_leto")
+    @XmlTransient
     private StudijskoLeto studijskoLeto;
 
     @ManyToOne(targetEntity = StudijskiProgram.class)
