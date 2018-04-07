@@ -3,6 +3,7 @@ package rest.viri;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import vpis.Kandidat;
+import zrna.KandidatZrno;
 import zrna.UvozPodatkov;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -27,10 +28,21 @@ public class KandidatVir {
     @Inject
     private UvozPodatkov uvozPodatkov;
 
+    @Inject
+    private KandidatZrno kandidatZrno;
+
     @GET
-    @Path("seznam")
-    public Response getImportStatus() {
-        return Response.ok().build();
+    public Response getKandidats() {
+        List<Kandidat> kandidati = kandidatZrno.getKandidats();
+        return Response.ok(kandidati).build();
+    }
+
+    @GET
+    @Path("{kandidat}")
+    public Response getKandidat(@PathParam("kandidat") Integer studentId) {
+        Kandidat kandidat = kandidatZrno.getKandidat(studentId);
+
+        return Response.ok(kandidat).build();
     }
 
     @GET

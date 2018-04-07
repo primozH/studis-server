@@ -13,8 +13,6 @@ public class VrstaVpisa {
 
     @Id
     @Column(name = "sifra")
-    @XmlElement
-    @XmlID
     private Integer sifraVpisa;
     @Column(name = "vrsta_vpisa")
     private String vrstaVpisa;

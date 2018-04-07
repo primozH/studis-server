@@ -23,7 +23,6 @@ import helpers.adapters.LocalDateTimeAdapter;
         @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
 })
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
 public class Uporabnik {
 
     private static final Logger logger = Logger.getLogger(Uporabnik.class.getName());

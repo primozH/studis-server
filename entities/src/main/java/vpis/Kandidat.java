@@ -16,7 +16,8 @@ import vloge.Uporabnik;
 @Entity
 @Table(name = "kandidat")
 @NamedQueries(value = {
-        @NamedQuery(name = "entitete.vloge.Kandidat.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT k FROM Kandidat k WHERE CONCAT(k.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY k.vpisnaStevilka DESC")
+        @NamedQuery(name = "entitete.vloge.Kandidat.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT k FROM Kandidat k WHERE CONCAT(k.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY k.vpisnaStevilka DESC"),
+        @NamedQuery(name = "entitete.vloge.Kandidat.vrniKandidate", query = "SELECT k FROM Kandidat k WHERE k.izkoriscen = false"),
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Kandidat extends Uporabnik {
