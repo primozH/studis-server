@@ -69,6 +69,9 @@ public class StudentZrno {
         if (newStudent.getEmso() != null) {
             student.setEmso(newStudent.getEmso());
         }
+        if (newStudent.getDavcnaStevilka() != null) {
+            student.setDavcnaStevilka(newStudent.getDavcnaStevilka());
+        }
 
         /*
         Kraj, obcina, drzava rojstva
@@ -127,8 +130,11 @@ public class StudentZrno {
         if (newStudent.getIme() != null) {
             student.setIme(newStudent.getIme());
         }
-        if (student.getPriimek() != null) {
+        if (newStudent.getPriimek() != null) {
             student.setPriimek(newStudent.getPriimek());
+        }
+        if (newStudent.getNaslovZaPosiljanjePoste() != null) {
+            student.setNaslovZaPosiljanjePoste(newStudent.getNaslovZaPosiljanjePoste());
         }
 
         em.merge(student);

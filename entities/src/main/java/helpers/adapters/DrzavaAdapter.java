@@ -4,16 +4,16 @@ import naslov.Drzava;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class DrzavaAdapter extends XmlAdapter<String, Drzava> {
+public class DrzavaAdapter extends XmlAdapter<Integer, Drzava> {
     @Override
-    public Drzava unmarshal(String v) throws Exception {
+    public Drzava unmarshal(Integer v) throws Exception {
         Drzava drzava = new Drzava();
-        drzava.setDvomestnaKoda(v);
+        drzava.setNumericnaOznaka(v);
         return drzava;
     }
 
     @Override
-    public String marshal(Drzava v) throws Exception {
-        return v.getDvomestnaKoda();
+    public Integer marshal(Drzava v) throws Exception {
+        return v.getNumericnaOznaka();
     }
 }

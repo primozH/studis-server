@@ -6,9 +6,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.PasswordAuthentication;
@@ -25,13 +23,17 @@ import helpers.adapters.LocalDateTimeAdapter;
         @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
 })
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class Uporabnik {
 
     private static final Logger logger = Logger.getLogger(Uporabnik.class.getName());
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_uporabnik") private Integer id;
+    @Column(name = "id_uporabnik")
+    @XmlElement
+    @XmlID
+    private Integer id;
     @Column(name = "email", nullable = false) private String email;
 
     @Column(name = "ime") private String ime;

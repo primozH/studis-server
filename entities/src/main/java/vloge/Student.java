@@ -1,6 +1,5 @@
 package vloge;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +7,15 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.DrzavaAdapter;
-import helpers.adapters.LocalDateAdapter;
+import helpers.adapters.ObcinaAdapter;
+import helpers.adapters.PostaAdapter;
+import javafx.geometry.Pos;
 import naslov.Drzava;
+import naslov.NaslovZaPosiljanjePoste;
 import naslov.Obcina;
 import naslov.Posta;
 import vpis.Vpis;
@@ -49,26 +51,26 @@ public class Student extends Uporabnik {
     @ManyToOne
     @JoinColumn(name = "drzava_stalno")
     private Drzava drzavaStalno;
-    @XmlIDREF
-    @ManyToOne(targetEntity = Obcina.class)
+    @XmlJavaTypeAdapter(ObcinaAdapter.class)
+    @ManyToOne
     @JoinColumn(name = "obcina_stalno")
     private Obcina obcinaStalno;
-    @XmlIDREF
+    @XmlJavaTypeAdapter(PostaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "posta_stalno")
     private Posta postaStalno;
     @Column(name = "naslov_stalno")
     private String naslovStalno;
 
-    @XmlIDREF
-    @ManyToOne(targetEntity = Drzava.class)
+    @XmlJavaTypeAdapter(DrzavaAdapter.class)
+    @ManyToOne
     @JoinColumn(name = "drzava_zacasno")
     private Drzava drzavaZacasno;
-    @XmlIDREF
-    @ManyToOne(targetEntity = Obcina.class)
+    @XmlJavaTypeAdapter(ObcinaAdapter.class)
+    @ManyToOne
     @JoinColumn(name = "obcina_zacasno")
     private Obcina obcinaZacasno;
-    @XmlIDREF
+    @XmlJavaTypeAdapter(PostaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "posta_zacasno")
     private Posta postaZacasno;
@@ -76,7 +78,12 @@ public class Student extends Uporabnik {
     private String naslovZacasno;
 
     @OneToMany(mappedBy = "student")
+    @XmlTransient
     private List<Vpis> vpisi = new ArrayList<>();
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "privzeti_naslov")
+    private NaslovZaPosiljanjePoste naslovZaPosiljanjePoste;
 
 
     public Student() {
@@ -201,5 +208,13 @@ public class Student extends Uporabnik {
 
     public void setPostaZacasno(Posta postaZacasno) {
         this.postaZacasno = postaZacasno;
+    }
+
+    public NaslovZaPosiljanjePoste getNaslovZaPosiljanjePoste() {
+        return naslovZaPosiljanjePoste;
+    }
+
+    public void setNaslovZaPosiljanjePoste(NaslovZaPosiljanjePoste naslovZaPosiljanjePoste) {
+        this.naslovZaPosiljanjePoste = naslovZaPosiljanjePoste;
     }
 }

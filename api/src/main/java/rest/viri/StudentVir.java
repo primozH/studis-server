@@ -48,9 +48,12 @@ public class StudentVir {
         return Response.ok(students).header("X-Total-Count", students.size()).build();
     }
 
-    @POST
+    @PUT
     @Path("{id}")
     public Response updateStudentData(@PathParam("id") Integer studentId, Student student) {
+        if (!studentId.equals(student.getId())) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         try {
             student = studentZrno.updateStudent(student);
         } catch (Exception e){
