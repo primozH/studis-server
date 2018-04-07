@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.vpis.Vpis.zadnjiVpisZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId" +
                 " ORDER BY v.studijskoLeto.id DESC"),
-        @NamedQuery(name = "entitete.vpis.Vpis.vrniVpiseZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student = :student")
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniVpiseZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId")
 })
 @IdClass(VpisId.class)
 @XmlAccessorType(XmlAccessType.FIELD)

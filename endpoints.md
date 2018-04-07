@@ -42,6 +42,9 @@ localhost:8080/api/v1/
         
         naslovZaPosiljanjePoste: [STALNI|ZACASNI]
         spol: [MOSKI|ZENSKI]
+        
+    - GET: student/{id}/vpis:
+        - vrne tabelo vpisov za danega študenta
                         
 - kandidati:
     - POST: kandidat/nalozi

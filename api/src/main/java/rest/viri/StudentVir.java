@@ -76,4 +76,12 @@ public class StudentVir {
         }
         return Response.ok(vpis).build();
     }
+
+    @GET
+    @Path("{id}/vpis")
+    public Response vrniVpiseZaStudenta(@PathParam("id") Integer studentId) {
+        List<Vpis> vpisi = vpisZrno.getVpisi(studentId);
+
+        return Response.ok(vpisi).build();
+    }
 }

@@ -37,5 +37,11 @@ public class VpisZrno {
         return vpisPotrjen;
     }
 
+    public List<Vpis> getVpisi(Integer studentId) {
+        return em.createNamedQuery("entitete.vpis.Vpis.vrniVpiseZaStudenta")
+                .setParameter("studentId", studentId)
+                .getResultList();
+    }
+
 
 }
