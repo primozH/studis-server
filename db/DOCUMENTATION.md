@@ -5,5 +5,6 @@ use [MySQL Workbench](https://www.mysql.com/products/workbench/). **CURRENT VERS
 FOR APPLICATION DEVELOPMENT. IT MIGHT NOT REPRESENT CURRENT SCHEME**
 
 ## Database creation and test data
-1. Create database and needed tables with `studis.sql`
-2. Populate newly created database with test data `populate-db.sql`
+1. Open folder `init`.
+2. Create database and needed tables with `studis.sql`
+3. Populate newly created database with test data `populate-db.sql`
