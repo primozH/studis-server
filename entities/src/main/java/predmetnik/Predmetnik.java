@@ -37,6 +37,10 @@ public class Predmetnik {
     @JoinColumn(name = "studijsko_leto")
     private StudijskoLeto studijskoLeto;
 
+    @Enumerated
+    @Column(name = "modul")
+    private Modul modul;
+
     public DelPredmetnika getDelPredmetnika() {
         return delPredmetnika;
     }

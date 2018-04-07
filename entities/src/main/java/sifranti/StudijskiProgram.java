@@ -12,8 +12,6 @@ public class StudijskiProgram {
 
     @Id
     @Column(name = "sifra_evs")
-    @XmlElement
-    @XmlID
     private Integer sifraEVS;
     @Column(name = "sifra")
     private String sifra;

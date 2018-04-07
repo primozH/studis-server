@@ -94,4 +94,4 @@ localhost:8080/api/v1/
     - DELETE: zeton/{student}?vrsta-vpisa={vrsta-vpisa}
         - izbriše žeton.
             Primer: 
-            `localhost:8080/api/v1/zeton?student=33&vrsta-vpisa=1`
+            `localhost:8080/api/v1/zeton/32?vrsta-vpisa=1`

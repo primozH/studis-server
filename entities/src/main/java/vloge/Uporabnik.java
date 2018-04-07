@@ -31,8 +31,6 @@ public class Uporabnik {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_uporabnik")
-    @XmlElement
-    @XmlID
     private Integer id;
     @Column(name = "email", nullable = false) private String email;
 

@@ -13,8 +13,6 @@ public class Letnik {
 
     @Id
     @Column(name = "letnik")
-    @XmlID
-    @XmlElement
     private Integer letnik;
 
     public Integer getLetnik() {
