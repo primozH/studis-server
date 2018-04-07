@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
@@ -25,6 +26,8 @@ import vloge.Ucitelj;
 @ApplicationScoped
 public class StudentZrno {
 
+    private static final Logger logger = Logger.getLogger(StudentZrno.class.getName());
+
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
@@ -33,10 +36,6 @@ public class StudentZrno {
 
     @Inject
     GeneratorPodatkov generator;
-
-//    public void init(@Observes @Initialized(ApplicationScoped.class) Object o) {
-//        createStudents();
-//    }
 
     public Student getStudent(Integer id) {
         return em.find(Student.class, id);
@@ -114,6 +113,22 @@ public class StudentZrno {
         }
         if (newStudent.getNaslovZacasno() != null) {
             student.setNaslovZacasno(newStudent.getNaslovZacasno());
+        }
+
+        /*
+        Kontaktni podatki
+         */
+        if (newStudent.getTelefonskaStevilka() != null) {
+            student.setTelefonskaStevilka(newStudent.getTelefonskaStevilka());
+        }
+        if (newStudent.getDavcnaStevilka() != null) {
+            student.setDavcnaStevilka(newStudent.getDavcnaStevilka());
+        }
+        if (newStudent.getIme() != null) {
+            student.setIme(newStudent.getIme());
+        }
+        if (student.getPriimek() != null) {
+            student.setPriimek(newStudent.getPriimek());
         }
 
         em.merge(student);

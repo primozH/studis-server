@@ -5,8 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import helpers.adapters.DrzavaAdapter;
 import helpers.adapters.LocalDateAdapter;
 import naslov.Drzava;
 import naslov.Obcina;
@@ -25,35 +30,13 @@ import vpis.Vpis;
                 query = "SELECT s FROM Student s WHERE s.ime LIKE :parameter OR " +
                         "s.priimek LIKE :parameter OR CONCAT(s.vpisnaStevilka, '') LIKE :parameter")
 })
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Student extends Uporabnik {
 
-    @Column(name = "vpisna_stevilka") private Integer vpisnaStevilka;
-
-    @Column(name = "tel_stevilka") private String telefonskaStevilka;
-
-    @ManyToOne
-    @JoinColumn(name = "drzava_stalno")
-    private Drzava drzavaStalno;
-    @ManyToOne(targetEntity = Obcina.class)
-    @JoinColumn(name = "obcina_stalno")
-    private Obcina obcinaStalno;
-    @ManyToOne
-    @JoinColumn(name = "posta_stalno")
-    private Posta postaStalno;
-    @Column(name = "naslov_stalno")
-    private String naslovStalno;
-
-    @ManyToOne(targetEntity = Drzava.class)
-    @JoinColumn(name = "drzava_zacasno")
-    private Drzava drzavaZacasno;
-    @ManyToOne(targetEntity = Obcina.class)
-    @JoinColumn(name = "obcina_zacasno")
-    private Obcina obcinaZacasno;
-    @ManyToOne
-    @JoinColumn(name = "posta_zacasno")
-    private Posta postaZacasno;
-    @Column(name = "naslov_zacasno")
-    private String naslovZacasno;
+    @Column(name = "vpisna_stevilka")
+    private Integer vpisnaStevilka;
+    @Column(name = "tel_stevilka")
+    private String telefonskaStevilka;
 
     @Column(name = "drzava_rojstva")
     private String drzavaRojstva;
@@ -61,6 +44,36 @@ public class Student extends Uporabnik {
     private String obcinaRojstva;
     @Column(name = "kraj_rojstva")
     private String krajRojstva;
+
+    @XmlJavaTypeAdapter(DrzavaAdapter.class)
+    @ManyToOne
+    @JoinColumn(name = "drzava_stalno")
+    private Drzava drzavaStalno;
+    @XmlIDREF
+    @ManyToOne(targetEntity = Obcina.class)
+    @JoinColumn(name = "obcina_stalno")
+    private Obcina obcinaStalno;
+    @XmlIDREF
+    @ManyToOne
+    @JoinColumn(name = "posta_stalno")
+    private Posta postaStalno;
+    @Column(name = "naslov_stalno")
+    private String naslovStalno;
+
+    @XmlIDREF
+    @ManyToOne(targetEntity = Drzava.class)
+    @JoinColumn(name = "drzava_zacasno")
+    private Drzava drzavaZacasno;
+    @XmlIDREF
+    @ManyToOne(targetEntity = Obcina.class)
+    @JoinColumn(name = "obcina_zacasno")
+    private Obcina obcinaZacasno;
+    @XmlIDREF
+    @ManyToOne
+    @JoinColumn(name = "posta_zacasno")
+    private Posta postaZacasno;
+    @Column(name = "naslov_zacasno")
+    private String naslovZacasno;
 
     @OneToMany(mappedBy = "student")
     private List<Vpis> vpisi = new ArrayList<>();

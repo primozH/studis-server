@@ -1,11 +1,15 @@
 package naslov;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 
 @Entity
 @Table(name = "posta")
 public class Posta {
 
+    @XmlID
+    @XmlElement
     @Id
     @Column(name = "postna_stevilka")
     private Integer postnaStevilka;

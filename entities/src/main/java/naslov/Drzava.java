@@ -1,12 +1,16 @@
 package naslov;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import java.util.List;
 
 @Entity
 @Table(name = "drzava")
 public class Drzava {
 
+    @XmlID
+    @XmlElement
     @Id
     @Column(name = "iso_koda", nullable = false, length = 2)
     private String dvomestnaKoda;

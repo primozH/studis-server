@@ -1,12 +1,16 @@
 package naslov;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import java.util.List;
 
 @Entity
 @Table(name = "obcina")
 public class Obcina {
 
+    @XmlID
+    @XmlElement
     @Id
     @Column(name = "sifra")
     private Integer sifra;
