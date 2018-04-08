@@ -6,7 +6,8 @@ import javax.persistence.*;
 @Table(name = "del_predmetnika")
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.sifranti.DelPredmetnika.vrniDelPredmetnika", query = "SELECT d FROM DelPredmetnika d WHERE " +
-                "d.tip LIKE :tip")
+                "d.tip LIKE :tip"),
+        @NamedQuery(name = "entitete.sifranti.DelPredmetnika.vrniVseDelePredmetnika", query = "SELECT d FROM DelPredmetnika d")
 })
 public class DelPredmetnika {
 

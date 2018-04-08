@@ -1,17 +1,29 @@
 package predmetnik;
 
-import sifranti.*;
-import vloge.Student;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import java.util.List;
+import sifranti.DelPredmetnika;
+import sifranti.Letnik;
+import sifranti.Predmet;
+import sifranti.StudijskiProgram;
+import sifranti.StudijskoLeto;
 
 @Entity
 @Table(name = "predmetnik")
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.predmetiZaProgram", query = "SELECT p.predmet FROM Predmetnik p" +
                 " WHERE p.studijskoLeto = :studijskoLeto AND p.letnik = :letnik AND p.studijskiProgram = :studijskiProgram AND " +
-                "p.delPredmetnika = :delPredmetnika")
+                "p.delPredmetnika = :delPredmetnika"),
+//        @NamedQuery(name = "entitete.predmetnik.Predmetnik.predmetiModulovProstaIzbira", query = "SLECT")
 })
 @IdClass(PredmetnikId.class)
 public class Predmetnik {
