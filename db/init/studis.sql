@@ -333,6 +333,15 @@ CREATE TABLE IF NOT EXISTS `zeton` (
   CONSTRAINT `FK_zeton_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
+DROP TABLE IF EXISTS `napacna_prijava`;
+CREATE TABLE IF NOT EXISTS `napacna_prijava` (
+    `id_napacnega` int(11) NOT NULL AUTO_INCREMENT,
+    `ip` varchar(20) COLLATE utf8_slovenian_ci NOT NULL,
+    `st_napacnih_poskusov` int(1) NOT NULL DEFAULT 0,
+    `cas_poteka_izklopa` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id_napacnega`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
