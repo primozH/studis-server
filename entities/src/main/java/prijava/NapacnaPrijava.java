@@ -57,7 +57,7 @@ public class NapacnaPrijava {
     public void setSteviloNapacnihPoskusov(int steviloNapacnihPoskusov) {
         if (steviloNapacnihPoskusov >= 3) {
             // Ban for 5minutes
-            casPotekaIzklopaMilliseconds = Long.toString(System.currentTimeMillis() + 5 * 60 * 1000);
+            casPotekaIzklopaMilliseconds = Long.toString(System.currentTimeMillis() + 1 * 60 * 1000);
         }
         this.steviloNapacnihPoskusov = steviloNapacnihPoskusov;
     }
