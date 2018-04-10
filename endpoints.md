@@ -45,8 +45,130 @@ localhost:8080/api/v1/
         
     - GET: student/{id}/vpis:
         - vrne tabelo vpisov za danega študenta
+    - POST: student/{id}/vpis:
+        - vpiše študenta
+        - json body:
+        ```json
+        {
+        	"zeton": {},
+        	"strokovniPredmet" : {},
+        	"splosniPredmeti" : [],
+        	"modulskiPredmeti": []
+        }
+        ```
+        **Example 1 (vpis v 2. letnik)**:
+        ```http request
+        POST localhost:8080/api/v1/student/31/vpis
+        
+        {
+        	"zeton": {
+        		"vrstaVpisa": {
+        			"sifraVpisa": 1
+        		},
+        		"student": {
+        			"id": 31
+        		}
+        	},
+        	"strokovniPredmet" : { 
+        		"sifra": 63219	
+        	},
+        	"splosniPredmeti" : [
+        		{
+        			"sifra": 63222
+        		},
+        		{
+        			"sifra": 63241
+        		}
+        	]
+        }
+        ```
+        
+        **Example 2 (vpis v 3. letnik, prosta izbira)**:
+        ```
+        POST localhost:8080/api/v1/student/33/vpis
+        {
+        	"zeton": {
+        		"vrstaVpisa": {
+        			"sifraVpisa": 1
+        		},
+        		"student": {
+        			"id": 33
+        		}
+        	},
+        	"splosniPredmeti" : [
+        		{
+        			"sifra": 63225
+        		}
+        	],
+        	"modulskiPredmeti": [
+        		{
+        			"sifra": 63249
+        		},
+        		{
+        			"sifra": 63252
+        		},	
+        		{
+        			"sifra": 63254
+        		},
+        		{
+        			"sifra": 63255
+        		},
+        		{
+        			"sifra": 63260
+        		},
+        		{
+        			"sifra": 63268
+        		}
+        	]
+        }
+        ```
+        
+        **Example 3 (vpis v 3. letnik):**
+        ```
+        POST localhost:8080/api/v1/student/34/vpis
+        
+        {
+        	"zeton": {
+        		"vrstaVpisa": {
+        			"sifraVpisa": 1
+        		},
+        		"student": {
+        			"id": 34
+        		}
+        	},
+        	"splosniPredmeti" : [
+        		{
+        			"sifra": 63225
+        		}
+        	],
+        	"modulskiPredmeti": [
+        		{
+        			"sifra": 63249
+        		},
+        		{
+        			"sifra": 63250
+        		},	
+        		{
+        			"sifra": 63251
+        		},
+        		{
+        			"sifra": 63252
+        		},
+        		{
+        			"sifra": 63226
+        		},
+        		{
+        			"sifra": 63253
+        		}
+        	]
+        }
+        ```
                         
 - kandidati:
+    - GET: kandidat
+        - vrne vse kandidate
+    - GET: kandidat/{id}
+        - vrne kandidata z idjem {id}
     - POST: kandidat/nalozi
         - pričakuje datoteko ".txt" s kandidati, vrne seznam uspešno uvoženih kandidatov. Header `X-Total-Count` je nastavljen 
         na število uspešno uvoženih

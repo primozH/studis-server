@@ -22,22 +22,24 @@ public class PredmetnikStudentZrno {
         StudijskoLeto studijskoLeto = vpis.getStudijskoLeto();
         StudijskiProgram studijskiProgram = vpis.getStudijskiProgram();
 
-        List<Predmet> mandatoryCourses = em.createNamedQuery("entitete.predmetnik.Predmetnik.predmetiZaProgram", Predmet.class)
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.predmetiZaProgram", Predmet.class)
                 .setParameter("letnik", letnik)
                 .setParameter("studijskoLeto", studijskoLeto)
                 .setParameter("studijskiProgram", studijskiProgram)
                 .setParameter("delPredmetnika", delPredmetnika)
                 .getResultList();
-
-        return mandatoryCourses;
     }
 
-    public void createCurriculum(Vpis vpis, List<Predmet> predmeti) {
-
+    public List<Predmetnik> getCurriculum(Vpis vpis, DelPredmetnika delPredmetnika) {
+        Letnik letnik = vpis.getLetnik();
         StudijskoLeto studijskoLeto = vpis.getStudijskoLeto();
-        Student student = vpis.getStudent();
-        predmeti.forEach(predmet ->
-            new PredmetStudent(student, predmet, studijskoLeto)
-        );
+        StudijskiProgram studijskiProgram = vpis.getStudijskiProgram();
+
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.predmetnikZaProgram", Predmetnik.class)
+                .setParameter("letnik", letnik)
+                .setParameter("studijskoLeto", studijskoLeto)
+                .setParameter("studijskiProgram", studijskiProgram)
+                .setParameter("delPredmetnika", delPredmetnika)
+                .getResultList();
     }
 }

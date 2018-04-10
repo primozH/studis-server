@@ -1,6 +1,6 @@
 package zrna;
 
-import vpis.Kandidat;
+import vloge.Kandidat;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;

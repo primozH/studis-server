@@ -2,7 +2,7 @@ package rest.viri;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import vpis.Kandidat;
+import vloge.Kandidat;
 import zrna.KandidatZrno;
 import zrna.UvozPodatkov;
 

@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import vloge.Student;
-import vpis.Kandidat;
+import vloge.Kandidat;
 
 @ApplicationScoped
 public class GeneratorPodatkov {

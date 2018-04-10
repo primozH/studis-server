@@ -2,7 +2,7 @@ package zrna;
 
 import orodja.GeneratorPodatkov;
 import sifranti.StudijskiProgram;
-import vpis.Kandidat;
+import vloge.Kandidat;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
