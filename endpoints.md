@@ -84,7 +84,7 @@ localhost:8080/api/v1/
         ```
         
         **Example 2 (vpis v 3. letnik, prosta izbira)**:
-        ```
+        ```json
         POST localhost:8080/api/v1/student/33/vpis
         {
         	"zeton": {
@@ -124,7 +124,7 @@ localhost:8080/api/v1/
         ```
         
         **Example 3 (vpis v 3. letnik):**
-        ```
+        ```json
         POST localhost:8080/api/v1/student/34/vpis
         
         {
@@ -190,25 +190,25 @@ localhost:8080/api/v1/
         ```json
         {
             "vrstaVpisa": {
-                "sifraVpisa": 2 // sifrant
+                "sifraVpisa": 2
             },
             "student": {
                 "id": 32 
             },
             "studijskiProgram": {
-                "sifraEVS": 1000470 // sifrant
+                "sifraEVS": 1000470
             },
             "letnik": {
                 "letnik": 1
             },
             "studijskoLeto": {
-            	"id": 2018 // studijsko leto - sifrant v bazi
+            	"id": 2018
             },
             "nacinStudija": {
-                "sifra": 2 // sifrant
+                "sifra": 2
             },
             "oblikaStudija": {
-                "sifra": 2 // sifrant
+                "sifra": 2
             },
             "prostaIzbira": false
         }
@@ -217,3 +217,21 @@ localhost:8080/api/v1/
         - izbriše žeton.
             Primer: 
             `localhost:8080/api/v1/zeton/32?vrsta-vpisa=1`
+            
+- predmetnik:
+    -POST predmetnik
+        - body: zeton
+        ```json
+        {
+                "studijskiProgram": {
+                    "sifraEVS": 1000468,
+                    }
+                },
+                "letnik": {
+                    "letnik": 2
+                },
+                "studijskoLeto": {
+                    "id": 2018,
+                }
+        }
+        ```
