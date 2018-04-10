@@ -87,6 +87,17 @@ CREATE TABLE IF NOT EXISTS `nacin_studija` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
+-- Dumping structure for tabela studis.napacna_prijava
+DROP TABLE IF EXISTS `napacna_prijava`;
+CREATE TABLE IF NOT EXISTS `napacna_prijava` (
+  `id_napacnega` int(11) NOT NULL AUTO_INCREMENT,
+  `cas_poteka_izklopa` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
+  `IP` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
+  `st_napacnih_poskusov` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_napacnega`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
 -- Dumping structure for tabela studis.obcina
 DROP TABLE IF EXISTS `obcina`;
 CREATE TABLE IF NOT EXISTS `obcina` (
@@ -129,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `predmet` (
 -- Dumping structure for tabela studis.predmetnik
 DROP TABLE IF EXISTS `predmetnik`;
 CREATE TABLE IF NOT EXISTS `predmetnik` (
+  `modul` int(11) DEFAULT NULL,
   `del_predmetnika` int(11) NOT NULL,
   `letnik` int(11) NOT NULL,
   `predmet` int(11) NOT NULL,
@@ -266,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   `ustvarjeno` datetime DEFAULT NULL,
   `zadnja_prijava` datetime DEFAULT NULL,
   PRIMARY KEY (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis
@@ -331,15 +343,6 @@ CREATE TABLE IF NOT EXISTS `zeton` (
   CONSTRAINT `FK_zeton_studijski_program` FOREIGN KEY (`studijski_program`) REFERENCES `studijski_program` (`sifra_evs`),
   CONSTRAINT `FK_zeton_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`),
   CONSTRAINT `FK_zeton_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
-
-DROP TABLE IF EXISTS `napacna_prijava`;
-CREATE TABLE IF NOT EXISTS `napacna_prijava` (
-    `id_napacnega` int(11) NOT NULL AUTO_INCREMENT,
-    `ip` varchar(20) COLLATE utf8_slovenian_ci NOT NULL,
-    `st_napacnih_poskusov` int(1) NOT NULL DEFAULT 0,
-    `cas_poteka_izklopa` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`id_napacnega`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
