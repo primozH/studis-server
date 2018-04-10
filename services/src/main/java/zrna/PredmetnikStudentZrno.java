@@ -3,6 +3,7 @@ package zrna;
 import predmetnik.Predmetnik;
 import sifranti.*;
 import student.PredmetStudent;
+import student.Zeton;
 import vloge.Student;
 import vpis.Vpis;
 
@@ -16,6 +17,14 @@ public class PredmetnikStudentZrno {
 
     @PersistenceContext(name = "studis")
     private EntityManager em;
+
+    public List<Predmet> getAllButMandatory(Zeton zeton) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.opcijskiPredmeti", Predmet.class)
+                .setParameter("letnik", zeton.getLetnik())
+                .setParameter("studijskoLeto", zeton.getStudijskoLeto())
+                .setParameter("studijskiProgram", zeton.getStudijskiProgram())
+                .getResultList();
+    }
 
     public List<Predmet> getCourses(Vpis vpis, DelPredmetnika delPredmetnika) {
         Letnik letnik = vpis.getLetnik();
@@ -42,4 +51,5 @@ public class PredmetnikStudentZrno {
                 .setParameter("delPredmetnika", delPredmetnika)
                 .getResultList();
     }
+
 }

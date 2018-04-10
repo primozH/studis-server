@@ -14,7 +14,10 @@ import java.util.List;
                 "p.delPredmetnika = :delPredmetnika"),
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.predmetnikZaProgram", query = "SELECT p FROM Predmetnik p " +
                 " WHERE p.studijskoLeto = :studijskoLeto AND p.letnik = :letnik AND p.studijskiProgram = :studijskiProgram AND " +
-                "p.delPredmetnika = :delPredmetnika")
+                "p.delPredmetnika = :delPredmetnika"),
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.opcijskiPredmeti", query = "SELECT p.predmet FROM Predmetnik p " +
+                "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
+                "p.delPredmetnika.tip NOT LIKE 'obvezni%'")
 })
 @IdClass(PredmetnikId.class)
 public class Predmetnik {
