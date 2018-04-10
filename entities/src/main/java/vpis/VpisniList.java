@@ -1,25 +1,46 @@
 package vpis;
 
-import vloge.Student;
+import sifranti.Predmet;
+import student.Zeton;
+
+import java.util.List;
 
 public class VpisniList {
 
-    private Student student;
-    private Vpis vpis;
+    private Zeton zeton;
+    private Predmet strokovniPredmet;
+    private List<Predmet> splosniPredmeti;
+    private List<Predmet> modulskiPredmeti;
 
-    public Student getStudent() {
-        return student;
+    public Zeton getZeton() {
+        return zeton;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setZeton(Zeton zeton) {
+        this.zeton = zeton;
     }
 
-    public Vpis getVpis() {
-        return vpis;
+    public Predmet getStrokovniPredmet() {
+        return strokovniPredmet;
     }
 
-    public void setVpis(Vpis vpis) {
-        this.vpis = vpis;
+    public void setStrokovniPredmet(Predmet strokovniPredmet) {
+        this.strokovniPredmet = strokovniPredmet;
+    }
+
+    public List<Predmet> getSplosniPredmeti() {
+        return splosniPredmeti;
+    }
+
+    public void setSplosniPredmeti(List<Predmet> splosniPredmeti) {
+        this.splosniPredmeti = splosniPredmeti;
+    }
+
+    public List<Predmet> getModulskiPredmeti() {
+        return modulskiPredmeti;
+    }
+
+    public void setModulskiPredmeti(List<Predmet> modulskiPredmeti) {
+        this.modulskiPredmeti = modulskiPredmeti;
     }
 }

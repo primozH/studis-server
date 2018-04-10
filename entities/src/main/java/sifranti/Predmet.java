@@ -50,4 +50,15 @@ public class Predmet {
     public void setECTS(Integer ECTS) {
         this.ECTS = ECTS;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Predmet) {
+            Predmet p = (Predmet) obj;
+            if (this.sifra.equals(p.getSifra()))
+                return true;
+        }
+
+        return false;
+    }
 }

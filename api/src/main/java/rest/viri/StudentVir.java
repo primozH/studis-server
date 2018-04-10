@@ -1,8 +1,5 @@
 package rest.viri;
 
-import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.kumuluz.ee.rest.utils.QueryStringDefaults;
-import student.Zeton;
 import vloge.Student;
 import vpis.Vpis;
 import vpis.VpisniList;
@@ -64,13 +61,13 @@ public class StudentVir {
 
     @POST
     @Path("{id}/vpis")
-    public Response vpisiStudenta(@PathParam("id") Integer studentId, Zeton zeton) {
-        if (studentId.equals(zeton.getStudent().getId()))
+    public Response vpisiStudenta(@PathParam("id") Integer studentId, VpisniList vpisniList) {
+        if (!studentId.equals(vpisniList.getZeton().getStudent().getId()))
             return Response.status(Response.Status.CONFLICT).build();
 
         Vpis vpis;
         try {
-            vpis = vpisZrno.vpisiStudenta(zeton);
+            vpis = vpisZrno.enrollmentProcedure(vpisniList);
         } catch (Exception e) {
             return Response.status(Response.Status.CONFLICT).build();
         }

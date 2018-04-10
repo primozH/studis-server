@@ -2,11 +2,7 @@ package rest;
 
 import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import rest.viri.KandidatVir;
-import rest.viri.PrijavaVir;
-import rest.viri.StudentVir;
-import rest.viri.ZetonVir;
-import zrna.UvozPodatkov;
+import rest.viri.*;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
