@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `drzava_rojstva` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `kraj_rojstva` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `naslov_stalno` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
-  `privzeti_naslov` int(11) DEFAULT NULL,
+  `privzeti_naslov` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `naslov_zacasno` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `obcina_rojstva` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `tel_stevilka` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,

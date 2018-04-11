@@ -56,6 +56,10 @@ public class UvozPodatkov {
                 int length = line.length();
                 if (length == 0)
                     break;
+                if (length < IME_L + PRIIMEK_L + PROGRAM_L){
+                    logger.info("Short line!");
+                    break;
+                }
 
                 ime = line.substring(0, IME_L).trim();
                 priimek = line.substring(IME_L, IME_L + PRIIMEK_L).trim();

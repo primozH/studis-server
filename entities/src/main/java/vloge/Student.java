@@ -6,16 +6,13 @@ import java.util.List;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.DrzavaAdapter;
 import helpers.adapters.ObcinaAdapter;
 import helpers.adapters.PostaAdapter;
-import javafx.geometry.Pos;
 import naslov.Drzava;
-import naslov.NaslovZaPosiljanjePoste;
 import naslov.Obcina;
 import naslov.Posta;
 import vpis.Vpis;
@@ -81,9 +78,8 @@ public class Student extends Uporabnik {
     @XmlTransient
     private List<Vpis> vpisi = new ArrayList<>();
 
-    @Enumerated(EnumType.ORDINAL)
     @Column(name = "privzeti_naslov")
-    private NaslovZaPosiljanjePoste naslovZaPosiljanjePoste;
+    private String naslovZaPosiljanjePoste;
 
 
     public Student() {
@@ -210,11 +206,11 @@ public class Student extends Uporabnik {
         this.postaZacasno = postaZacasno;
     }
 
-    public NaslovZaPosiljanjePoste getNaslovZaPosiljanjePoste() {
+    public String getNaslovZaPosiljanjePoste() {
         return naslovZaPosiljanjePoste;
     }
 
-    public void setNaslovZaPosiljanjePoste(NaslovZaPosiljanjePoste naslovZaPosiljanjePoste) {
+    public void setNaslovZaPosiljanjePoste(String naslovZaPosiljanjePoste) {
         this.naslovZaPosiljanjePoste = naslovZaPosiljanjePoste;
     }
 }
