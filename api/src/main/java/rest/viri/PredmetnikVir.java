@@ -1,5 +1,7 @@
 package rest.viri;
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
+import predmetnik.Predmetnik;
 import sifranti.Predmet;
 import student.Zeton;
 import zrna.PredmetnikStudentZrno;
@@ -22,7 +24,7 @@ public class PredmetnikVir {
 
     @POST
     public Response getCourses(Zeton zeton) {
-        List<Predmet> predmetList = psz.getAllButMandatory(zeton);
+        List<Predmetnik> predmetList = psz.getAllButMandatory(zeton);
 
         return Response.ok(predmetList).build();
     }
