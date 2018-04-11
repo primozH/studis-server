@@ -55,11 +55,12 @@ public class ZetonVir {
     @PUT
     @Path("{id}")
     public Response modifyToken(@PathParam("id") Integer studentId,
+                                @QueryParam("vrsta-vpisa") Integer vrstaVpisa,
                                 Zeton zeton) {
         if (!studentId.equals(zeton.getStudent().getId()))
             return Response.status(Response.Status.BAD_REQUEST).build();
 
-        Zeton updatedToken = zetonZrno.updateToken(zeton);
+        Zeton updatedToken = zetonZrno.updateToken(zeton, vrstaVpisa);
         return Response.ok(updatedToken).build();
     }
 

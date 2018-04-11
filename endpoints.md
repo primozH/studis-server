@@ -188,8 +188,9 @@ localhost:8080/api/v1/
             `localhost:8080/api/v1/zeton/31?vrsta-vpisa=1`
     - POST: zeton/{student}
         - ustvari žeton za izbranega študenta. Vrne ustvarjeni žeton.
-    - PUT: http://localhost:8080/api/v1/zeton/32
-        - posodobi žeton
+    - PUT: http://localhost:8080/api/v1/zeton/{studentid}?vrsta-vpisa={vrsta_vpisaid}
+        - posodobi žeton za študenta studentid in vrsto vpisa vrsta_vpisaid na vrednosti,
+        podane v json. Študenta ni možno spreminjati.
         - body: 
         ```json
         {

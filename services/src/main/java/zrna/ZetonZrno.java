@@ -118,27 +118,45 @@ public class ZetonZrno {
     }
 
     @Transactional
-    public Zeton updateToken(Zeton zeton) {
-        ZetonId zetonId = new ZetonId(zeton.getStudent().getId(), zeton.getVrstaVpisa().getSifraVpisa());
-        Zeton newZeton = em.find(Zeton.class, zetonId);
+    public Zeton updateToken(Zeton zeton, Integer vrstaVpisa) {
+        ZetonId zetonId = new ZetonId(zeton.getStudent().getId(), vrstaVpisa);
+        Zeton oldToken = em.find(Zeton.class, zetonId);
 
         if (zeton.getVrstaVpisa() != null) {
-            newZeton.setVrstaVpisa(zeton.getVrstaVpisa());
+            Zeton newToken = new Zeton();
+            newToken.setVrstaVpisa(zeton.getVrstaVpisa());
+            newToken.setStudent(zeton.getStudent());
+            newToken.setStudijskiProgram(zeton.getStudijskiProgram());
+            newToken.setLetnik(zeton.getLetnik());
+            newToken.setStudijskoLeto(zeton.getStudijskoLeto());
+            newToken.setNacinStudija(zeton.getNacinStudija());
+            newToken.setOblikaStudija(zeton.getOblikaStudija());
+            newToken.setProstaIzbira(zeton.isProstaIzbira());
+
+            em.remove(oldToken);
+            em.persist(newToken);
+
+            em.flush();
+            em.clear();
+            ZetonId newTokenId = new ZetonId(newToken.getStudent().getId(), newToken.getVrstaVpisa().getSifraVpisa());
+            newToken = em.find(Zeton.class, newTokenId);
+
+            return newToken;
         }
         if (zeton.getStudijskoLeto() != null) {
-            newZeton.setStudijskoLeto(zeton.getStudijskoLeto());
+            oldToken.setStudijskoLeto(zeton.getStudijskoLeto());
         }
         if (zeton.getStudijskiProgram() != null) {
-            newZeton.setStudijskiProgram(zeton.getStudijskiProgram());
+            oldToken.setStudijskiProgram(zeton.getStudijskiProgram());
         }
         if (zeton.getOblikaStudija() != null) {
-            newZeton.setOblikaStudija(zeton.getOblikaStudija());
+            oldToken.setOblikaStudija(zeton.getOblikaStudija());
         }
         if (zeton.getLetnik() != null) {
-            newZeton.setLetnik(zeton.getLetnik());
+            oldToken.setLetnik(zeton.getLetnik());
         }
 
-        zeton = em.merge(newZeton);
+        zeton = em.merge(oldToken);
         return zeton;
     }
 
