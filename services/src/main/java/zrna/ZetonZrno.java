@@ -1,16 +1,20 @@
 package zrna;
 
+import jdk.nashorn.internal.parser.Token;
 import sifranti.*;
 import student.Zeton;
 import student.ZetonId;
+import vloge.Kandidat;
 import vloge.Student;
 import vpis.Vpis;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,19 +24,60 @@ public class ZetonZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
+    @Inject
+    private KandidatZrno kandidatZrno;
+
+    @Inject
+    private UserTransaction ux;
+
     public List<Zeton> getTokens(Integer student) {
         if (student != null) {
-            return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudenta")
+            return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudenta", Zeton.class)
                     .setParameter("student", student)
                     .getResultList();
         }
-        return em.createNamedQuery("entitete.vpis.Zeton.vrniVse")
+        return em.createNamedQuery("entitete.vpis.Zeton.vrniVse", Zeton.class)
                 .getResultList();
     }
 
     public Zeton getToken(Integer student, Integer vrstaVpisa) {
         ZetonId zetonId = new ZetonId(student, vrstaVpisa);
         return em.find(Zeton.class, zetonId);
+    }
+
+    public Zeton createTokenForCandidate(Integer id) throws Exception {
+        Kandidat kandidat = em.find(Kandidat.class, id);
+        if (kandidat == null) {
+            throw new Exception("Kandidat ne obstaja");
+        }
+        ux.begin();
+
+        kandidatZrno.createStudentFromCandidate(kandidat);
+
+        em.flush();
+        em.clear();
+        Student student = em.find(Student.class, id);
+        Zeton zeton = new Zeton();
+        Letnik letnik = em.find(Letnik.class, 1);
+        NacinStudija nacinStudija = em.find(NacinStudija.class, 1);
+        OblikaStudija oblikaStudija = em.find(OblikaStudija.class, 1);
+        StudijskoLeto studijskoLeto = (StudijskoLeto) em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniStudijkoLeto")
+                .setParameter("studijskoLeto", Integer.toString(LocalDate.now().getYear()) + "%")
+                .getSingleResult();
+        StudijskiProgram studijskiProgram = kandidat.getStudijskiProgram();
+        VrstaVpisa vrstaVpisa = em.find(VrstaVpisa.class, 1);
+
+        zeton.setLetnik(letnik);
+        zeton.setNacinStudija(nacinStudija);
+        zeton.setOblikaStudija(oblikaStudija);
+        zeton.setStudent(student);
+        zeton.setStudijskiProgram(studijskiProgram);
+        zeton.setVrstaVpisa(vrstaVpisa);
+        zeton.setStudijskoLeto(studijskoLeto);
+
+        em.persist(zeton);
+        ux.commit();
+        return zeton;
     }
 
     @Transactional
@@ -65,6 +110,7 @@ public class ZetonZrno {
         zeton.setStudent(zadnjiVpis.getStudent());
         zeton.setStudijskiProgram(studijskiProgram);
         zeton.setVrstaVpisa(zadnjiVpis.getVrstaVpisa());
+        zeton.setStudijskoLeto(studijskoLeto);
 
         em.persist(zeton);
 

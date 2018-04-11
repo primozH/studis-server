@@ -27,7 +27,9 @@ import vpis.Vpis;
         @NamedQuery(name = "entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT s FROM Student s WHERE CONCAT(s.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY s.vpisnaStevilka DESC"),
         @NamedQuery(name = "entitete.vloge.Student.isciStudentaPoImenuPriimkuVpisni",
                 query = "SELECT s FROM Student s WHERE s.ime LIKE :parameter OR " +
-                        "s.priimek LIKE :parameter OR CONCAT(s.vpisnaStevilka, '') LIKE :parameter")
+                        "s.priimek LIKE :parameter OR CONCAT(s.vpisnaStevilka, '') LIKE :parameter"),
+        @NamedQuery(name = "entitete.vloge.Student.ustvariStudentaIzKandidata", query = "UPDATE Uporabnik u SET u.tip = 'Student' WHERE " +
+                "u.id = :id"),
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Student extends Uporabnik {
