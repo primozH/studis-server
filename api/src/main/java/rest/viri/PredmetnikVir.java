@@ -1,8 +1,6 @@
 package rest.viri;
 
-import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import predmetnik.Predmetnik;
-import sifranti.Predmet;
 import student.Zeton;
 import zrna.PredmetnikStudentZrno;
 

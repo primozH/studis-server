@@ -22,7 +22,7 @@ public class KandidatVir {
 
     private static final Logger logger = Logger.getLogger(KandidatVir.class.getName());
 
-    private static final String FILE_LOCATION = "./kandidati/";
+    private static final String FILE_LOCATION = "./";
     private static final String ERROR_FILE_NAME = "napaka_uvoz.txt";
 
     @Inject
@@ -60,7 +60,7 @@ public class KandidatVir {
             @FormDataParam("file") InputStream content,
             @FormDataParam("file") FormDataContentDisposition fdcd) {
 
-        String fileName = FILE_LOCATION + fdcd.getFileName();
+        String fileName = FILE_LOCATION + "kandidati.txt";
         InputStreamReader reader = new InputStreamReader(content);
         int count = 0;
         char [] buffer = new char[1024];

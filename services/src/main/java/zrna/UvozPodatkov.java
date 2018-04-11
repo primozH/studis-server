@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class UvozPodatkov {
 
-    private String ERROR_IMPORT = "./kandidati/napaka_uvoz.txt";
+    private String ERROR_IMPORT = "./napaka_uvoz.txt";
     private final static int IME_L = 30;
     private final static int PRIIMEK_L = 30;
     private final static int PROGRAM_L = 7;
