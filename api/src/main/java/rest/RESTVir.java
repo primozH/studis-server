@@ -1,6 +1,6 @@
 package rest;
 
-import com.kumuluz.ee.cors.annotations.CrossOrigin;
+//import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import rest.viri.*;
 
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationPath("/api/v1")
-@CrossOrigin(supportedMethods = "GET, POST, UPDATE, DELETE, HEAD")
+//@CrossOrigin(supportedMethods = "GET, POST, UPDATE, DELETE, HEAD")
 public class RESTVir extends Application {
 
     @Override

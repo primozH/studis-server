@@ -97,11 +97,11 @@ public class Uporabnik {
 
     public void setEmso(String emso) throws Exception {
         if (datumRojstva == null) {
-            throw new Exception("Birth date not set");
+            throw new Exception("Rojstni datum mora biti nastavljen!");
         }
         emso = emso.trim();
         if (emso.length() < 13) {
-            throw new NumberFormatException("Invalid EMSO");
+            throw new NumberFormatException("Neveljaven EMSO!");
         }
 
         Integer day = Integer.parseInt(emso.substring(0, 2));
@@ -112,19 +112,19 @@ public class Uporabnik {
         Integer control = Integer.parseInt(emso.substring(12));
 
         if (day != datumRojstva.getDayOfMonth()) {
-            throw new Exception("Invalid day in EMSO");
+            throw new Exception("Napaka v EMSO (dan)");
         }
         if (month != datumRojstva.getMonthValue()) {
-            throw new Exception("Invalid month in EMSO");
+            throw new Exception("Napaka v EMSO (mesec)");
         }
         if (year != datumRojstva.getYear() % 1000) {
-            throw new Exception("Invalid year in EMSO");
+            throw new Exception("Napaka v EMSO (leto)");
         }
         if (register < 10) {
-            throw new Exception("Invalid register in EMSO");
+            throw new Exception("Napaka v EMSO (register)");
         }
         if (spol == Spol.ZENSKI && seq < 500 || spol == Spol.MOSKI && seq > 500) {
-            throw new Exception("Invalid sequence number in EMSO");
+            throw new Exception("Napaka v EMSO (zaporedna številka)");
         }
 
         Integer verification =
@@ -146,14 +146,14 @@ public class Uporabnik {
         Integer controlNum = 11 - verification;
 
         if (!controlNum.equals(control)) {
-            throw new Exception("Invalid control number in EMSO");
+            throw new Exception("Napaka v EMSO (kontrolna številka)");
         }
 
         this.emso = emso;
     }
 
     public void setDavcnaStevilka(String davcnaStevilka) {
-        // TODO Verify???
+        this.davcnaStevilka = davcnaStevilka;
     }
 
     public void setZadnjaPrijava() {

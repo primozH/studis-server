@@ -24,11 +24,11 @@
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-jax-rs-jersey</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.cors</groupId>
-            <artifactId>kumuluzee-cors</artifactId>
-            <version>${kumuluzee.cors.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.kumuluz.ee.cors</groupId>-->
+            <!--<artifactId>kumuluzee-cors</artifactId>-->
+            <!--<version>${kumuluzee.cors.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
@@ -75,6 +75,28 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/resources/webapp</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../../studis-web/app</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

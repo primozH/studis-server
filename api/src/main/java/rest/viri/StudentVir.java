@@ -70,7 +70,7 @@ public class StudentVir {
         try {
             vpis = vpisZrno.enrollmentProcedure(vpisniList);
         } catch (Exception e) {
-            return Response.status(Response.Status.CONFLICT).build();
+            return Response.status(Response.Status.CONFLICT).entity(new CustomErrorMessage(e.getMessage())).build();
         }
         return Response.ok(vpis).build();
     }
