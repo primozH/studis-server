@@ -1,27 +1,17 @@
 package zrna;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 
-import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.kumuluz.ee.rest.utils.JPAUtils;
-
 import orodja.GeneratorPodatkov;
-import vloge.Referent;
-import vloge.Skrbnik;
 import vloge.Student;
-import vloge.Ucitelj;
 
 @ApplicationScoped
 public class StudentZrno {
@@ -48,10 +38,10 @@ public class StudentZrno {
      */
     public List<Student> getStudentsByNSN(String param) {
         if (param == null || param.length() == 0)
-            return em.createNamedQuery("entitete.vloge.Student.vrniVse")
+            return em.createNamedQuery("entitete.vloge.Student.vrniVse", Student.class)
                     .getResultList();
 
-        return em.createNamedQuery("entitete.vloge.Student.isciStudentaPoImenuPriimkuVpisni")
+        return em.createNamedQuery("entitete.vloge.Student.isciStudentaPoImenuPriimkuVpisni", Student.class)
                 .setParameter("parameter", param + "%")
                 .getResultList();
     }

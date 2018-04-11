@@ -1,5 +1,6 @@
 package rest.viri;
 
+import common.CustomErrorMessage;
 import vloge.Student;
 import vpis.Vpis;
 import vpis.VpisniList;
@@ -54,7 +55,7 @@ public class StudentVir {
         try {
             student = studentZrno.updateStudent(student);
         } catch (Exception e){
-            return Response.status(Response.Status.CONFLICT).build();
+            return Response.status(Response.Status.CONFLICT).entity(new CustomErrorMessage(e.getMessage())).build();
         }
         return Response.ok(student).build();
     }

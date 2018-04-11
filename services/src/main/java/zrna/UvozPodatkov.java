@@ -54,6 +54,7 @@ public class UvozPodatkov {
             while (br.ready()) {
                 line = br.readLine();
                 int length = line.length();
+                logger.info(line + " " + Integer.toString(length));
                 if (length == 0)
                     break;
                 if (length < IME_L + PRIIMEK_L + PROGRAM_L){
