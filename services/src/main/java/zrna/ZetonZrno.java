@@ -84,7 +84,7 @@ public class ZetonZrno {
     public Zeton createTokenForStudent(Integer studentId) {
         Vpis zadnjiVpis = (Vpis) em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta")
                 .setParameter("studentId", studentId)
-                .getSingleResult();
+                .getResultList().get(0);
 
         if (zadnjiVpis == null) {
             throw new EntityNotFoundException("Vpis ne obstaja!");
