@@ -89,7 +89,7 @@ public class KandidatVir {
 
     }
 
-    @POST
+    @GET
     @Path("{id}/ustvariStudenta")
     public Response candidateEnrollment(@PathParam("id") Integer id) {
         try {

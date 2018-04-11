@@ -174,6 +174,10 @@ localhost:8080/api/v1/
         na število uspešno uvoženih
     - GET: kandidat/neuspesni
         - vrne .txt datoteko z neuspešnimo uvoženimi kandidati
+    - GET: kandidat/{id}/ustvariStudenta
+        - se kliče, ko se kandidat prijavi v sistem; spremeni tip iz kandidata v študenta,
+        ustvari potrebni žeton za vpis in ga vrne (naj se kliče takoj ob prijavi kandidata, ki se ga 
+        potem preusmeri na stran za vpis študenta (vpisni list))
 
 - žeton:
     - GET: zeton
