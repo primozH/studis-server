@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 
+import naslov.Drzava;
 import orodja.GeneratorPodatkov;
 import vloge.Student;
 
@@ -21,11 +22,11 @@ public class StudentZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
-    @Inject
-    UserTransaction utx;
+    @Inject private UserTransaction utx;
 
-    @Inject
-    GeneratorPodatkov generator;
+    @Inject private GeneratorPodatkov generator;
+
+    private final static Integer NUMERICNA_OZNAKA_SLOVENIJA = 705;
 
     public Student getStudent(Integer id) {
         return em.find(Student.class, id);
@@ -50,28 +51,47 @@ public class StudentZrno {
     public Student updateStudent(Student newStudent) throws Exception{
         Student student = em.find(Student.class, newStudent.getId());
 
-        if (newStudent.getSpol() != null) {
+        if (student.getSpol() == null && newStudent.getSpol() == null) {
+            throw new Exception("Spol je obvezno polje");
+        } else if (newStudent.getSpol() != null) {
             student.setSpol(newStudent.getSpol());
         }
-        if (newStudent.getDatumRojstva() != null) {
+
+        if (student.getDatumRojstva() == null && newStudent.getDatumRojstva() == null) {
+            throw new Exception("Datum rojstva je obvezno polje");
+        } else if (newStudent.getDatumRojstva() != null) {
             student.setDatumRojstva(newStudent.getDatumRojstva());
         }
-        if (newStudent.getEmso() != null) {
+
+        if (student.getEmso() == null && newStudent.getEmso() == null) {
+            throw new Exception("EMSO je obvezno polje");
+        } else if (newStudent.getEmso() != null) {
             student.setEmso(newStudent.getEmso());
         }
-        if (newStudent.getDavcnaStevilka() != null) {
+
+        if (student.getDavcnaStevilka() == null && newStudent.getDavcnaStevilka() == null) {
+            throw new Exception("Davcna stevilka je obvezno polje");
+        } else if (student.getDavcnaStevilka() != null) {
+            if (student.getDavcnaStevilka().length() != 8)
+                throw new Exception("Davčna številka mora vsebovati 8 števk");
             student.setDavcnaStevilka(newStudent.getDavcnaStevilka());
         }
 
         /*
         Kraj, obcina, drzava rojstva
          */
-        if (newStudent.getDrzavaRojstva() != null) {
+        if (student.getDrzavaRojstva() == null && newStudent.getDrzavaRojstva() == null) {
+            throw new Exception("Drzava rojstva je obvezno polje");
+        } else if (newStudent.getDrzavaRojstva() != null) {
             student.setDrzavaRojstva(newStudent.getDrzavaRojstva());
         }
-        if (newStudent.getKrajRojstva() != null) {
+
+        if (student.getKrajRojstva() == null && newStudent.getKrajRojstva() == null) {
+            throw new Exception("Kraj rojstva je obvezno polje");
+        } else if (newStudent.getKrajRojstva() != null) {
             student.setKrajRojstva(newStudent.getKrajRojstva());
         }
+
         if (newStudent.getObcinaRojstva() != null) {
             student.setObcinaRojstva(newStudent.getObcinaRojstva());
         }
@@ -79,17 +99,32 @@ public class StudentZrno {
         /*
         Stalno prebivalisce
          */
-        if (newStudent.getDrzavaStalno() != null) {
+        if (student.getDrzavaStalno() == null && newStudent.getDrzavaStalno() == null) {
+            throw new Exception("Drzava stalnega prebivališča je obvezno polje");
+        } else if (newStudent.getDrzavaStalno() != null) {
             student.setDrzavaStalno(newStudent.getDrzavaStalno());
         }
-        if (newStudent.getObcinaStalno() != null) {
+
+        Integer numDrzava = student.getDrzavaStalno().getNumericnaOznaka();
+
+        if (numDrzava.equals(NUMERICNA_OZNAKA_SLOVENIJA) && student.getObcinaStalno() == null &&
+                newStudent.getObcinaStalno() == null) {
+            throw new Exception("Za Slovenijo je občina stalnega prebivališča obvezno polje");
+        } else if (numDrzava.equals(NUMERICNA_OZNAKA_SLOVENIJA) && newStudent.getObcinaStalno() != null) {
             student.setObcinaStalno(newStudent.getObcinaStalno());
         }
-        if (newStudent.getNaslovStalno() != null) {
-            student.setNaslovStalno(newStudent.getNaslovStalno());
-        }
-        if (newStudent.getPostaStalno() != null) {
+
+        if (numDrzava.equals(NUMERICNA_OZNAKA_SLOVENIJA) && student.getPostaStalno() == null &&
+                newStudent.getPostaStalno() == null) {
+            throw new Exception("Za Slovenijo je pošta stalnega prebivališča obvezno polje");
+        } else if (numDrzava.equals(NUMERICNA_OZNAKA_SLOVENIJA) && newStudent.getPostaStalno() != null) {
             student.setPostaStalno(newStudent.getPostaStalno());
+        }
+
+        if (student.getNaslovStalno() == null && newStudent.getNaslovStalno() == null) {
+            throw new Exception("Naslov stalnega bivališča je obvezno polje");
+        } else if (newStudent.getNaslovStalno() != null) {
+            student.setNaslovStalno(newStudent.getNaslovStalno());
         }
 
         /*
@@ -98,12 +133,16 @@ public class StudentZrno {
         if (newStudent.getDrzavaZacasno() != null) {
             student.setDrzavaZacasno(newStudent.getDrzavaZacasno());
         }
-        if (newStudent.getObcinaZacasno() != null) {
+
+        numDrzava = student.getDrzavaZacasno() == null ? 0 : student.getDrzavaZacasno().getNumericnaOznaka();
+        if (newStudent.getObcinaZacasno() != null && numDrzava.equals(NUMERICNA_OZNAKA_SLOVENIJA)) {
             student.setObcinaZacasno(newStudent.getObcinaZacasno());
         }
-        if (newStudent.getPostaZacasno() != null) {
+
+        if (newStudent.getPostaZacasno() != null && numDrzava.equals(NUMERICNA_OZNAKA_SLOVENIJA)) {
             student.setPostaZacasno(newStudent.getPostaZacasno());
         }
+
         if (newStudent.getNaslovZacasno() != null) {
             student.setNaslovZacasno(newStudent.getNaslovZacasno());
         }
@@ -114,18 +153,18 @@ public class StudentZrno {
         if (newStudent.getTelefonskaStevilka() != null) {
             student.setTelefonskaStevilka(newStudent.getTelefonskaStevilka());
         }
-        if (newStudent.getDavcnaStevilka() != null) {
-            student.setDavcnaStevilka(newStudent.getDavcnaStevilka());
-        }
         if (newStudent.getIme() != null) {
             student.setIme(newStudent.getIme());
         }
         if (newStudent.getPriimek() != null) {
             student.setPriimek(newStudent.getPriimek());
         }
-        if (newStudent.getNaslovZaPosiljanjePoste() != null) {
+        if (student.getNaslovZaPosiljanjePoste() == null && newStudent.getNaslovZaPosiljanjePoste() == null) {
+            throw new Exception("Naslov za posiljanje poste je obvezen podatek");
+        } else if (newStudent.getNaslovZaPosiljanjePoste() != null) {
             student.setNaslovZaPosiljanjePoste(newStudent.getNaslovZaPosiljanjePoste());
         }
+
         if (newStudent.getEmail() != null) {
             student.setEmail(newStudent.getEmail());
         }
