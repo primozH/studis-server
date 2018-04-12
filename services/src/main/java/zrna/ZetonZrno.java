@@ -122,6 +122,9 @@ public class ZetonZrno {
         ZetonId zetonId = new ZetonId(zeton.getStudent().getId(), vrstaVpisa);
         Zeton oldToken = em.find(Zeton.class, zetonId);
 
+        if (oldToken.isIzkoriscen())
+            return oldToken;
+
         if (zeton.getVrstaVpisa() != null && !zeton.getVrstaVpisa().getSifraVpisa().equals(vrstaVpisa)) {
             Zeton newToken = new Zeton();
             newToken.setVrstaVpisa(zeton.getVrstaVpisa());
@@ -164,6 +167,8 @@ public class ZetonZrno {
     public void deleteToken(Integer student, Integer vrstaVpisa) {
         ZetonId zetonId = new ZetonId(student, vrstaVpisa);
         Zeton zeton = em.find(Zeton.class, zetonId);
-        em.remove(zeton);
+        if (!zeton.isIzkoriscen()) {
+            em.remove(zeton);
+        }
     }
 }
