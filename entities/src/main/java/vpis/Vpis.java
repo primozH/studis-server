@@ -48,6 +48,8 @@ public class Vpis {
     @JoinColumn(name = "letnik")
     private Letnik letnik;
 
+    @Column(name = "potrjen")
+    private boolean potrjen;
 
     public Vpis() { }
 
@@ -115,5 +117,13 @@ public class Vpis {
 
     public void setLetnik(Letnik letnik) {
         this.letnik = letnik;
+    }
+
+    public boolean isPotrjen() {
+        return potrjen;
+    }
+
+    public void setPotrjen(boolean potrjen) {
+        this.potrjen = potrjen;
     }
 }

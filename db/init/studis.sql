@@ -291,6 +291,7 @@ CREATE TABLE IF NOT EXISTS `vpis` (
   `studijski_program` int(11) DEFAULT NULL,
   `studijsko_leto` int(11) NOT NULL,
   `vrsta_vpisa` int(11) NOT NULL,
+  `potrjen` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`student`,`studijsko_leto`),
   KEY `FK_vpis_oblika_studija` (`oblika_studija`),
   KEY `FK_vpis_vrsta_vpisa` (`vrsta_vpisa`),
