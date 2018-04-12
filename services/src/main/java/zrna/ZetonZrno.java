@@ -1,12 +1,7 @@
 package zrna;
 
-import jdk.nashorn.internal.parser.Token;
-import sifranti.*;
-import student.Zeton;
-import student.ZetonId;
-import vloge.Kandidat;
-import vloge.Student;
-import vpis.Vpis;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,8 +10,18 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
-import java.time.LocalDate;
-import java.util.List;
+
+import sifranti.Letnik;
+import sifranti.NacinStudija;
+import sifranti.OblikaStudija;
+import sifranti.StudijskiProgram;
+import sifranti.StudijskoLeto;
+import sifranti.VrstaVpisa;
+import student.Zeton;
+import student.ZetonId;
+import vloge.Kandidat;
+import vloge.Student;
+import vpis.Vpis;
 
 @ApplicationScoped
 public class ZetonZrno {
@@ -158,6 +163,7 @@ public class ZetonZrno {
         if (zeton.getLetnik() != null) {
             oldToken.setLetnik(zeton.getLetnik());
         }
+        oldToken.setProstaIzbira(zeton.isProstaIzbira());
 
         zeton = em.merge(oldToken);
         return zeton;

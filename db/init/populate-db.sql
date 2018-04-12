@@ -1450,3 +1450,4 @@ VALUES
   (true, 33, 1, 3, 1, 1, 1000468, 2018),
   (false, 34, 1, 3, 1, 1, 1000468, 2018),
   (false, 35, 1, 1, 1, 1, 1000470, 2018);
+UPDATE zeton SET izkoriscen=1 WHERE student=34;
