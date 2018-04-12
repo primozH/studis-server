@@ -122,7 +122,7 @@ public class ZetonZrno {
         ZetonId zetonId = new ZetonId(zeton.getStudent().getId(), vrstaVpisa);
         Zeton oldToken = em.find(Zeton.class, zetonId);
 
-        if (zeton.getVrstaVpisa() != null) {
+        if (zeton.getVrstaVpisa() != null && zeton.getVrstaVpisa().getSifraVpisa().equals(vrstaVpisa)) {
             Zeton newToken = new Zeton();
             newToken.setVrstaVpisa(zeton.getVrstaVpisa());
             newToken.setStudent(zeton.getStudent());
