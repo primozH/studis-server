@@ -17,30 +17,29 @@ localhost:8080/api/v1/
         - posodobi podatke o studentu. Obvezen je ujemanje idja v JSON in v poti. Podatki, ki jih lahko spreminjamo:
         ```json 
         {
-            "id": 31, // se ne spreminja
+            "id": 31,
+            "email": "ph1234@student.fri.si",
             "ime": "Primož",
             "priimek": "Hrovat",
-            "emso": "2301996500052", // veljaven emšo, skladen z datumom rojstva in spolom
-            "davcnaStevilka": "12345678", //
+            "emso": "2301996500052",
+            "davcnaStevilka": "12345678", 
             "datumRojstva": "1996-01-23",
             "spol": "MOSKI",
             "telefonskaStevilka": "070123123",
-            "drzavaRojstva": "Slovenija", // prost vnos
-            "krajRojstva": "Novo mesto", // prost vnos
-            "obcinaRojstva": "Novo mesto", // prost vnos
-            "drzavaStalno": 705, // numericna oznaka drzave
-            "postaStalno": 8000, // postna stevilka
-            "obcinaStalno": 85, // sifra obcine
-            "naslovStalno": "Krajčeva ulica 15", // prost vnos
-            "drzavaZacasno": 705, 
+            "drzavaRojstva": "Slovenija",
+            "krajRojstva": "Novo mesto",
+            "obcinaRojstva": "Novo mesto",
+            "drzavaStalno": 705,
+            "postaStalno": 8000,
+            "obcinaStalno": 85,
+            "naslovStalno": "Krajčeva ulica 15",
+            "drzavaZacasno": 705,
             "postaZacasno": 1000,
             "obcinaZacasno": 61,
             "naslovZacasno": "Gosposvetska 12",
-            "naslovZaPosiljanjePoste": "ZACASNI"
+            "naslovZaPosiljanjePoste": "Krajčeva ulica 15"
         } 
         ```
-        
-        naslovZaPosiljanjePoste: [STALNI|ZACASNI]
         spol: [MOSKI|ZENSKI]
         
     - GET: student/{id}/vpis:

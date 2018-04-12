@@ -126,6 +126,9 @@ public class StudentZrno {
         if (newStudent.getNaslovZaPosiljanjePoste() != null) {
             student.setNaslovZaPosiljanjePoste(newStudent.getNaslovZaPosiljanjePoste());
         }
+        if (newStudent.getEmail() != null) {
+            student.setEmail(newStudent.getEmail());
+        }
 
         em.merge(student);
         return student;
