@@ -1,0 +1,51 @@
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand">STUDIS</a>
+      </div>
+      
+    </div>
+  </nav>
+
+
+
+<div class="panel panel-primary" style="width:50vw; margin:0 auto;">
+	<div class="row">
+		<div class="col-sm-6">
+			<h3>VPIS V STUDIS</h3>
+		</div>
+		<div class="col-sm-6">
+			<img src="http://lkrv.fri.uni-lj.si/fri_logo.jpg" alt="fri-uni-logo" width="150" height="70">	
+		</div>
+	</div>
+
+	<br><br>
+	<form>
+		<div class="form-group">
+			<input ng-model="uporabnisko_ime" placeholder="Uporabniško ime" type="uporabnisko_ime" class="form-control">
+		</div>
+		<div class="form-group">
+			<input ng-model="geslo" placeholder="Geslo" type="password" class="form-control">
+		</div>
+		<button type="submit" class="btn btn-success btn-block" ng-click="login_funkcija()">LOGIN</button><br>
+	</form>
+
+
+	<div ng-show="pokazi_napako_login" class="alert alert-danger">
+		<p ng-bind="login_status" style="display:inline-block"></p>
+        <div id="counter" style="display:none"></div>
+        <div id="seconds" style="display:none">sekund</div>
+	</div>
+
+	<button class="btn btn-danger btn-block" ng-click="pozabljeno_geslo()">Pozabljeno geslo?</button><br>
+
+	<div ng-show="klik_pozabljeno">
+		<input ng-model="pozabljeno_email" type="email" class="form-control" placeholder="vnesi svoj email">
+		<button class="btn btn-dark btn-block" ng-click="poslji_geslo()">Pošlji novo geslo</button>
+		<p ng-bind="status_pozabljeno_geslo"></p>
+	</div>
+
+
+	
+</div>
+

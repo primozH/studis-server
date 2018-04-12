@@ -1,0 +1,105 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" >STUDIS</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/#/student">Domov</a></li>
+            <li><a ng-click="logout()">Log out</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+<h2 align="center">VPISNI LIST</h2>
+<div class="container">
+    <form class="form-horizontal" action="">
+        <fieldset>
+            <br><br><h4 align="left">PREDMETNIK:</h4><hr>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Študijsko leto</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="2017/2018" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Letnik</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-value="vl_letnik" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Študijski program</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-value="vl_program_naziv" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Vrsta vpisa</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-value="vl_vrsta_vpisa" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Način študija</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-value="vl_nacin_studija" readonly>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Strokovni predmeti</label>
+                <div class="col-sm-10">
+                    <select ng-options="strokovniPredmet as strokovniPredmet.naziv for strokovniPredmet in strokovniPredmetni" class="form-control" ng-model="vl_obcina_stalno"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Izbirni predmeti</label>
+                <div class="col-sm-10">
+                    <select ng-options="izbirniPredmet as izbirniPredmet.naziv for izbirniPredmet in izbirniPredmetni" class="form-control" ng-model="vl_obcina_stalno"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Modulski predmeti</label>
+                <div class="col-sm-10">
+                    <select ng-options="modulskiPredmet as modulskiPredmet.naziv for modulskiPredmet in modulskiPredmetni" class="form-control" ng-model="vl_obcina_stalno"></select>
+                </div>
+            </div>
+
+
+            <br><br><h4 align="left">Dodeljeni predmeti:</h4><hr>
+            <table class="table table-hover col-sm-10">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Ime predmeta</th>
+                    <th scope="col">Število KT</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="predmet in predmeti">
+                    <td>{{predmet.ime_predmeta}}</td>
+                    <td>{{predmet.stevilo_kt}}</td>
+                    <td><button class="btn btn-primary btn-block" data-ng-click=odstrani_s_seznama($index)">Odstrani</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>{{skupno_stevilo_kt}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary" onclick="window.history.go(-1);">Nazaj</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" >Oddaj prijavo</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+

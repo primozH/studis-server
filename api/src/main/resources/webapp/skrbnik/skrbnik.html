@@ -1,0 +1,73 @@
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand">STUDIS</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/#/skrbnik">Domov</a></li>
+        
+        <li><a ng-click="logout()">Log out</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+<div>
+  <div class="row">
+    <div class="col-md-2"></div>
+
+    <div align="center" class="col-md-8">
+      <h3 align="center">Pozdravljen skrbnik</h3><hr>
+        <form>
+          <div class="form-group">
+          <h3 align="center">Uvoz podatkov o študentih</h3>
+
+
+          <label class="btn btn-info  btn-block btn-file">Izberi datoteko
+          <input type="file" on-read-file="showContent($fileContent)" file-model="myFile" style="display: none;"/>
+          </label>    
+          </div>
+        </form>
+
+
+        <textarea ng-bind="prikaz_datoteke" rows="8" class="form-control" readonly></textarea>
+        <button ng-show="dovoliUvoz" class="btn btn-info  btn-block" ng-click="uploadFile()">uvozi kandidate</button>
+        <br>
+        <p align="center">{{error_uvoz}}</p>
+        <br><br>
+
+        <div ng-show="uvozeni_zapisi_naslov">
+          <h3 align="center">Podatki o uvoženih zapisih</h3>
+          <table id="mytable" class="table table-striped">
+          <tbody>
+            <tr ng-repeat="zapis in aZapisi">
+              <th>
+                <div>
+                  {{zapis.ime}} {{zapis.priimek}} (id: {{zapis.id}})<br>
+                  uporabniško ime: {{zapis.uporabniskoIme}}<br>
+                  vpisna številka: {{zapis.vpisnaStevilka}}<br>
+                  študijski program: {{zapis.studijskiProgram.naziv}}<br>
+                  geslo: {{zapis.gesloPlain}}<br>
+                </div>
+              </th>
+            </tr>
+          </tbody>
+          </table>
+          <uib-pagination total-items="steviloUvozenih" ng-model="trenutnaStran" items-per-page="zapisovNaStran"></uib-pagination>
+        </div>
+
+
+      <div ng-show="uvozeni_zapisi_naslov">
+        <h3 align="center">Podatki o neuspešno uvoženih zapisih</h3>
+        <textarea ng-bind="neuspesni_fajl" rows="6" class="form-control" readonly></textarea>
+      </div>
+
+
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+<hr><br>
+
+
