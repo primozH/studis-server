@@ -223,19 +223,18 @@ localhost:8080/api/v1/
             `localhost:8080/api/v1/zeton/32?vrsta-vpisa=1`
             
 - predmetnik:
-    -POST predmetnik
+    -POST predmetnik/obvezni   ali   predmetnik/neobvezni
         - body: zeton
         ```json
         {
-                "studijskiProgram": {
-                    "sifraEVS": 1000468,
-                    }
-                },
-                "letnik": {
-                    "letnik": 2
-                },
-                "studijskoLeto": {
-                    "id": 2018,
-                }
+        	"studijskiProgram": {
+        	    "sifraEVS": 1000468
+        	},
+        	"letnik": {
+        	    "letnik": 2
+        	},
+        	"studijskoLeto": {
+        	    "id": 2018
+        	}
         }
         ```
