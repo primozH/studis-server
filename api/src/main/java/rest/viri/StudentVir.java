@@ -53,6 +53,7 @@ public class StudentVir {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         try {
+            logger.info("Updating student with new data...");
             student = studentZrno.updateStudent(student);
         } catch (Exception e){
             return Response.status(Response.Status.CONFLICT).entity(new CustomErrorMessage(e.getMessage())).build();

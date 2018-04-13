@@ -34,10 +34,9 @@ public class UvozPodatkov {
     @Inject
     private UserTransaction ux;
 
-    private List<Kandidat> kandidati = new ArrayList<>();
-
     public List<Kandidat> parseFile(File file) {
         String ime, priimek, program, email;
+        List<Kandidat> kandidati = new ArrayList<>();
 
         BufferedReader br;
         BufferedWriter out;
