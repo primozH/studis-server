@@ -1,14 +1,19 @@
 package zrna;
 
-import predmetnik.Predmetnik;
-import sifranti.*;
-import student.Zeton;
-import vpis.Vpis;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+
+import predmetnik.Predmetnik;
+import sifranti.DelPredmetnika;
+import sifranti.Letnik;
+import sifranti.Predmet;
+import sifranti.StudijskiProgram;
+import sifranti.StudijskoLeto;
+import student.Zeton;
+import vpis.Vpis;
 
 @ApplicationScoped
 public class PredmetnikStudentZrno {
@@ -22,6 +27,14 @@ public class PredmetnikStudentZrno {
                 .setParameter("studijskoLeto", zeton.getStudijskoLeto())
                 .setParameter("studijskiProgram", zeton.getStudijskiProgram())
                 .getResultList();
+    }
+
+    public List<Predmetnik> getOnlyMandatory(Zeton zeton) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.obvezniPredmetnik", Predmetnik.class)
+                 .setParameter("letnik", zeton.getLetnik())
+                 .setParameter("studijskoLeto", zeton.getStudijskoLeto())
+                 .setParameter("studijskiProgram", zeton.getStudijskiProgram())
+                 .getResultList();
     }
 
     public List<Predmet> getCourses(Vpis vpis, DelPredmetnika delPredmetnika) {

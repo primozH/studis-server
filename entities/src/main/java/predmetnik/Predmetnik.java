@@ -1,10 +1,21 @@
 package predmetnik;
 
-import sifranti.*;
-import vloge.Student;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import java.util.List;
+import sifranti.DelPredmetnika;
+import sifranti.Letnik;
+import sifranti.Predmet;
+import sifranti.StudijskiProgram;
+import sifranti.StudijskoLeto;
 
 @Entity
 @Table(name = "predmetnik")
@@ -17,7 +28,10 @@ import java.util.List;
                 "p.delPredmetnika = :delPredmetnika"),
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.opcijskiPredmetnik", query = "SELECT p FROM Predmetnik p " +
                 "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
-                "p.delPredmetnika.tip NOT LIKE 'obvezni%'")
+                "p.delPredmetnika.tip NOT LIKE 'obvezni%'"),
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.obvezniPredmetnik", query = "SELECT p FROM Predmetnik p " +
+                "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
+                "p.delPredmetnika.tip LIKE 'obvezni%'")
 })
 @IdClass(PredmetnikId.class)
 public class Predmetnik {
