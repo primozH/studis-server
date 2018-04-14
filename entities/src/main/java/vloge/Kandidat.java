@@ -1,15 +1,11 @@
 package vloge;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
+import org.eclipse.persistence.tools.schemaframework.ForeignKeyConstraint;
 import sifranti.StudijskiProgram;
 import vloge.Uporabnik;
 
@@ -19,13 +15,15 @@ import vloge.Uporabnik;
         @NamedQuery(name = "entitete.vloge.Kandidat.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT k FROM Kandidat k WHERE CONCAT(k.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY k.vpisnaStevilka DESC"),
         @NamedQuery(name = "entitete.vloge.Kandidat.vrniKandidate", query = "SELECT k FROM Kandidat k WHERE k.izkoriscen = false"),
 })
+@PrimaryKeyJoinColumn(name = "id_uporabnik", referencedColumnName = "id_uporabnik")
 @XmlAccessorType(XmlAccessType.FIELD)
+@CascadeOnDelete
 public class Kandidat extends Uporabnik {
 
     @Column(name = "vpisna_stevilka")
     private Integer vpisnaStevilka;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "studijski_program", referencedColumnName = "sifra_evs")
     private StudijskiProgram studijskiProgram;
 

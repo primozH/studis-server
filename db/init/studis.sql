@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `kandidat` (
   `studijski_program` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_uporabnik`),
   KEY `FK_kandidat_studijski_program` (`studijski_program`),
-  CONSTRAINT `FK_kandidat_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`),
+  CONSTRAINT `FK_kandidat_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`) ON DELETE CASCADE,
   CONSTRAINT `FK_kandidat_studijski_program` FOREIGN KEY (`studijski_program`) REFERENCES `studijski_program` (`sifra_evs`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
@@ -278,12 +278,13 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   `ustvarjeno` datetime DEFAULT NULL,
   `zadnja_prijava` datetime DEFAULT NULL,
   PRIMARY KEY (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis
 DROP TABLE IF EXISTS `vpis`;
 CREATE TABLE IF NOT EXISTS `vpis` (
+  `potrjen` tinyint(1) DEFAULT 0,
   `letnik` int(11) DEFAULT NULL,
   `nacin_studija` int(11) DEFAULT NULL,
   `oblika_studija` int(11) DEFAULT NULL,
@@ -291,7 +292,6 @@ CREATE TABLE IF NOT EXISTS `vpis` (
   `studijski_program` int(11) DEFAULT NULL,
   `studijsko_leto` int(11) NOT NULL,
   `vrsta_vpisa` int(11) NOT NULL,
-  `potrjen` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`student`,`studijsko_leto`),
   KEY `FK_vpis_oblika_studija` (`oblika_studija`),
   KEY `FK_vpis_vrsta_vpisa` (`vrsta_vpisa`),

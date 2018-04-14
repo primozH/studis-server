@@ -18,7 +18,8 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class UvozPodatkov {
 
-    private String ERROR_IMPORT = "./napaka_uvoz.txt";
+    private static final String FILE_LOCATION = "./";
+    private static final String ERROR_FILE_NAME = "napaka_uvoz.txt";
     private final static int IME_L = 30;
     private final static int PRIIMEK_L = 30;
     private final static int PROGRAM_L = 7;
@@ -34,7 +35,38 @@ public class UvozPodatkov {
     @Inject
     private UserTransaction ux;
 
-    public List<Kandidat> parseFile(File file) {
+    @Transactional
+    public List<Kandidat> importData(InputStream content) {
+        try {
+            emptyTable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String fileName = FILE_LOCATION + "kandidati.txt";
+        InputStreamReader reader = new InputStreamReader(content);
+        int count = 0;
+        char [] buffer = new char[1024];
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName));
+
+            while ((count = reader.read(buffer)) > 0) {
+                out.write(buffer);
+            }
+
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return parseFile(new File(fileName));
+    }
+
+    public File downloadFile() {
+        return new File(ERROR_FILE_NAME);
+    }
+
+    private List<Kandidat> parseFile(File file) {
         String ime, priimek, program, email;
         List<Kandidat> kandidati = new ArrayList<>();
 
@@ -42,7 +74,7 @@ public class UvozPodatkov {
         BufferedWriter out;
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
-            out = new BufferedWriter(new FileWriter(ERROR_IMPORT));
+            out = new BufferedWriter(new FileWriter(ERROR_FILE_NAME));
 
             String line = null;
 
@@ -82,6 +114,7 @@ public class UvozPodatkov {
         return kandidati;
     }
 
+    @Transactional
     private Kandidat createKandidat(String ime, String priimek, String program, String email, BufferedWriter out) throws IOException {
         Kandidat k = new Kandidat();
         k.setIme(ime);
@@ -101,11 +134,9 @@ public class UvozPodatkov {
             }
 
             k.setStudijskiProgram(studijskiProgram);
-            ux.begin();
             em.persist(k);
-            ux.commit();
             return k;
-        } catch (NumberFormatException | NotSupportedException | RollbackException | HeuristicRollbackException | HeuristicMixedException | SystemException e) {
+        } catch (NumberFormatException | NotSupportedException e) {
             logger.log(Level.WARNING, e.getMessage());
 
             StringBuilder sb = new StringBuilder();
@@ -117,5 +148,11 @@ public class UvozPodatkov {
             out.write(newIme + newPriimek + newProgram + newEmail);
             return null;
         }
+    }
+
+    @Transactional
+    private void emptyTable() {
+        em.createNativeQuery("DELETE FROM uporabnik WHERE tip = 'Kandidat'").executeUpdate();
+
     }
 }
