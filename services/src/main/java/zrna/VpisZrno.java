@@ -145,6 +145,17 @@ public class VpisZrno {
         }
     }
 
+    public List<Student> getVpisaniStudenti() {
+        StudijskoLeto zadnjeStudijskoLeto = em.createNamedQuery("entitete.vpis.Vpis.vrniZadnjeStudijskoLeto", StudijskoLeto.class).setMaxResults(1).getSingleResult();
+        try {
+            return em.createNamedQuery("entitete.vpis.Vpis.vrniVseVpisaneStudente", Student.class)
+                     .setParameter("studijskoLeto", zadnjeStudijskoLeto.getId())
+                     .getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     private Vpis vpisiStudenta(Zeton vpis) throws Exception{
         ZetonId zetonId = new ZetonId(vpis.getStudent().getId(), vpis.getVrstaVpisa().getSifraVpisa());
         Zeton zeton = em.find(Zeton.class, zetonId);

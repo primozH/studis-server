@@ -111,4 +111,14 @@ public class StudentVir {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @GET
+    @Path("seznam-vpisanih")
+    public Response vrniSeznamVsehVpisanih() {
+        List<Student> vpisaniStudenti = vpisZrno.getVpisaniStudenti();
+        if (vpisaniStudenti != null && !vpisaniStudenti.isEmpty()) {
+            return Response.ok(vpisaniStudenti).header("X-Total-Count", vpisaniStudenti.size()).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
 }

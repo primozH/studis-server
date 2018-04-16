@@ -1,20 +1,35 @@
 package vpis;
 
-import sifranti.*;
-import student.Zeton;
-import vloge.Student;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
+
+import sifranti.Letnik;
+import sifranti.NacinStudija;
+import sifranti.OblikaStudija;
+import sifranti.StudijskiProgram;
+import sifranti.StudijskoLeto;
+import sifranti.VrstaVpisa;
+import vloge.Student;
 
 @Entity
 @Table(name = "vpis")
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.vpis.Vpis.zadnjiVpisZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId" +
                 " ORDER BY v.studijskoLeto.id DESC"),
-        @NamedQuery(name = "entitete.vpis.Vpis.vrniVpiseZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId")
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniVpiseZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniVseVpisaneStudente", query = "SELECT v.student FROM Vpis v WHERE v.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniZadnjeStudijskoLeto", query = "SELECT vp.studijskoLeto FROM Vpis vp ORDER BY vp.studijskoLeto.id DESC")
 })
 @IdClass(VpisId.class)
 @XmlAccessorType(XmlAccessType.FIELD)
