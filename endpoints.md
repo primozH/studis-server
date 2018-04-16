@@ -258,3 +258,14 @@ localhost:8080/api/v1/
 		"err": 20,
 		"msg": "nepotrjen"
 	}
+
+- vrni vse vpisane studente za zadnje studijsko leto
+	- GET student/seznam-vpisanih
+	response:
+	[
+		{student1},
+		{student2},
+		.
+		.
+		.
+	]
