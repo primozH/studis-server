@@ -146,7 +146,7 @@ public class VpisZrno {
     }
 
     public List<Student> getVpisaniStudenti() {
-        StudijskoLeto zadnjeStudijskoLeto = em.createNamedQuery("entitete.vpis.Vpis.vrniZadnjeStudijskoLeto", StudijskoLeto.class).setMaxResults(1).getSingleResult();
+        StudijskoLeto zadnjeStudijskoLeto = em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniZadnjeStudijskoLeto", StudijskoLeto.class).setMaxResults(1).getSingleResult();
         try {
             return em.createNamedQuery("entitete.vpis.Vpis.vrniVseVpisaneStudente", Student.class)
                      .setParameter("studijskoLeto", zadnjeStudijskoLeto.getId())
