@@ -1,21 +1,31 @@
 package rest.viri;
 
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import org.json.JSONObject;
+
 import common.CustomErrorMessage;
 import vloge.Student;
 import vpis.Vpis;
 import vpis.VpisniList;
 import zrna.StudentZrno;
 import zrna.VpisZrno;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.util.List;
-import java.util.logging.Logger;
 
 @Path("/student")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -83,4 +93,22 @@ public class StudentVir {
 
         return Response.ok(vpisi).build();
     }
+
+    @GET
+    @Path("{id}/zadnji-vpis")
+    public Response vrniZadnjiVpisZaStudenta(@PathParam("id") Integer studentId) {
+        Vpis zadnjiVpis = vpisZrno.getZadnjiVpis(studentId).get(0);
+        if (zadnjiVpis != null) {
+            if (zadnjiVpis.isPotrjen()) {
+                if (zadnjiVpis.getNacinStudija().getSifra() == 2) {
+                    return Response.status(Response.Status.CONFLICT).entity(new JSONObject().put("err", 10).put("msg","izredni").toString()).build();
+                }
+                return Response.ok(zadnjiVpis).build();
+            } else {
+                return Response.status(Response.Status.CONFLICT).entity(new JSONObject().put("err", 20).put("msg","nepotrjen").toString()).build();
+            }
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
 }

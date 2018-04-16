@@ -238,3 +238,23 @@ localhost:8080/api/v1/
         	}
         }
         ```
+
+- vpis (potrdila o vpisu)
+	- GET student/{id}/zadnji-vpis
+ 	response:
+	1.) succesful: 
+	{ 
+		json vpisa
+	}
+	2.) fail - izredni vpis:
+	Http error - Conflict (409)
+	{ 
+		"err": 10,
+		"msg": "izredni"
+	}
+	3.) fail - nepotrjen vpis:
+	Http error - Conflict (409)
+	{
+		"err": 20,
+		"msg": "nepotrjen"
+	}
