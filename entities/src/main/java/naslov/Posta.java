@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlID;
 
 @Entity
 @Table(name = "posta")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.naslov.Posta.vsePoste", query = "SELECT p FROM Posta p ORDER BY p.nazivPoste")
+})
 public class Posta {
 
     @XmlID

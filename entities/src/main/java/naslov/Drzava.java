@@ -1,15 +1,14 @@
 package naslov;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
-import java.util.List;
 
 @Entity
 @Table(name = "drzava")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.naslov.Drzava.vseDrzave", query = "SELECT c FROM Drzava c ORDER BY c.slovenskiNaziv")
+})
 public class Drzava {
-    @XmlID
-    @XmlElement
+
     @Id
     @Column(name = "numericna_oznaka")
     private Integer numericnaOznaka;
