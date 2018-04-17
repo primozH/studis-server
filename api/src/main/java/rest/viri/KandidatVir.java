@@ -25,9 +25,6 @@ public class KandidatVir {
 
     private static final Logger logger = Logger.getLogger(KandidatVir.class.getName());
 
-    private static final String FILE_LOCATION = "./";
-    private static final String ERROR_FILE_NAME = "napaka_uvoz.txt";
-
     @Inject
     private UvozPodatkov uvozPodatkov;
 
@@ -55,7 +52,7 @@ public class KandidatVir {
     @Path("neuspesni")
     @Produces(MediaType.TEXT_PLAIN)
     public Response downloadImportedCandidates() {
-        File file = new File(FILE_LOCATION + ERROR_FILE_NAME);
+        File file = uvozPodatkov.downloadFile();
         return Response.ok(file).header("Content-Disposition", "attachment; filename=\"neuspesno_uvozeni.txt\"").build();
     }
 
@@ -66,24 +63,7 @@ public class KandidatVir {
             @FormDataParam("file") InputStream content,
             @FormDataParam("file") FormDataContentDisposition fdcd) {
 
-        String fileName = FILE_LOCATION + "kandidati.txt";
-        InputStreamReader reader = new InputStreamReader(content);
-        int count = 0;
-        char [] buffer = new char[1024];
-        try {
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName));
-
-            while ((count = reader.read(buffer)) > 0) {
-                out.write(buffer);
-            }
-
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<Kandidat> kandidatList = uvozPodatkov.parseFile(new File(fileName));
+        List<Kandidat> kandidatList = uvozPodatkov.importData(content);
 
         return Response.accepted(kandidatList).header("X-Total-Count", kandidatList.size()).build();
 

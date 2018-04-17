@@ -15,6 +15,7 @@ import helpers.adapters.PostaAdapter;
 import naslov.Drzava;
 import naslov.Obcina;
 import naslov.Posta;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import vpis.Vpis;
 
 @Entity

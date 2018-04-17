@@ -1,22 +1,40 @@
 package zrna;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+
 import predmetnik.Predmetnik;
-import sifranti.*;
+import sifranti.DelPredmetnika;
+import sifranti.Letnik;
+import sifranti.NacinStudija;
+import sifranti.OblikaStudija;
+import sifranti.Predmet;
+import sifranti.StudijskiProgram;
+import sifranti.StudijskoLeto;
+import sifranti.VrstaVpisa;
 import student.PredmetStudent;
 import student.Zeton;
 import student.ZetonId;
 import vloge.Student;
 import vpis.Vpis;
 import vpis.VpisniList;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.*;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class VpisZrno {
@@ -115,6 +133,27 @@ public class VpisZrno {
         return em.createNamedQuery("entitete.vpis.Vpis.vrniVpiseZaStudenta", Vpis.class)
                 .setParameter("studentId", studentId)
                 .getResultList();
+    }
+
+    public List<Vpis> getZadnjiVpis(Integer studentId) {
+        try {
+            return em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta", Vpis.class)
+                     .setParameter("studentId", studentId)
+                     .getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public List<Student> getVpisaniStudenti() {
+        StudijskoLeto zadnjeStudijskoLeto = em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniZadnjeStudijskoLeto", StudijskoLeto.class).setMaxResults(1).getSingleResult();
+        try {
+            return em.createNamedQuery("entitete.vpis.Vpis.vrniVseVpisaneStudente", Student.class)
+                     .setParameter("studijskoLeto", zadnjeStudijskoLeto.getId())
+                     .getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     private Vpis vpisiStudenta(Zeton vpis) throws Exception{
