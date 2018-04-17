@@ -1,6 +1,7 @@
 package rest.viri;
 
 import naslov.Drzava;
+import naslov.Obcina;
 import naslov.Posta;
 import zrna.SifrantiZrno;
 
@@ -35,6 +36,13 @@ public class SifrantiVir {
     public Response getPostsList() {
         List<Posta> poste = sifrantiZrno.getPostList();
         return Response.ok(poste).build();
+    }
+
+    @Path("obcina")
+    @GET
+    public Response getMunicipalityList() {
+        List<Obcina> obcine = sifrantiZrno.getMunicipalityList();
+        return Response.ok(obcine).build();
     }
 
 }

@@ -13,6 +13,7 @@ import helpers.PasswordAuthentication;
 import helpers.PasswordAuthenticationImpl;
 import helpers.adapters.LocalDateAdapter;
 import helpers.adapters.LocalDateTimeAdapter;
+import naslov.Drzava;
 
 @Entity
 @Table(name = "uporabnik")
@@ -55,8 +56,12 @@ public class Uporabnik {
     @Column(name = "datum_rojstva")
     private LocalDate datumRojstva;
 
+    @ManyToOne
+    @JoinColumn(name = "drzavljanstvo")
+    private Drzava drzavljanstvo;
+
     @Column(name = "spol")
-    @Enumerated
+    @Enumerated(value = EnumType.ORDINAL)
     private Spol spol;
 
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
@@ -194,6 +199,14 @@ public class Uporabnik {
 
     public void setDatumRojstva(LocalDate datumRojstva) {
         this.datumRojstva = datumRojstva;
+    }
+
+    public Drzava getDrzavljanstvo() {
+        return drzavljanstvo;
+    }
+
+    public void setDrzavljanstvo(Drzava drzavljanstvo) {
+        this.drzavljanstvo = drzavljanstvo;
     }
 
     public Spol getSpol() {

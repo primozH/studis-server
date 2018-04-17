@@ -1,6 +1,7 @@
 package zrna;
 
 import naslov.Drzava;
+import naslov.Obcina;
 import naslov.Posta;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,6 +22,11 @@ public class SifrantiZrno {
 
     public List<Posta> getPostList() {
         return em.createNamedQuery("entitete.naslov.Posta.vsePoste", Posta.class)
+                .getResultList();
+    }
+
+    public List<Obcina> getMunicipalityList() {
+        return em.createNamedQuery("entitete.naslov.Obcina.vseObcine", Obcina.class)
                 .getResultList();
     }
 }

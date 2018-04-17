@@ -7,6 +7,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "obcina")
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.naslov.Obcina.vseObcine", query = "SELECT o FROM Obcina o ORDER BY o.ime")
+})
 public class Obcina {
 
     @XmlID
