@@ -5,6 +5,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import predmetnik.Predmetnik;
 import sifranti.DelPredmetnika;
@@ -21,14 +22,34 @@ public class PredmetnikStudentZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
-    public List<Predmetnik> getAllButMandatory(Zeton zeton) {
-        return em.createNamedQuery("entitete.predmetnik.Predmetnik.opcijskiPredmetnik", Predmetnik.class)
+    @Transactional
+    public List<Predmetnik> getModules(Zeton zeton) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.moduli", Predmetnik.class)
                 .setParameter("letnik", zeton.getLetnik())
                 .setParameter("studijskoLeto", zeton.getStudijskoLeto())
                 .setParameter("studijskiProgram", zeton.getStudijskiProgram())
                 .getResultList();
     }
 
+    @Transactional
+    public List<Predmetnik> getOptionals(Zeton zeton) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.splosni", Predmetnik.class)
+                .setParameter("letnik", zeton.getLetnik())
+                .setParameter("studijskoLeto", zeton.getStudijskoLeto())
+                .setParameter("studijskiProgram", zeton.getStudijskiProgram())
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Predmetnik> getProf(Zeton zeton) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.strokovni", Predmetnik.class)
+                .setParameter("letnik", zeton.getLetnik())
+                .setParameter("studijskoLeto", zeton.getStudijskoLeto())
+                .setParameter("studijskiProgram", zeton.getStudijskiProgram())
+                .getResultList();
+    }
+
+    @Transactional
     public List<Predmetnik> getOnlyMandatory(Zeton zeton) {
         return em.createNamedQuery("entitete.predmetnik.Predmetnik.obvezniPredmetnik", Predmetnik.class)
                  .setParameter("letnik", zeton.getLetnik())

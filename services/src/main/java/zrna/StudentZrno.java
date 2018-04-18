@@ -71,10 +71,16 @@ public class StudentZrno {
 
         if (student.getDavcnaStevilka() == null && newStudent.getDavcnaStevilka() == null) {
             throw new Exception("Davcna stevilka je obvezno polje");
-        } else if (student.getDavcnaStevilka() != null) {
-            if (student.getDavcnaStevilka().length() != 8)
+        } else if (newStudent.getDavcnaStevilka() != null) {
+            if (newStudent.getDavcnaStevilka().length() != 8)
                 throw new Exception("Davčna številka mora vsebovati 8 števk");
             student.setDavcnaStevilka(newStudent.getDavcnaStevilka());
+        }
+
+        if (student.getDrzavljanstvo() == null && newStudent.getDrzavljanstvo() == null) {
+            throw new Exception("Podatek o državljanstvu je obvezen");
+        } else if (newStudent.getDrzavljanstvo() != null) {
+            student.setDrzavljanstvo(newStudent.getDrzavljanstvo());
         }
 
         /*
@@ -173,14 +179,14 @@ public class StudentZrno {
         return student;
     }
 
-    private List<String> imena = Arrays.asList(
-            "Janez", "Marko", "Miha", "Matjaž", "Gašper", "Vilko", "Slavko", "Matija", "Peter", "Luka", "Pavel",
-            "Gregor", "Žan", "Andraž", "Sonja", "Eva", "Ana", "Ema", "Klara", "Tina", "Mirjam", "Mojca", "Maruša");
-    private List<String> priimki = Arrays.asList(
-            "Zagorc", "Kovač", "Novak", "Horvat", "Hrovat", "Šuštar", "Omrzel", "Pirnar", "Čebašević", "Krpan");
-
-    private String geslo = "123456";
-    private String tel_st = "070123123";
+//    private List<String> imena = Arrays.asList(
+//            "Janez", "Marko", "Miha", "Matjaž", "Gašper", "Vilko", "Slavko", "Matija", "Peter", "Luka", "Pavel",
+//            "Gregor", "Žan", "Andraž", "Sonja", "Eva", "Ana", "Ema", "Klara", "Tina", "Mirjam", "Mojca", "Maruša");
+//    private List<String> priimki = Arrays.asList(
+//            "Zagorc", "Kovač", "Novak", "Horvat", "Hrovat", "Šuštar", "Omrzel", "Pirnar", "Čebašević", "Krpan");
+//
+//    private String geslo = "123456";
+//    private String tel_st = "070123123";
 
 
     /**

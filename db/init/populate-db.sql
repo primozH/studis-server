@@ -1202,10 +1202,6 @@ INSERT INTO predmetnik (del_predmetnika, letnik, predmet, studijski_program, stu
   (3, 2, 63242, 1000468, 2018),
   (3, 2, 63284, 1000468, 2018),
   (3, 2, 63248, 1000468, 2018),
-
-  (3, 2, 63219, 1000468, 2018),
-  (3, 2, 63220, 1000468, 2018),
-  (3, 2, 63221, 1000468, 2018),
   /*
   TRETJI LETNIK BUN-RI
    */
