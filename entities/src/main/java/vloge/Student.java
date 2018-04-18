@@ -7,15 +7,10 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import helpers.adapters.DrzavaAdapter;
-import helpers.adapters.ObcinaAdapter;
-import helpers.adapters.PostaAdapter;
 import naslov.Drzava;
 import naslov.Obcina;
 import naslov.Posta;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 import vpis.Vpis;
 
 @Entity
@@ -47,30 +42,24 @@ public class Student extends Uporabnik {
     @Column(name = "kraj_rojstva")
     private String krajRojstva;
 
-    @XmlJavaTypeAdapter(DrzavaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "drzava_stalno")
     private Drzava drzavaStalno;
-    @XmlJavaTypeAdapter(ObcinaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "obcina_stalno")
     private Obcina obcinaStalno;
-    @XmlJavaTypeAdapter(PostaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "posta_stalno")
     private Posta postaStalno;
     @Column(name = "naslov_stalno")
     private String naslovStalno;
 
-    @XmlJavaTypeAdapter(DrzavaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "drzava_zacasno")
     private Drzava drzavaZacasno;
-    @XmlJavaTypeAdapter(ObcinaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "obcina_zacasno")
     private Obcina obcinaZacasno;
-    @XmlJavaTypeAdapter(PostaAdapter.class)
     @ManyToOne
     @JoinColumn(name = "posta_zacasno")
     private Posta postaZacasno;

@@ -277,8 +277,11 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   `uporabnisko_ime` varchar(255) COLLATE utf8_slovenian_ci NOT NULL,
   `ustvarjeno` datetime DEFAULT NULL,
   `zadnja_prijava` datetime DEFAULT NULL,
-  PRIMARY KEY (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+  `drzavljanstvo` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_uporabnik`),
+  KEY `FK_uporabnik_drzavljanstvo` (`drzavljanstvo`),
+  CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis

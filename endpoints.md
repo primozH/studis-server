@@ -269,3 +269,6 @@ localhost:8080/api/v1/
 		.
 		.
 	]
+-šifranti:
+    - GET /sifranti/[drzava|obcina|posta]
+        - vrne vse pošte/občine/države
