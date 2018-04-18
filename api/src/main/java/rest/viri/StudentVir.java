@@ -121,4 +121,11 @@ public class StudentVir {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @POST
+    @Path("potdilo")
+    @Produces("application/pdf")
+    public Response vrniPotrdiloOVpisuZaVpis(Vpis vpis) {
+
+    }
+
 }
