@@ -25,9 +25,25 @@ public class PredmetnikVir {
     private PredmetnikStudentZrno psz;
 
     @POST
-    @Path("/neobvezni")
-    public Response getCourses(Zeton zeton) {
-        List<Predmetnik> predmetList = psz.getAllButMandatory(zeton);
+    @Path("/strokovni")
+    public Response getProf(Zeton zeton) {
+        List<Predmetnik> predmetList = psz.getProf(zeton);
+
+        return Response.ok(predmetList).build();
+    }
+
+    @POST
+    @Path("/splosni")
+    public Response getOptional(Zeton zeton) {
+        List<Predmetnik> predmetList = psz.getOptionals(zeton);
+
+        return Response.ok(predmetList).build();
+    }
+
+    @POST
+    @Path("/moduli")
+    public Response getModule(Zeton zeton) {
+        List<Predmetnik> predmetList = psz.getModules(zeton);
 
         return Response.ok(predmetList).build();
     }
