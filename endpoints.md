@@ -14,34 +14,49 @@ localhost:8080/api/v1/
         - vsi podatki o študentih (glede na filter)
     - GET student/{id}
     - PUT: /student/{id}
-        - posodobi podatke o studentu. Obvezen je ujemanje idja v JSON in v poti. Podatki, ki jih lahko spreminjamo:
+        - posodobi podatke o študentu. Obvezen je ujemanje idja v JSON in v poti. 
+        Ob uspešni posodobitvi je odgovor posodobljen objekt.
+        
+        Primer JSONa:
+        `PUT /student/32`
         ```json 
         {
-            "id": 31,
-            "email": "ph1234@student.fri.si",
-            "ime": "Primož",
-            "priimek": "Hrovat",
+            "id": 32,
+            "email": "pavel.krpan@student.fri.si",
+            "ime": "Pavel",
+            "priimek": "Krpan",
             "emso": "2301996500052",
-            "davcnaStevilka": "12345678", 
+            "davcnaStevilka": "12345678",
             "datumRojstva": "1996-01-23",
-            "spol": "MOSKI",
+            "spol": 1,
+            "vpisnaStevilka": 63150002,
             "telefonskaStevilka": "070123123",
             "drzavaRojstva": "Slovenija",
-            "krajRojstva": "Novo mesto",
             "obcinaRojstva": "Novo mesto",
-            "drzavaStalno": 705,
-            "postaStalno": 8000,
-            "obcinaStalno": 85,
-            "naslovStalno": "Krajčeva ulica 15",
-            "drzavaZacasno": 705,
-            "postaZacasno": 1000,
-            "obcinaZacasno": 61,
-            "naslovZacasno": "Gosposvetska 12",
-            "naslovZaPosiljanjePoste": "Krajčeva ulica 15"
-        } 
-        ```
-        spol: [MOSKI|ZENSKI]
-        
+            "krajRojstva": "Novo mesto",
+            "drzavaStalno": {
+            	"numericnaOznaka": 705
+            },
+            "obcinaStalno": {
+            	"sifra": 85
+            },
+            "postaStalno": {
+            	"postnaStevilka": 8000
+            },
+            "naslovStalno": "Šmihelska cesta 12",
+            "drzavaZacasno": {
+            	"numericnaOznaka": 705
+            },
+            "obcinaZacasno": {
+            	"sifra": 61
+            },
+            "postaZacasno": {
+            	"postnaStevilka": 1000
+            },
+            "naslovZacasno": "Mariborska 14",
+            "naslovZaPosiljanjePoste": "Mariborska 15"
+        }
+        ```        
     - GET: student/{id}/vpis:
         - vrne tabelo vpisov za danega študenta
     - POST: student/{id}/vpis:

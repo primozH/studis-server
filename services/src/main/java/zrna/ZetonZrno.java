@@ -35,8 +35,14 @@ public class ZetonZrno {
     @Inject
     private UserTransaction ux;
 
-    public List<Zeton> getTokens(Integer student) {
+    public List<Zeton> getTokens(Integer student, Boolean izkoriscen) {
         if (student != null) {
+            if (izkoriscen != null) {
+                return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudentaIzkoriscenost", Zeton.class)
+                        .setParameter("student", student)
+                        .setParameter("izkoriscen", izkoriscen)
+                        .getResultList();
+            }
             return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudenta", Zeton.class)
                     .setParameter("student", student)
                     .getResultList();

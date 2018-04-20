@@ -11,8 +11,6 @@ import javax.xml.bind.annotation.XmlID;
 })
 public class Posta {
 
-    @XmlID
-    @XmlElement
     @Id
     @Column(name = "postna_stevilka")
     private Integer postnaStevilka;

@@ -12,8 +12,6 @@ import java.util.List;
 })
 public class Obcina {
 
-    @XmlID
-    @XmlElement
     @Id
     @Column(name = "sifra")
     private Integer sifra;
