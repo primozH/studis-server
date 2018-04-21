@@ -61,7 +61,6 @@ public class Uporabnik {
     private Drzava drzavljanstvo;
 
     @Column(name = "spol")
-    @Enumerated(value = EnumType.ORDINAL)
     private Spol spol;
 
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)

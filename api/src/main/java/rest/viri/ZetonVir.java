@@ -24,15 +24,16 @@ public class ZetonVir {
 
     @GET
     public Response getTokens() {
-        List<Zeton> zetoni = zetonZrno.getTokens(null);
+        List<Zeton> zetoni = zetonZrno.getTokens(null, null);
         return Response.ok(zetoni).build();
     }
 
     @GET
     @Path("{student}")
-    public Response getToken(@PathParam("student") Integer student, @QueryParam("vrsta-vpisa") Integer vrstaVpisa) {
+    public Response getToken(@PathParam("student") Integer student, @QueryParam("vrsta-vpisa") Integer vrstaVpisa,
+                             @QueryParam("izkoriscen") Boolean izkoriscen) {
         if (vrstaVpisa == null) {
-            List<Zeton> zetoni = zetonZrno.getTokens(student);
+            List<Zeton> zetoni = zetonZrno.getTokens(student, izkoriscen);
             return Response.ok(zetoni).build();
         }
 
