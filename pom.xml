@@ -19,8 +19,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kumuluzee.version>2.5.2</kumuluzee.version>
-
-        <kumuluzee.cors.version>1.0.3</kumuluzee.cors.version>
+        <itext.version>5.5.10</itext.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
