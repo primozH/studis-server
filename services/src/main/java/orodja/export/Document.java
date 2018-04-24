@@ -1,8 +1,9 @@
-package orodja;
+package orodja.export;
 
 public class Document {
     private String name;
     private DocumentType documentType;
+    private Metadata metadata;
     private TableHeader tableHeader;
     private TableRow[] tableRows;
 
@@ -20,6 +21,14 @@ public class Document {
 
     public void setDocumentType(DocumentType documentType) {
         this.documentType = documentType;
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
     public TableHeader getTableHeader() {

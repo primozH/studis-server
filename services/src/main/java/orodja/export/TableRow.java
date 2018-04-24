@@ -1,18 +1,14 @@
-package orodja;
+package orodja.export;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-public class TableHeader implements Iterable<String> {
+public class TableRow implements Iterable<String> {
     private List<String> row;
 
-    public TableHeader(String[] array) {
+    public TableRow(String[] array) {
         row = new ArrayList<>(Arrays.asList(array));
     }
-
-    public TableHeader() { }
+    public TableRow() { }
 
     @Override
     public Iterator<String> iterator() {

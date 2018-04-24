@@ -1,6 +1,6 @@
 package rest.viri;
 
-import orodja.Document;
+import orodja.export.Document;
 import orodja.FileExporter;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;

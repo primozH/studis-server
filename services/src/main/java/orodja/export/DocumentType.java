@@ -1,4 +1,4 @@
-package orodja;
+package orodja.export;
 
 public enum DocumentType {
     CSV,
