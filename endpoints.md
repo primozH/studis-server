@@ -287,3 +287,41 @@ localhost:8080/api/v1/
 -šifranti:
     - GET /sifranti/[drzava|obcina|posta]
         - vrne vse pošte/občine/države
+        
+- izvoz seznamov (pdf/csv):
+    - POST /izvoz
+        ```json
+        {
+        	"name": "Test",
+        	"documentType": "CSV",
+        	"metadata": {
+        		"subject": {
+        			"sifra": 63214,
+                    "naziv": "Osnove umetne inteligence"
+        		},
+        		"yearOfStudy": {
+        			"letnik": 3
+        		},
+        		"studyYear": {
+        			"id": 2018,
+        			"studijskoLeto": "2018/2019"
+        		},
+  		        "studyProgramme": {
+                    "sifraEVS": 1000468,
+                    "naziv": "Računalništvo in informatika UNI-1.st",
+                }
+        	},
+        	"tableHeader": {
+        		"row": ["Ime", "Priimek", "Ocena"]
+        	},
+        	"tableRows": [
+        		{
+        			"row": ["Aljaž", "Črni", "20"]
+        		}
+  		      // ...
+        	]
+        }
+        ```
+        
+        Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
+        mora zadostiti zgornjemu zgledu.
