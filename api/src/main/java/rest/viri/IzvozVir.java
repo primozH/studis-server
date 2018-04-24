@@ -34,7 +34,7 @@ public class IzvozVir {
         }
 
         return Response.ok(file)
-                .header("Content-Disposition", "attachment; filename='" + file.getName() + "'")
+                .header("Content-Disposition", "attachment; filename=" + file.getName())
                 .header("Content-Type", contentType)
                 .build();
     }

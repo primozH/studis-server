@@ -8,9 +8,7 @@ import orodja.export.TableRow;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,10 +16,10 @@ import java.time.format.DateTimeFormatter;
 public class FileExporter {
 
     private final static String GENERATED_FILES = "generated";
+    private final static char separator = ',';
     private String NOTOSANS_BOLD;
     private String NOTOSANS_REGULAR;
     private Font notoRegular;
-
 
     @PostConstruct
     private void init() {
@@ -77,7 +75,19 @@ public class FileExporter {
     }
 
     private void createCsv(orodja.export.Document document, String fileName) {
-        return;
+
+        TableHeader header = document.getTableHeader();
+        TableRow[] tableRow = document.getTableRows();
+
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
+            addHeaders(header, fileWriter);
+            addRowsCsv(tableRow, fileWriter);
+
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private PdfPTable createTable(orodja.export.Document document) {
@@ -150,6 +160,36 @@ public class FileExporter {
             for (String celica : tableRow) {
                 table.addCell(new Phrase(celica, notoRegular));
             }
+        }
+    }
+
+    private void addHeaders(TableHeader header, FileWriter fileWriter) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for(String cell : header) {
+            if (!first) {
+                sb.append(separator);
+            }
+            sb.append(cell);
+            first = false;
+        }
+        sb.append("\n");
+        fileWriter.append(sb.toString());
+    }
+
+    private void addRowsCsv(TableRow[] rows, FileWriter fw) throws IOException {
+        for (TableRow row : rows) {
+            boolean first = true;
+            StringBuilder sb = new StringBuilder();
+            for(String cell : row) {
+                if (!first) {
+                    sb.append(separator);
+                }
+                sb.append(cell);
+                first = false;
+            }
+            sb.append("\n");
+            fw.append(sb.toString());
         }
     }
 
