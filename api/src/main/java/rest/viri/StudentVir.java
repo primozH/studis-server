@@ -1,5 +1,8 @@
 package rest.viri;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,7 +23,14 @@ import javax.ws.rs.core.UriInfo;
 
 import org.json.JSONObject;
 
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
+
 import common.CustomErrorMessage;
+import orodja.PotrdiloVpisaHTML;
 import vloge.Student;
 import vpis.Vpis;
 import vpis.VpisniList;
@@ -122,10 +132,36 @@ public class StudentVir {
     }
 
     @POST
-    @Path("potdilo")
+    @Path("potrdilo")
     @Produces("application/pdf")
     public Response vrniPotrdiloOVpisuZaVpis(Vpis vpis) {
+        try {
+            String html = PotrdiloVpisaHTML.html;
+            html = vpisZrno.zamenjajPodatkeZaPotrdiloVpisa(html, vpis);
 
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(html.getBytes().length);
+            baos.write(html.getBytes(), 0, html.getBytes().length);
+            PdfDocument pdfDocument = new PdfDocument();
+            PdfWriter writer = PdfWriter.getInstance(pdfDocument, baos);
+            pdfDocument.addWriter(writer);
+            pdfDocument.setPageSize(PageSize.A4);
+            if (!pdfDocument.isOpen()) pdfDocument.open();
+            pdfDocument.add(new Paragraph(html));
+            XMLWorkerHelper workerHelper = XMLWorkerHelper.getInstance();
+            ByteArrayInputStream pdfStream = new ByteArrayInputStream(baos.toByteArray());
+            workerHelper.parseXHtml(writer, pdfDocument, pdfStream, Charset.forName("UTF-8"));
+            pdfDocument.close();
+            writer.close();
+
+            javax.ws.rs.core.Response.ResponseBuilder responseBuilder = javax.ws.rs.core.Response.ok(html);
+            responseBuilder.type("application/pdf");
+            responseBuilder.header("Content-Disposition", "attachment;filename=test.pdf");
+            return responseBuilder.build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
     }
 
 }
