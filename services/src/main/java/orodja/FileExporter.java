@@ -22,7 +22,7 @@ public class FileExporter {
     private Font notoRegular;
 
     @PostConstruct
-    private void init() {
+    public void init() {
         NOTOSANS_BOLD = getClass().getClassLoader().getResource("fonts/NotoSans-Bold.ttf").getPath();
         NOTOSANS_REGULAR = getClass().getClassLoader().getResource("fonts/NotoSans-Regular.ttf").getPath();
         FontFactory.register(NOTOSANS_BOLD, "notosans-bold");
