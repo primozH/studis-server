@@ -1,0 +1,9 @@
+language: java
+
+script: mvn clean package
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: 0850b6ff-4feb-461d-9292-52b8f4761dee
+  app: studis-fri
