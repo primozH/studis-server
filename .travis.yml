@@ -1,6 +1,6 @@
 language: java
 
-before_install: git clone https://github.com/primozH/studis-web
+before_install: git clone https://github.com/primozH/studis-web primozH/studis-web
 
 deploy:
   provider: heroku
