@@ -28,7 +28,7 @@ import sifranti.StudijskoLeto;
                 "p.delPredmetnika = :delPredmetnika"),
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.moduli", query = "SELECT p FROM Predmetnik p " +
                 "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
-                "p.delPredmetnika.tip LIKE 'modul%'"),
+                "p.delPredmetnika.tip LIKE 'modul%' ORDER BY p.modul"),
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.splosni", query = "SELECT p FROM Predmetnik p " +
                 "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
                 "p.delPredmetnika.tip LIKE 'splošni%'"),
