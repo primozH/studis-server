@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="studis" transaction-type="JTA">
+        <jta-data-source>jdbc/studis</jta-data-source>
+
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <properties>
+            <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>-->
+            <!--<property name="javax.persistence.schema-generation.create-source" value="metadata"/>-->
+            <!--<property name="javax.persistence.schema-generation.drop-source" value="metadata"/>-->
+            <!--<property name="javax.persistence.sql-load-script-source" value="sql/init-db.sql"/>-->
+        </properties>
+    </persistence-unit>
+</persistence>
+

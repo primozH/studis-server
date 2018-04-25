@@ -10,17 +10,31 @@
 
     <modules>
         <module>api</module>
+        <module>entities</module>
+        <module>services</module>
     </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+        <kumuluzee.version>2.5.2</kumuluzee.version>
+        <itext.version>5.5.10</itext.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-bom</artifactId>
+                <version>${kumuluzee.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
 </project>

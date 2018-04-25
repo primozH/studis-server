@@ -1,0 +1,8 @@
+﻿Matija                        Mlakar                        1000468matija.mlakar@student.fri.si                                
+Primož                        Hrovat                        1000468primoz.hrovat@student.fri.si                                
+Marko                         Potočar                       1000470marko.potocar@student.fri.si                                
+Eva                           Prepih                        1000471eva.prepih@student.fri.si                                   
+Gašper                        Velik                         1000474gasper@student.fri.si                                       
+Luka                          Kovač                         1000470luka@student.fri.si                                         
+Marko                         Majer                         1010101matija@majer.si
+Franc                         Okoren                        1000470franc.okoren@student.fri.si

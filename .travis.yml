@@ -1,6 +1,6 @@
 language: java
 
-script: mvn clean package
+before_install: git clone https://github.com/primozH/studis-web
 
 deploy:
   provider: heroku
