@@ -43,6 +43,24 @@ CREATE TABLE IF NOT EXISTS `drzava` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
+-- Dumping structure for tabela studis.izpit
+DROP TABLE IF EXISTS `izpit`;
+CREATE TABLE IF NOT EXISTS `izpit` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `datum` date DEFAULT NULL,
+  `koncna_ocena` int(11) DEFAULT NULL,
+  `ocena_pisno` int(11) DEFAULT NULL,
+  `ocena_ustno` int(11) DEFAULT NULL,
+  `studijsko_leto` int(11) DEFAULT NULL,
+  `student` int(11) DEFAULT NULL,
+  `predmet` int(11) DEFAULT NULL,
+  `datum_izvajanja` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_izpit_studijsko_leto` (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
+  CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_izpit` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
 -- Dumping structure for tabela studis.kandidat
 DROP TABLE IF EXISTS `kandidat`;
 CREATE TABLE IF NOT EXISTS `kandidat` (
@@ -117,12 +135,38 @@ CREATE TABLE IF NOT EXISTS `oblika_studija` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
+-- Dumping structure for tabela studis.odjava
+DROP TABLE IF EXISTS `odjava`;
+CREATE TABLE IF NOT EXISTS `odjava` (
+  `cas_odjave` datetime DEFAULT NULL,
+  `odjavitelj` int(11) DEFAULT NULL,
+  `studijsko_leto` int(11) NOT NULL,
+  `student` int(11) NOT NULL,
+  `predmet` int(11) NOT NULL,
+  `datum_izvajanja` datetime NOT NULL,
+  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
+  KEY `FK_odjava_odjavitelj` (`odjavitelj`),
+  CONSTRAINT `FK_odjava_odjavitelj` FOREIGN KEY (`odjavitelj`) REFERENCES `uporabnik` (`id_uporabnik`),
+  CONSTRAINT `FK_odjava_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_izpit` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
 -- Dumping structure for tabela studis.posta
 DROP TABLE IF EXISTS `posta`;
 CREATE TABLE IF NOT EXISTS `posta` (
   `postna_stevilka` int(11) NOT NULL,
   `naziv_poste` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   PRIMARY KEY (`postna_stevilka`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
+-- Dumping structure for tabela studis.praznik
+DROP TABLE IF EXISTS `praznik`;
+CREATE TABLE IF NOT EXISTS `praznik` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `datum` date NOT NULL,
+  `ime` varchar(100) COLLATE utf8_slovenian_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
@@ -159,18 +203,54 @@ CREATE TABLE IF NOT EXISTS `predmetnik` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
+-- Dumping structure for tabela studis.predmet_izvajanje
+DROP TABLE IF EXISTS `predmet_izvajanje`;
+CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
+  `nosilec1` int(11) DEFAULT NULL,
+  `nosilec2` int(11) DEFAULT NULL,
+  `nosilec3` int(11) DEFAULT NULL,
+  `predmet` int(11) NOT NULL,
+  `studijsko_leto` int(11) NOT NULL,
+  PRIMARY KEY (`predmet`,`studijsko_leto`),
+  KEY `FK_predmet_izvajanje_studijsko_leto` (`studijsko_leto`),
+  KEY `FK_predmet_izvajanje_nosilec1` (`nosilec1`),
+  KEY `FK_predmet_izvajanje_nosilec3` (`nosilec3`),
+  KEY `FK_predmet_izvajanje_nosilec2` (`nosilec2`),
+  CONSTRAINT `FK_predmet_izvajanje_nosilec1` FOREIGN KEY (`nosilec1`) REFERENCES `uporabnik` (`id_uporabnik`),
+  CONSTRAINT `FK_predmet_izvajanje_nosilec2` FOREIGN KEY (`nosilec2`) REFERENCES `uporabnik` (`id_uporabnik`),
+  CONSTRAINT `FK_predmet_izvajanje_nosilec3` FOREIGN KEY (`nosilec3`) REFERENCES `uporabnik` (`id_uporabnik`),
+  CONSTRAINT `FK_predmet_izvajanje_predmet` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
+  CONSTRAINT `FK_predmet_izvajanje_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
 -- Dumping structure for tabela studis.predmet_student
 DROP TABLE IF EXISTS `predmet_student`;
 CREATE TABLE IF NOT EXISTS `predmet_student` (
   `predmet` int(11) NOT NULL,
-  `student` int(11) NOT NULL,
   `studijsko_leto` int(11) NOT NULL,
-  PRIMARY KEY (`predmet`,`student`,`studijsko_leto`),
-  KEY `FK_predmet_student_student` (`student`),
-  KEY `FK_predmet_student_studijsko_leto` (`studijsko_leto`),
+  `student` int(11) NOT NULL,
+  PRIMARY KEY (`predmet`,`studijsko_leto`,`student`),
+  KEY `FK_predmet_student_student` (`student`,`studijsko_leto`),
   CONSTRAINT `FK_predmet_student_predmet` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
-  CONSTRAINT `FK_predmet_student_student` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`),
-  CONSTRAINT `FK_predmet_student_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`)
+  CONSTRAINT `FK_predmet_student_student` FOREIGN KEY (`student`, `studijsko_leto`) REFERENCES `vpis` (`student`, `studijsko_leto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
+-- Dumping structure for tabela studis.prijava_izpit
+DROP TABLE IF EXISTS `prijava_izpit`;
+CREATE TABLE IF NOT EXISTS `prijava_izpit` (
+  `brisana` tinyint(1) DEFAULT 0,
+  `cas_prijave` datetime DEFAULT NULL,
+  `studijsko_leto` int(11) NOT NULL,
+  `student` int(11) NOT NULL,
+  `predmet` int(11) NOT NULL,
+  `datum_izvajanja` datetime NOT NULL,
+  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
+  KEY `FK_prijava_izpit_datum_izvajanja` (`datum_izvajanja`,`studijsko_leto`,`predmet`),
+  KEY `FK_prijava_izpit_predmet` (`predmet`,`studijsko_leto`,`student`),
+  CONSTRAINT `FK_prijava_izpit_datum_izvajanja` FOREIGN KEY (`datum_izvajanja`, `studijsko_leto`, `predmet`) REFERENCES `rok` (`datum_cas`, `studijsko_leto`, `predmet`),
+  CONSTRAINT `FK_prijava_izpit_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`, `student`) REFERENCES `predmet_student` (`predmet`, `studijsko_leto`, `student`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
@@ -180,6 +260,22 @@ CREATE TABLE IF NOT EXISTS `referent` (
   `id_uporabnik` int(11) NOT NULL,
   PRIMARY KEY (`id_uporabnik`),
   CONSTRAINT `FK_referent_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+-- Data exporting was unselected.
+-- Dumping structure for tabela studis.rok
+DROP TABLE IF EXISTS `rok`;
+CREATE TABLE IF NOT EXISTS `rok` (
+  `datum_cas` datetime NOT NULL,
+  `prostor` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
+  `izvajalec` int(11) DEFAULT NULL,
+  `studijsko_leto` int(11) NOT NULL,
+  `predmet` int(11) NOT NULL,
+  PRIMARY KEY (`datum_cas`,`studijsko_leto`,`predmet`),
+  KEY `FK_rok_izvajalec` (`izvajalec`),
+  KEY `FK_rok_predmet` (`predmet`,`studijsko_leto`),
+  CONSTRAINT `FK_rok_izvajalec` FOREIGN KEY (`izvajalec`) REFERENCES `uporabnik` (`id_uporabnik`),
+  CONSTRAINT `FK_rok_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`) REFERENCES `predmet_izvajanje` (`predmet`, `studijsko_leto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
@@ -281,7 +377,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   PRIMARY KEY (`id_uporabnik`),
   KEY `FK_uporabnik_drzavljanstvo` (`drzavljanstvo`),
   CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis
