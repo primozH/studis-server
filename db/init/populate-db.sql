@@ -1034,6 +1034,34 @@ INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (4226, 'Žiri');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (4274, 'Žirovnica');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (8360, 'Žužemberk');
 
+
+/*
+Prazniki
+ */
+INSERT INTO praznik (datum, ime)
+VALUES
+
+  /* dela prosti dnevi */
+  ('1900-01-01', 'Novo leto'),
+  ('1900-01-02', 'Novo leto'),
+  ('1900-02-08', 'Prešernov dan'),
+  ('1900-04-27', 'dan upora proti okupatorju'),
+  ('1900-05-01', 'praznik dela'),
+  ('1900-05-02', 'praznik dela'),
+  ('1900-06-25', 'dan državnosti'),
+  ('1900-08-15', 'Marijino vnebovzetje'),
+  ('1900-10-31', 'dan reformacije'),
+  ('1900-11-01', 'dan spomina na mrtve'),
+  ('1900-12-25', 'božič'),
+  ('1900-12-26', 'dan samostojnosti in enotnosti'),
+
+  /* premakljivi */
+  ('2019-04-22', 'velikonočni ponedeljek'),
+  ('2020-04-13', 'velikonočni ponedeljek'),
+  ('2021-04-05', 'velikonočni ponedeljek'),
+  ('2022-04-18', 'velikonočni ponedeljek');
+
+
 /**
 Sifrant PREDMET
  */
