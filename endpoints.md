@@ -71,9 +71,8 @@ localhost:8080/api/v1/
         }
         ```
         **Example 1 (vpis v 2. letnik)**:
-        ```http request
-        POST localhost:8080/api/v1/student/31/vpis
-        
+        `POST localhost:8080/api/v1/student/31/vpis`
+        ```json
         {
         	"zeton": {
         		"vrstaVpisa": {
@@ -83,9 +82,11 @@ localhost:8080/api/v1/
         			"id": 31
         		}
         	},
-        	"strokovniPredmet" : { 
-        		"sifra": 63219	
-        	},
+        	"strokovniPredmeti" : [
+  	           { 
+        		    "sifra": 63219	
+        	   }
+            ],
         	"splosniPredmeti" : [
         		{
         			"sifra": 63222
@@ -98,8 +99,8 @@ localhost:8080/api/v1/
         ```
         
         **Example 2 (vpis v 3. letnik, prosta izbira)**:
+        `POST localhost:8080/api/v1/student/33/vpis`
         ```json
-        POST localhost:8080/api/v1/student/33/vpis
         {
         	"zeton": {
         		"vrstaVpisa": {
@@ -308,7 +309,7 @@ localhost:8080/api/v1/
         		},
   		        "studyProgramme": {
                     "sifraEVS": 1000468,
-                    "naziv": "Računalništvo in informatika UNI-1.st",
+                    "naziv": "Računalništvo in informatika UNI-1.st"
                 }
         	},
         	"tableHeader": {

@@ -76,7 +76,7 @@ public class VpisZrno {
         ZetonId zetonId = new ZetonId(studentId, enrollmentType);
 
         Zeton token = em.find(Zeton.class, zetonId);
-        Predmet profCourse = vpisniList.getStrokovniPredmet();
+        List<Predmet> profCourses = vpisniList.getStrokovniPredmeti();
         List<Predmet> optionalCourses = vpisniList.getSplosniPredmeti();
         List<Predmet> moduleCourses = vpisniList.getModulskiPredmeti();
 
@@ -101,10 +101,10 @@ public class VpisZrno {
             case 1:
                 break;
             case 2:
-                Predmet prof = hasProfCourse(enrollment, profCourse);
+                List<Predmet> prof = hasProfCourse(enrollment, profCourses);
                 optional = hasOptionalCourse(enrollment, optionalCourses);
-                if (prof != null) {
-                    courses.add(prof);
+                if (!prof.isEmpty()) {
+                    courses.addAll(prof);
                 }
                 if (optional != null && optional.size() != 0) {
                     courses.addAll(optional);
@@ -124,7 +124,8 @@ public class VpisZrno {
 
         Integer ECTSSum = courses.stream().mapToInt(Predmet::getECTS).sum();
         if (ECTSSum < 60) {
-            throw new Exception("Izbrani predmetnik ne vsebuje dovolj ECTS točk");
+            throw new Exception("Izbrani predmetnik mora obsegati točno 60 ECTS točk! Število zbranih točk: "
+                    + ECTSSum.toString());
         }
 
         // end
@@ -213,18 +214,14 @@ public class VpisZrno {
         return null;
     }
 
-    private Predmet hasProfCourse(Vpis enrollment, Predmet course) {
-        if (course == null) {
+    private List<Predmet> hasProfCourse(Vpis enrollment, List<Predmet> courses) {
+        if (courses == null || courses.size() == 0) {
             return null;
         }
         logger.info("Strokovno izbirni predmet...");
         List<Predmet> availableCourses = psz.getCourses(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(1)));
 
-        for (Predmet c : availableCourses) {
-            if (course.getSifra().equals(c.getSifra()))
-                return c;
-        }
-        return null;
+        return availableCourses.stream().filter(courses::contains).collect(Collectors.toList());
     }
 
     private List<Predmet> hasOptionalCourse(Vpis enrollment, List<Predmet> courses) {
@@ -249,7 +246,7 @@ public class VpisZrno {
             // filter selected courses
             List<Predmet> moduleCourses = availableCourses.stream().filter(courses::contains).collect(Collectors.toList());
 
-            if (moduleCourses.size() != 6) {
+            if (moduleCourses.size() < 6) {
                 return null;
             }
             return moduleCourses;
@@ -258,6 +255,7 @@ public class VpisZrno {
         logger.info("Preverjanje veljavnosti izbire modulov");
         List<Predmet> module1 = new ArrayList<>();
         List<Predmet> module2 = new ArrayList<>();
+        Predmet optionalModuleCourse = null;
         int module1Code = -1;
         int module2Code = -1;
 
@@ -278,14 +276,17 @@ public class VpisZrno {
                 module1.add(p.getPredmet());
             } else if (module2Code == p.getModul().ordinal()){
                 module2.add(p.getPredmet());
+            } else if (optionalModuleCourse == null){
+                optionalModuleCourse = p.getPredmet();
             } else {
                 return null;
             }
         }
 
         module1.addAll(module2);
+        module1.add(optionalModuleCourse);
 
-        if (module1.size() != 6) {
+        if (module1.size() < 6) {
             return null;
         }
 

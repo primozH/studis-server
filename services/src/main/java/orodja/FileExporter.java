@@ -11,20 +11,21 @@ import javax.enterprise.context.ApplicationScoped;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class FileExporter {
 
+    private final static Logger log = Logger.getLogger(FileExporter.class.getName());
+
     private final static String GENERATED_FILES = "generated";
     private final static char separator = ',';
-    private String NOTOSANS_BOLD;
-    private String NOTOSANS_REGULAR;
+    private String NOTOSANS_BOLD = "/fonts/NotoSans-Bold.ttf";
+    private String NOTOSANS_REGULAR = "/fonts/NotoSans-Regular.ttf";
     private Font notoRegular;
 
     @PostConstruct
     public void init() {
-        NOTOSANS_BOLD = getClass().getClassLoader().getResource("fonts/NotoSans-Bold.ttf").getPath();
-        NOTOSANS_REGULAR = getClass().getClassLoader().getResource("fonts/NotoSans-Regular.ttf").getPath();
         FontFactory.register(NOTOSANS_BOLD, "notosans-bold");
         FontFactory.register(NOTOSANS_REGULAR, "notosans-regular");
 
@@ -53,6 +54,7 @@ public class FileExporter {
     }
 
     private void createPdf(orodja.export.Document document, String fileName) {
+        log.info("Ustvarjanje PDF dokumenta: " + fileName);
         com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
         try {
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(fileName));
@@ -72,10 +74,11 @@ public class FileExporter {
 
 
         doc.close();
+        log.info("Postopek uspesno zakljucen");
     }
 
     private void createCsv(orodja.export.Document document, String fileName) {
-
+        log.info("Ustvarjanje CSV dokumenta: " + fileName);
         TableHeader header = document.getTableHeader();
         TableRow[] tableRow = document.getTableRows();
 
@@ -84,6 +87,7 @@ public class FileExporter {
             addRowsCsv(tableRow, fileWriter);
 
             fileWriter.flush();
+            log.info("Postopek uspesno zakljucen");
         } catch (IOException e) {
             e.printStackTrace();
         }
