@@ -197,7 +197,7 @@ public class VpisZrno {
                     .setParameter("izkoriscen", true)
                     .executeUpdate();
 
-            List<PredmetStudent> studentCourses = new ArrayList<>(persistStudentsCourses(student, yearOfStudy, courses));
+            List<PredmetStudent> studentCourses = new ArrayList<>(persistStudentsCourses(enrollment, courses));
             ux.commit();
             return studentCourses;
         } catch (NotSupportedException e) {
@@ -293,14 +293,13 @@ public class VpisZrno {
         return module1;
     }
 
-    private List<PredmetStudent> persistStudentsCourses(Student student, StudijskoLeto yearOfStudy, List<Predmet> courses) {
+    private List<PredmetStudent> persistStudentsCourses(Vpis enrollment, List<Predmet> courses) {
         logger.info("Shranjevanje izbranega predmetnika");
         List<PredmetStudent> studentCourses = new ArrayList<>();
         courses.forEach(course -> {
             PredmetStudent studentCourse = new PredmetStudent();
             studentCourse.setPredmet(course);
-            studentCourse.setStudent(student);
-            studentCourse.setStudijskoLeto(yearOfStudy);
+            studentCourse.setVpis(enrollment);
 
             em.persist(studentCourse);
 

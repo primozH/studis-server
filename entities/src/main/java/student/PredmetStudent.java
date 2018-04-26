@@ -3,6 +3,7 @@ package student;
 import sifranti.Predmet;
 import sifranti.StudijskoLeto;
 import vloge.Student;
+import vpis.Vpis;
 
 import javax.persistence.*;
 
@@ -13,33 +14,16 @@ public class PredmetStudent {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "student")
-    private Student student;
-
-    @Id
-    @ManyToOne
     @JoinColumn(name = "predmet")
     private Predmet predmet;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "studijsko_leto")
-    private StudijskoLeto studijskoLeto;
-
-    public PredmetStudent() { }
-
-    public PredmetStudent(Student student, Predmet predmet, StudijskoLeto studijskoLeto) {
-        this.student = student;
-        this.predmet = predmet;
-        this.studijskoLeto = studijskoLeto;
-    }
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+    @JoinColumns({
+            @JoinColumn(name = "student", referencedColumnName = "student"),
+            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto")
+    })
+    private Vpis vpis;
 
     public Predmet getPredmet() {
         return predmet;
@@ -49,11 +33,11 @@ public class PredmetStudent {
         this.predmet = predmet;
     }
 
-    public StudijskoLeto getStudijskoLeto() {
-        return studijskoLeto;
+    public Vpis getVpis() {
+        return vpis;
     }
 
-    public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
-        this.studijskoLeto = studijskoLeto;
+    public void setVpis(Vpis vpis) {
+        this.vpis = vpis;
     }
 }
