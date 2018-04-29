@@ -1,11 +1,32 @@
 package izpit;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "izpit")
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.izpit.Izpit.vrniSteviloVsehPolaganj",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId "),
+        @NamedQuery(name = "entities.izpit.Izpit.vrniIzpitZaLeto",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto")
+})
 public class Izpit {
 
     @Id

@@ -1,15 +1,31 @@
 package izpit;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import helpers.adapters.LocalDateTimeAdapter;
 import student.PredmetStudent;
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prijava_izpit")
 @IdClass(PrijavaIzpitId.class)
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.izpit.PrijavaIzpit.vrniZadnjoPrijavo",
+                query = "SELECT p FROM PrijavaIzpit p WHERE p.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND p.predmetStudent.vpis.student.id = :studentId ORDER BY p.casPrijave DESC")
+})
 public class PrijavaIzpit {
 
     @Id
