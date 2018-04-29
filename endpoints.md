@@ -339,6 +339,9 @@ localhost:8080/api/v1/
             "vpis":{
                 "student":{
                     "id_uporabnik": student_id
+                },
+                "studijskoLeto":{
+                    "id": studijsko_leto_letnica
                 }
             }
         }
