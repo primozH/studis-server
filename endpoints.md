@@ -326,3 +326,24 @@ localhost:8080/api/v1/
         
         Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
         mora zadostiti zgornjemu zgledu.
+
+- podatki o izpitu:
+    - POST /izpit
+    /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu)
+    ```json
+    {
+        "predmetStudent": {
+            "predmet":{
+                "sifra": sifra_predmeta
+            },
+            "vpis":{
+                "student":{
+                    "id_uporabnik": student_id
+                },
+                "studijskoLeto":{
+                    "id": studijsko_leto_letnica
+                }
+            }
+        }
+    }
+    ```

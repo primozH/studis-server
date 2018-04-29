@@ -4,11 +4,21 @@ import sifranti.Predmet;
 import sifranti.StudijskoLeto;
 import vloge.Student;
 
-import javax.persistence.*;
 import java.time.LocalDate;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "izpit")
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.izpit.Izpit.vrniSteviloVsehPolaganj",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId "),
+        @NamedQuery(name = "entities.izpit.Izpit.vrniIzpitZaLeto",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto")
+})
 @IdClass(IzpitId.class)
 public class Izpit {
 
