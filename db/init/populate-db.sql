@@ -1589,3 +1589,14 @@ VALUES
 INSERT INTO rok (datum_cas, prostor, izvajalec, studijsko_leto, predmet)
 VALUES
   ('2019-06-02 10:00:00', 'P22', 39, 2018, 63268);
+
+INSERT INTO predmet_student (predmet, student, studijsko_leto)
+VALUES
+  (63279, 57, 2018),
+  (63208, 57, 2018),
+  (63213, 57, 2018),
+  (63218, 57, 2018),
+  (63283, 57, 2018),
+  (63216, 57, 2018),
+  (63280, 57, 2018),
+  (63217, 57, 2018);
