@@ -1,8 +1,6 @@
 package zrna;
 
-import izpit.Izpit;
-import izpit.IzpitniRok;
-import izpit.PrijavaIzpit;
+import izpit.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -143,4 +141,22 @@ public class IzpitZrno {
                  .getSingleResult();
     }
 
+    public void returnApplication(OdjavaIzpit odjava) {
+        logger.info("Vracanje prijave");
+
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setCasOdjave(LocalDateTime.now());
+        odjavaIzpit.setOdjavitelj(odjava.getOdjavitelj());
+        odjavaIzpit.setPrijavaIzpit(odjava.getPrijavaIzpit());
+
+        em.persist(odjavaIzpit);
+        em.refresh(odjavaIzpit);
+
+        logger.info("Označujem prijavo kot brisano...");
+        PrijavaIzpit prijavaIzpit = odjavaIzpit.getPrijavaIzpit();
+        prijavaIzpit.setBrisana(true);
+
+        em.persist(prijavaIzpit);
+        logger.info("Prijava uspešno vrnjena");
+    }
 }
