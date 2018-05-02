@@ -147,7 +147,7 @@ public class IzpitZrno {
                  .getSingleResult();
     }
 
-    public boolean vrniPrijavoZaPredmet(int sifraPredmeta, int studentId, int studijskoLeto) {
+    public boolean odjavaOdIzpita(int sifraPredmeta, int studentId, int studijskoLeto) {
         PrijavaIzpit prijavaIzpit =  em.createNamedQuery("entities.izpit.PrijavaIzpit.vrniPrijavo", PrijavaIzpit.class)
                  .setParameter("sifraPredmeta", sifraPredmeta)
                  .setParameter("studentId", studentId)
@@ -173,5 +173,53 @@ public class IzpitZrno {
                                        .setParameter("studentId", studentId)
                                        .setParameter("studijskoLeto", studijskoLeto)
                                        .getResultList();
+    }
+
+    public boolean vnesiRezultatIzpita(Izpit izpit, int sifraPredmeta, int studentId, int studijskoLeto) {
+        PrijavaIzpit prijavaIzpit =  null;
+        try{
+            prijavaIzpit = em.createNamedQuery("entities.izpit.PrijavaIzpit.vrniPrijavo", PrijavaIzpit.class)
+              .setParameter("sifraPredmeta", sifraPredmeta)
+              .setParameter("studentId", studentId)
+              .setParameter("studijskoLeto", studijskoLeto)
+              .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (prijavaIzpit == null
+            || prijavaIzpit.isBrisana()
+                || izpit.getOcenaPisno() > 100 || izpit.getOcenaPisno() < 0) return false;
+        em.merge(izpit);
+        return true;
+    }
+
+    public List<Student> vrniZeVneseneRezultateIzpita(Izpit izpit, int sifraPredmeta, int studijskoLeto) {
+        List<Student> studenti = null;
+        try {
+            studenti = em.createNamedQuery("entities.izpit.Izpit.vrniStudenteZZeVpisanoOceno", Student.class)
+                    .setParameter("sifraPredmeta", sifraPredmeta)
+                    .setParameter("studijskoLeto", studijskoLeto)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return studenti;
+    }
+
+    public boolean razveljaviOceno(int sifraPredmeta, int studentId, int studijskoLeto) {
+        Izpit izpit =  null;
+        try{
+            izpit = em.createNamedQuery("entities.izpit.Izpit.vrniIzpitZaLeto", Izpit.class)
+                             .setParameter("sifraPredmeta", sifraPredmeta)
+                             .setParameter("studentId", studentId)
+                             .setParameter("studijskoLeto", studijskoLeto)
+                             .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (izpit == null) return false;
+        izpit.setOcenaPisno(-1);
+        em.merge(izpit);
+        return true;
     }
 }

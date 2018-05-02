@@ -11,10 +11,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import izpit.Izpit;
 import izpit.IzpitniRok;
 import izpit.PrijavaIzpit;
 import vloge.Student;
-import vloge.Uporabnik;
 import zrna.IzpitZrno;
 
 @Path("izpit")
@@ -94,7 +94,7 @@ public class IzpitVir {
         } catch (NullPointerException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        boolean potrjeno = izpitZrno.vrniPrijavoZaPredmet(studentId, sifraPredmeta, studijskoLeto);
+        boolean potrjeno = izpitZrno.odjavaOdIzpita(studentId, sifraPredmeta, studijskoLeto);
         if (!potrjeno) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
@@ -117,5 +117,56 @@ public class IzpitVir {
             return Response.ok().entity(prijavljeniStudenti).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @POST
+    @Path("vnos-rezultatov")
+    public Response vnesiRezultateVpisnegaDela(Izpit izpit) {
+        int sifraPredmeta, studentId, studijskoLeto;
+        try {
+            sifraPredmeta = izpit.getPrijavaIzpit().getPredmetStudent().getPredmet().getSifra();
+            studentId = izpit.getPrijavaIzpit().getPredmetStudent().getVpis().getStudent().getId();
+            studijskoLeto = izpit.getPrijavaIzpit().getPredmetStudent().getVpis().getStudijskoLeto().getId();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (izpitZrno.vnesiRezultatIzpita(izpit, sifraPredmeta, studentId, studijskoLeto)) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    }
+
+    @POST
+    @Path("vrni-vpisane-ocene")
+    public Response vrniZeVpisaneOcene(Izpit izpit) {
+        int sifraPredmeta, studijskoLeto;
+        try {
+            sifraPredmeta = izpit.getPrijavaIzpit().getPredmetStudent().getPredmet().getSifra();
+            studijskoLeto = izpit.getPrijavaIzpit().getPredmetStudent().getVpis().getStudijskoLeto().getId();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<Student> studenti = izpitZrno.vrniZeVneseneRezultateIzpita(izpit, sifraPredmeta, studijskoLeto);
+        if (studenti != null) {
+            return Response.ok().entity(studenti).build();
+        }
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    }
+
+    @POST
+    @Path("razveljavi-oceno")
+    public Response razveljaviOceno(Izpit izpit) {
+        int sifraPredmeta, studentId, studijskoLeto;
+        try {
+            sifraPredmeta = izpit.getPrijavaIzpit().getPredmetStudent().getPredmet().getSifra();
+            studentId = izpit.getPrijavaIzpit().getPredmetStudent().getVpis().getStudent().getId();
+            studijskoLeto = izpit.getPrijavaIzpit().getPredmetStudent().getVpis().getStudijskoLeto().getId();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (izpitZrno.razveljaviOceno(sifraPredmeta, studentId, studijskoLeto)) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
     }
 }

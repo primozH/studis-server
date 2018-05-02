@@ -1,12 +1,23 @@
 package izpit;
 
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+
 import sifranti.Predmet;
 import sifranti.StudijskoLeto;
 import vloge.Student;
-
-import java.time.LocalDate;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "izpit")
@@ -21,6 +32,9 @@ import javax.persistence.*;
         @NamedQuery(name = "entities.izpit.Izpit.vrniPrijavljeneStudente",
         query = "SELECT i.prijavaIzpit.predmetStudent.vpis.student FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
                 "AND i.prijavaIzpit.brisana = FALSE " +
+                "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entities.izpit.Izpit.vrniStudenteZZeVpisanoOceno",
+        query = "SELECT i.prijavaIzpit.predmetStudent.vpis.student FROM Izpit i WHERE i.ocenaPisno >= 0 AND i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta" +
                 "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto")
 })
 @IdClass(IzpitId.class)
@@ -50,11 +64,11 @@ public class Izpit {
     private PrijavaIzpit prijavaIzpit;
 
     @Column(name = "ocena_ustno")
-    private Integer ocenaUstno;
+    private Integer ocenaUstno = -1;
     @Column(name = "ocena_pisno")
-    private Integer ocenaPisno;
+    private Integer ocenaPisno = -1;
     @Column(name = "koncna_ocena")
-    private Integer koncnaOcena;
+    private Integer koncnaOcena = -1;
 
     @Column(name = "datum")
     private LocalDate datum;

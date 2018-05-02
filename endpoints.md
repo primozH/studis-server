@@ -333,6 +333,7 @@ localhost:8080/api/v1/
     /brisi-prijavo (Error.NOT_ACCEPTABLE ce ni v bazi oz. ce je prepozen za odjavo),
     /prijavljeni (vrne vse prijavljene studente na izpitni rok)
 
+
     Error.BAD_GATEWAY (ce katerakoli od spodnjih informacij manjka v jsonu)
     ```json
     {
@@ -351,3 +352,35 @@ localhost:8080/api/v1/
         }
     }
     ```
+
+    POST
+    /vnos-rezultatov (BAD_REQUEST v kolikor so podatki(sifra predmeta, student id in studijsko leto) napacni)
+    ```json
+        {
+            "izpit" : {
+                "prijavaIzpit" : {
+                    "predmetStudent": {
+                        "predmet":{
+                            "sifra": sifra_predmeta
+                        },
+                        "vpis":{
+                            "student":{
+                                "id_uporabnik": student_id
+                            },
+                            "studijskoLeto":{
+                                "id": studijsko_leto_letnica
+                            }
+                        }
+                    }
+                },
+                "ocenaPisno": [ocena]
+            }
+        }
+        ```
+    /vrni-vpisane-ocene (BAD_REQUEST v kolikor so podatki(sifra predmeta in studijsko leto) napacni)
+    Enak POST request kot zgoraj, razen, da se ne potrebuje "id_uporabnika" in "ocenaPisno".
+
+    Vrne se List<Student> v JSON obliki
+
+    /razveljavi-oceno
+    Enak POST request kot zgoraj, razen, da se ne potrebuje "ocenaPisno"
