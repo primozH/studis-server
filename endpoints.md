@@ -326,3 +326,28 @@ localhost:8080/api/v1/
         
         Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
         mora zadostiti zgornjemu zgledu.
+
+- podatki o izpitu:
+    - POST /izpit
+    /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu),
+    /brisi-prijavo (Error.NOT_ACCEPTABLE ce ni v bazi oz. ce je prepozen za odjavo),
+    /prijavljeni (vrne vse prijavljene studente na izpitni rok)
+
+    Error.BAD_GATEWAY (ce katerakoli od spodnjih informacij manjka v jsonu)
+    ```json
+    {
+        "predmetStudent": {
+            "predmet":{
+                "sifra": sifra_predmeta
+            },
+            "vpis":{
+                "student":{
+                    "id_uporabnik": student_id
+                },
+                "studijskoLeto":{
+                    "id": studijsko_leto_letnica
+                }
+            }
+        }
+    }
+    ```

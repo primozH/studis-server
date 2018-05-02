@@ -11,6 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
 DROP USER IF EXISTS 'studis'@'localhost';
 
 CREATE USER 'studis'@'localhost' IDENTIFIED BY 'studisIS';
@@ -167,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `praznik` (
   `datum` date NOT NULL,
   `ime` varchar(100) COLLATE utf8_slovenian_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.predmet
@@ -246,6 +247,9 @@ CREATE TABLE IF NOT EXISTS `prijava_izpit` (
   `student` int(11) NOT NULL,
   `predmet` int(11) NOT NULL,
   `datum_izvajanja` datetime NOT NULL,
+  `cena` decimal(7,2) DEFAULT NULL,
+  `valuta` varchar(20) COLLATE utf8_slovenian_ci DEFAULT NULL,
+  `zakljucena` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
   KEY `FK_prijava_izpit_datum_izvajanja` (`datum_izvajanja`,`studijsko_leto`,`predmet`),
   KEY `FK_prijava_izpit_predmet` (`predmet`,`studijsko_leto`,`student`),
@@ -377,7 +381,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   PRIMARY KEY (`id_uporabnik`),
   KEY `FK_uporabnik_drzavljanstvo` (`drzavljanstvo`),
   CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis

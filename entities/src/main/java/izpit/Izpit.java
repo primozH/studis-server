@@ -1,16 +1,44 @@
 package izpit;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import sifranti.Predmet;
+import sifranti.StudijskoLeto;
+import vloge.Student;
+
 import java.time.LocalDate;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "izpit")
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.izpit.Izpit.vrniSteviloVsehPolaganj",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId "),
+        @NamedQuery(name = "entities.izpit.Izpit.vrniIzpitZaLeto",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId " +
+                        "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entities.izpit.Izpit.vrniPrijavljeneStudente",
+        query = "SELECT i.prijavaIzpit.predmetStudent.vpis.student FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                "AND i.prijavaIzpit.brisana = FALSE " +
+                "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto")
+})
+@IdClass(IzpitId.class)
 public class Izpit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @ManyToOne
+    @JoinColumn(name = "student")
+    private Student student;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "predmet")
+    private Predmet predmet;
+
+    @ManyToOne
+    @JoinColumn(name = "studijsko_leto")
+    private StudijskoLeto studijskoLeto;
 
     @ManyToOne
     @JoinColumns({
@@ -35,14 +63,6 @@ public class Izpit {
     @PreUpdate
     void updateDatum() {
         datum = LocalDate.now();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public PrijavaIzpit getPrijavaIzpit() {
@@ -83,5 +103,29 @@ public class Izpit {
 
     public void setDatum(LocalDate datum) {
         this.datum = datum;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Predmet getPredmet() {
+        return predmet;
+    }
+
+    public void setPredmet(Predmet predmet) {
+        this.predmet = predmet;
+    }
+
+    public StudijskoLeto getStudijskoLeto() {
+        return studijskoLeto;
+    }
+
+    public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
+        this.studijskoLeto = studijskoLeto;
     }
 }

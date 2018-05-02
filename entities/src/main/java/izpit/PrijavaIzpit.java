@@ -1,15 +1,53 @@
 package izpit;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import helpers.adapters.LocalDateTimeAdapter;
 import student.PredmetStudent;
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prijava_izpit")
 @IdClass(PrijavaIzpitId.class)
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.izpit.PrijavaIzpit.vrniZadnjoPrijavo",
+                query = "SELECT p FROM PrijavaIzpit p WHERE p.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND p.predmetStudent.vpis.student.id = :studentId ORDER BY p.casPrijave DESC"),
+        @NamedQuery(name = "entities.izpit.PrijavaIzpit.vrniPrijavo",
+                query = "SELECT p FROM PrijavaIzpit p WHERE p.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND p.predmetStudent.vpis.student.id = :studentId " +
+                        "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.stejPrijave", query = "SELECT COUNT(p) FROM PrijavaIzpit p WHERE " +
+                "p.predmetStudent.vpis.student = :student " +
+                "AND p.predmetStudent.predmet = :predmet " +
+                "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.stejPrijaveStudijskoLeto", query = "SELECT COUNT(p) FROM PrijavaIzpit p WHERE " +
+                "p.predmetStudent.vpis.student = :student " +
+                "AND p.predmetStudent.vpis.studijskoLeto = :studijskoLeto " +
+                "AND p.predmetStudent.predmet = :predmet " +
+                "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.preveriZaOpravljenIzpit", query = "SELECT i FROM Izpit i WHERE " +
+                "i.predmet = :predmet " +
+                "AND i.student = :student"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.aktivnePrijave", query = "SELECT p FROM PrijavaIzpit p WHERE " +
+                "p.predmetStudent = :predmetStudent " +
+                "AND p.rok = :rok " +
+                "AND p.zakljucena = FALSE " +
+                "AND p.brisana = FALSE")
+})
 public class PrijavaIzpit {
 
     @Id
@@ -34,8 +72,17 @@ public class PrijavaIzpit {
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime casPrijave;
 
+    @Column(name = "cena", precision = 7, scale = 2)
+    private BigDecimal cena;
+
+    @Column(name = "valuta")
+    private String valuta;
+
     @Column(name = "brisana")
     private boolean brisana;
+
+    @Column(name = "zakljucena")
+    private boolean zakljucena;
 
     @PrePersist
     void setTime() {
@@ -73,4 +120,29 @@ public class PrijavaIzpit {
     public void setBrisana(boolean brisana) {
         this.brisana = brisana;
     }
+
+    public BigDecimal getCena() {
+        return cena;
+    }
+
+    public void setCena(BigDecimal cena) {
+        this.cena = cena;
+    }
+
+    public String getValuta() {
+        return valuta;
+    }
+
+    public void setValuta(String valuta) {
+        this.valuta = valuta;
+    }
+
+    public boolean isZakljucena() {
+        return zakljucena;
+    }
+
+    public void setZakljucena(boolean zakljucena) {
+        this.zakljucena = zakljucena;
+    }
 }
+
