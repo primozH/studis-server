@@ -329,7 +329,11 @@ localhost:8080/api/v1/
 
 - podatki o izpitu:
     - POST /izpit
-    /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu)
+    /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu),
+    /brisi-prijavo (Error.NOT_ACCEPTABLE ce ni v bazi oz. ce je prepozen za odjavo),
+    /prijavljeni (vrne vse prijavljene studente na izpitni rok)
+
+    Error.BAD_GATEWAY (ce katerakoli od spodnjih informacij manjka v jsonu)
     ```json
     {
         "predmetStudent": {

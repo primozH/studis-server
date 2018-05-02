@@ -1,16 +1,20 @@
 package zrna;
 
-import izpit.Izpit;
-import izpit.IzpitniRok;
-import izpit.PrijavaIzpit;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.logging.Logger;
+
+import izpit.Izpit;
+import izpit.IzpitniRok;
+import izpit.OdjavaIzpit;
+import izpit.PrijavaIzpit;
+import vloge.Student;
 
 @ApplicationScoped
 public class IzpitZrno {
@@ -70,10 +74,10 @@ public class IzpitZrno {
 
     private void checkDates(PrijavaIzpit prijavaIzpit) throws Exception {
         LocalDateTime lastValidDate = prijavaIzpit.getRok().getDatumCasIzvajanja()
-                .minusDays(2)
-                .withHour(23)
-                .withMinute(59)
-                .withSecond(0);
+                                                  .minusDays(2)
+                                                  .withHour(23)
+                                                  .withMinute(59)
+                                                  .withSecond(0);
         logger.info("Preverjam veljaven cas prijave na izpit. Zadnji rok za prijavo: " +
                 "" + lastValidDate.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         LocalDateTime now = LocalDateTime.now();
@@ -143,4 +147,31 @@ public class IzpitZrno {
                  .getSingleResult();
     }
 
+    public boolean vrniPrijavoZaPredmet(int sifraPredmeta, int studentId, int studijskoLeto) {
+        PrijavaIzpit prijavaIzpit =  em.createNamedQuery("entities.izpit.PrijavaIzpit.vrniPrijavo", PrijavaIzpit.class)
+                 .setParameter("sifraPredmeta", sifraPredmeta)
+                 .setParameter("studentId", studentId)
+                 .setParameter("studijskoLeto", studijskoLeto)
+                 .getSingleResult();
+        if (prijavaIzpit == null) return false;
+        long casIzvajanjaIzpita = prijavaIzpit.getRok().getDatumCasIzvajanja().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long trenutniCas = System.currentTimeMillis();
+        if (trenutniCas + 24 * 60 * 60 * 1000 >= casIzvajanjaIzpita) return false;
+        prijavaIzpit.setBrisana(true);
+        em.merge(prijavaIzpit);
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setCasOdjave(LocalDateTime.now());
+        odjavaIzpit.setPrijavaIzpit(prijavaIzpit);
+        odjavaIzpit.setOdjavitelj(prijavaIzpit.getPredmetStudent().getVpis().getStudent());
+        em.merge(odjavaIzpit);
+        return true;
+    }
+
+    public List<Student> vrniPrijavljeneStudente(int sifraPredmeta, int studentId, int studijskoLeto) {
+        return   em.createNamedQuery("entities.izpit.Izpit.vrniPrijavljeneStudente", Student.class)
+                                       .setParameter("sifraPredmeta", sifraPredmeta)
+                                       .setParameter("studentId", studentId)
+                                       .setParameter("studijskoLeto", studijskoLeto)
+                                       .getResultList();
+    }
 }

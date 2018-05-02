@@ -13,6 +13,8 @@ import javax.ws.rs.core.Response;
 
 import izpit.IzpitniRok;
 import izpit.PrijavaIzpit;
+import vloge.Student;
+import vloge.Uporabnik;
 import zrna.IzpitZrno;
 
 @Path("izpit")
@@ -81,4 +83,39 @@ public class IzpitVir {
         return Response.ok().entity(izpitZrno.vrniZadnjoPrijavoZaPredmet(studentId, sifraPredmeta)).build();
     }
 
+    @POST
+    @Path("brisi-prijavo")
+    public Response brisiPrijavoNaIzpit(PrijavaIzpit prijavaIzpit) {
+        int sifraPredmeta, studentId, studijskoLeto;
+        try {
+            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
+            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
+            studijskoLeto = prijavaIzpit.getPredmetStudent().getVpis().getStudijskoLeto().getId();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        boolean potrjeno = izpitZrno.vrniPrijavoZaPredmet(studentId, sifraPredmeta, studijskoLeto);
+        if (!potrjeno) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        return Response.ok().entity(prijavaIzpit).build();
+    }
+
+    @POST
+    @Path("prijavljeni")
+    public Response vrniPrijavljeneStudente(PrijavaIzpit prijavaIzpit) {
+        int sifraPredmeta, studentId, studijskoLeto;
+        try {
+            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
+            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
+            studijskoLeto = prijavaIzpit.getPredmetStudent().getVpis().getStudijskoLeto().getId();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<Student> prijavljeniStudenti = izpitZrno.vrniPrijavljeneStudente(sifraPredmeta, studentId, studijskoLeto);
+        if (prijavljeniStudenti != null && !prijavljeniStudenti.isEmpty()) {
+            return Response.ok().entity(prijavljeniStudenti).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }

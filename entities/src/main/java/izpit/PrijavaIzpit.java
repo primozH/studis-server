@@ -1,5 +1,6 @@
 package izpit;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -18,8 +19,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import helpers.adapters.LocalDateTimeAdapter;
 import student.PredmetStudent;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "prijava_izpit")
 @IdClass(PrijavaIzpitId.class)
@@ -27,6 +26,10 @@ import java.math.BigDecimal;
         @NamedQuery(name = "entities.izpit.PrijavaIzpit.vrniZadnjoPrijavo",
                 query = "SELECT p FROM PrijavaIzpit p WHERE p.predmetStudent.predmet.sifra = :sifraPredmeta " +
                         "AND p.predmetStudent.vpis.student.id = :studentId ORDER BY p.casPrijave DESC"),
+        @NamedQuery(name = "entities.izpit.PrijavaIzpit.vrniPrijavo",
+                query = "SELECT p FROM PrijavaIzpit p WHERE p.predmetStudent.predmet.sifra = :sifraPredmeta " +
+                        "AND p.predmetStudent.vpis.student.id = :studentId " +
+                        "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.stejPrijave", query = "SELECT COUNT(p) FROM PrijavaIzpit p WHERE " +
                 "p.predmetStudent.vpis.student = :student " +
                 "AND p.predmetStudent.predmet = :predmet " +
