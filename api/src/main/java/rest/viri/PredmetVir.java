@@ -1,6 +1,7 @@
 package rest.viri;
 
 import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -10,10 +11,13 @@ import javax.ws.rs.core.Response;
 
 import authentication.Auth;
 import authentication.Role;
+import izpit.IzvajanjePredmeta;
+import vloge.Student;
 import vloge.Ucitelj;
 import vloge.Uporabnik;
 import zrna.PredmetZrno;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -27,27 +31,36 @@ public class PredmetVir {
     @Inject
     private PredmetZrno predmetZrno;
 
-    @POST
+    @GET
+    @Path("studenti")
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
     public Response vrniPodatkeOPredmetu(Uporabnik uporabnik,
                                          @QueryParam("sifra-predmeta") Integer sifraPredmeta,
                                          @QueryParam("studijsko-leto") Integer studijskoLeto) {
-        if (uporabnik.getTip().equals("Referent")) {
-            return Response.status(OK).entity(predmetZrno.vrniListoStudentovZaPredmet(sifraPredmeta, studijskoLeto)).build();
-        } else if (uporabnik.getTip().equals("Ucitelj")) {
 
-            return Response.status(OK)
-                           .entity(predmetZrno.vrniListoStudentovPredmetaZaUcitelja(sifraPredmeta, (Ucitelj) uporabnik, studijskoLeto))
-                           .build();
-        } else {
-            return Response.status(Response.Status.FORBIDDEN).build();
+        List<Student> students;
+        try {
+            students = predmetZrno.vrniListoStudentovZaPredmet(uporabnik, sifraPredmeta, studijskoLeto);
+        } catch (Exception e) {
+            return Response.status(UNAUTHORIZED).build();
         }
+
+        return Response.status(Response.Status.OK)
+                .header("X-Total-Count", students != null ? students.size() : 0)
+                .entity(students).build();
     }
 
     @GET
+    @Path("izvajanje")
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
-    public Response vrniSeznamIzvajanihPredmetov(Uporabnik uporabnik,
-                                                 @QueryParam("studijsko-leto") Integer studijskoLeto) {
+    public Response vrniPredmeteVIzvajanju(Uporabnik uporabnik,
+                                           @QueryParam("studijsko-leto") Integer studijskoLeto) {
+        List<IzvajanjePredmeta> predmeti;
 
-        return Response.ok(uporabnik).build();
+        predmeti = predmetZrno.izvajaniPredmeti(uporabnik, studijskoLeto);
+
+        return Response.ok(predmeti)
+                .header("X-Total-Count", predmeti != null ? predmeti.size() : 0)
+                .build();
     }
 }
