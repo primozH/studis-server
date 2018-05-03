@@ -2,9 +2,9 @@ package zrna;
 
 import helpers.PrijavniPodatkiIzpit;
 import izpit.*;
+import sifranti.Predmet;
 import student.PredmetStudent;
 import student.PredmetStudentId;
-import vloge.Student;
 import vloge.Uporabnik;
 import vpis.VpisId;
 
@@ -15,12 +15,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class IzpitZrno {
@@ -251,9 +250,35 @@ public class IzpitZrno {
         return id;
     }
 
-    public List<IzpitniRok> vrniRokeZaPredmet(int sifraPredmeta) {
-        return em.createNamedQuery("entities.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", IzpitniRok.class)
-                .setParameter("sifraPredmeta", sifraPredmeta)
+    public List<IzpitniRok> vrniIzpitneRoke(Integer uporabnikId, Integer sifraPredmeta, Integer studijskoLeto) {
+        Uporabnik u = em.find(Uporabnik.class, uporabnikId);
+        if (!u.getTip().equalsIgnoreCase("student")) {
+            logger.info("Pridobivanje izpitnih rokov za predmet " + sifraPredmeta + " in studijsko leto " + studijskoLeto);
+            return em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", IzpitniRok.class)
+                    .setParameter("sifraPredmeta", sifraPredmeta)
+                    .setParameter("studijskoLeto", studijskoLeto)
+                    .getResultList();
+        } else {
+            logger.info("Pridobivanje izpitnih rokov za študenta " + uporabnikId);
+            List<IzpitniRok> roki = em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRoke", IzpitniRok.class)
+                    .setParameter("student", uporabnikId)
+                    .setParameter("studijskoLeto", studijskoLeto)
+                    .getResultList();
+
+            List<Predmet> opravljeniPredmeti = em.createNamedQuery("entitete.izpit.Izpit.opravljeniPredmeti", Predmet.class)
+                    .setParameter("student", uporabnikId)
+                    .getResultList();
+
+
+            return roki.stream().filter(rok -> !opravljeniPredmeti.contains(rok.getIzvajanjePredmeta().getPredmet()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public List<PrijavaIzpit> vrniPrijaveNaIzpit(Uporabnik uporabnik, Integer studijskoLeto) {
+        return em.createNamedQuery("entitete.izpit.PrijavaIzpit.prijaveZaStudenta", PrijavaIzpit.class)
+                .setParameter("student", uporabnik.getId())
+                .setParameter("studijskoLeto", studijskoLeto)
                 .getResultList();
     }
 

@@ -28,7 +28,7 @@ public class AuthInterceptor {
         Role[] roles = context.getMethod().getAnnotation(Auth.class).rolesAllowed();
 
         String authorization = httpServletRequest.getHeader("Authorization");
-        if (authorization.toLowerCase().startsWith("bearer")) {
+        if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
             DecodedJWT token = JWT.decode(authorization.substring(7));
             String roleStr = token.getClaim("tip").asString();
             Integer id = token.getClaim("uid").asInt();

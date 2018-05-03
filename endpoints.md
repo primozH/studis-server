@@ -341,7 +341,12 @@ localhost:8080/api/v1/
     - GET /izpit/prijavljeni?[predmet={sifra}&studijsko-leto={sifra}&datum-cas={sifra}]
         - seznam vseh prijav na izpitni rok pri predmetu za studijsko leto in na izbrani rok
         [localhost:8080/api/v1/izpit/prijavljeni?predmet=63208&studijsko-leto=2018&datum-cas=2019-06-05T10:00]()
-      
+    - GET /izpit/rok?studijsko-leto={sifra}&[predmet={sifra}]
+        - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
+        študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
+    - GET /izpit/prijave?studijsko-leto={sifra}
+        - seznam vseh prijav na izpite
+    
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
         - seznam vseh študentov, vpisanih v predmet za študijsko leto

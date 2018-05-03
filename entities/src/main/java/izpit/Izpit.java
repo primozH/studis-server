@@ -18,6 +18,14 @@ import javax.persistence.*;
                 query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
                         "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId " +
                         "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.izpit.Izpit.opravljeniIzpiti",
+                query = "SELECT i FROM Izpit i WHERE " +
+                        "i.student.id = :student " +
+                        "AND i.koncnaOcena > 5"),
+        @NamedQuery(name = "entitete.izpit.Izpit.opravljeniPredmeti",
+                query = "SELECT i.predmet FROM Izpit i WHERE " +
+                        "i.student.id = :student " +
+                        "AND i.koncnaOcena > 5"),
 })
 @IdClass(IzpitId.class)
 public class Izpit {

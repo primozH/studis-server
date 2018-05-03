@@ -9,12 +9,15 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import authentication.Auth;
+import authentication.Role;
 import common.CustomErrorMessage;
 import common.PrijavniPodatki;
 import helpers.PrijavniPodatkiIzpit;
 import izpit.IzpitniRok;
 import izpit.PrijavaIzpit;
 import vloge.Student;
+import vloge.Uporabnik;
 import zrna.IzpitZrno;
 
 @Path("izpit")
@@ -69,19 +72,27 @@ public class IzpitVir {
         return Response.ok(prijavaIzpit).build();
     }
 
-    @POST
-    @Path("roki")
-    public Response vrniRokeZaPredmet(PrijavaIzpit prijavaIzpit) {
-        int sifraPredmeta;
-        try {
-            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
-        } catch (NullPointerException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        List<IzpitniRok> izpitniRoki = izpitZrno.vrniRokeZaPredmet(sifraPredmeta);
+    @GET
+    @Path("rok")
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ, Role.STUDENT})
+    public Response vrniRokeZaPredmet(@QueryParam("predmet") Integer predmet,
+                                      @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                      Uporabnik uporabnik) {
+
+        List<IzpitniRok> izpitniRoki = izpitZrno.vrniIzpitneRoke(uporabnik.getId(), predmet, studijskoLeto);
         if (izpitniRoki != null && !izpitniRoki.isEmpty())
-            return Response.ok().entity(izpitniRoki).build();
+            return Response.ok().entity(izpitniRoki).header("X-Total-Count", izpitniRoki.size()).build();
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Path("prijave")
+    @Auth(rolesAllowed = {Role.STUDENT})
+    public Response vrniPrijaveNaIzpit(@QueryParam("studijsko-leto") Integer studijskoLeto,
+                                       Uporabnik uporabnik) {
+        List<PrijavaIzpit> prijave = izpitZrno.vrniPrijaveNaIzpit(uporabnik, studijskoLeto);
+
+        return Response.ok(prijave).header("X-Total-Count", prijave != null ? prijave.size() : 0).build();
     }
 
     @POST
