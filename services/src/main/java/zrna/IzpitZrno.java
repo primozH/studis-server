@@ -303,10 +303,13 @@ public class IzpitZrno {
 //        return true;
 //    }
 
-    public List<Student> vrniPrijavljeneStudente(int sifraPredmeta, int studentId, int studijskoLeto) {
-        return   em.createNamedQuery("entities.izpit.Izpit.vrniPrijavljeneStudente", Student.class)
-                                       .setParameter("sifraPredmeta", sifraPredmeta)
-                                       .setParameter("studijskoLeto", studijskoLeto)
-                                       .getResultList();
+    public List<PrijavaIzpit> vrniPrijavljeneStudente(int sifraPredmeta, int studijskoLeto, LocalDateTime datumCas) {
+        logger.info("Iskanje vseh prijavljenih studentov na izpit. Predmet: " + sifraPredmeta +
+        ", studijsko leto: " + studijskoLeto + ", datum: " + datumCas);
+        return   em.createNamedQuery("entitete.izpit.PrijavaIzpit.prijavljeniStudentje", PrijavaIzpit.class)
+                .setParameter("predmet", sifraPredmeta)
+                .setParameter("studijskoLeto", studijskoLeto)
+                .setParameter("datumCas", datumCas)
+                .getResultList();
     }
 }

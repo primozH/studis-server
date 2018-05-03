@@ -12,7 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import helpers.adapters.LocalDateTimeAdapter;
 import vloge.Ucitelj;
 
 @Entity
@@ -33,6 +35,7 @@ public class IzpitniRok {
 
     @Id
     @Column(name = "datum_cas")
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime datumCasIzvajanja;
 
     @ManyToOne

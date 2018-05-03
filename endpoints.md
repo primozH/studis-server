@@ -327,11 +327,25 @@ localhost:8080/api/v1/
         Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
         mora zadostiti zgornjemu zgledu.
 
+- izpitni roki:
+    - POST /izpit/[prijava|odjava]
+        - prijava/odjava študenta na izpit:
+        ```json
+        {
+        	"student": 57,
+        	"predmet": 63208,
+        	"studijskoLeto": 2018,
+        	"datumIzvajanja": "2019-06-05T10:00:00"
+        }
+        ```
+    - GET /izpit/prijavljeni?[predmet={sifra}&studijsko_leto={sifra}&datum_cas={sifra}]
+        - seznam vseh prijav na izpitni rok pri predmetu za studijsko leto in na izbrani rok
+        [localhost:8080/api/v1/izpit/prijavljeni?predmet=63208&studijsko_leto=2018&datum_cas=2019-06-05T10:00]()
+        
 - podatki o izpitu:
     - POST /izpit
     /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu),
     /brisi-prijavo (Error.NOT_ACCEPTABLE ce ni v bazi oz. ce je prepozen za odjavo),
-    /prijavljeni (vrne vse prijavljene studente na izpitni rok)
 
     Error.BAD_GATEWAY (ce katerakoli od spodnjih informacij manjka v jsonu)
     ```json

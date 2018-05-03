@@ -1,13 +1,11 @@
 package rest.viri;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -58,6 +56,17 @@ public class IzpitVir {
         }
 
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("prijavljeni")
+    public Response vrniPrijavljeneStudente(@QueryParam("predmet") Integer predmet,
+                                            @QueryParam("studijsko_leto") Integer studijskoLeto,
+                                            @QueryParam("datum_cas") String datum_cas) {
+        List<PrijavaIzpit> prijavaIzpit = izpitZrno.vrniPrijavljeneStudente(predmet,
+                studijskoLeto,
+                LocalDateTime.parse(datum_cas));
+        return Response.ok(prijavaIzpit).build();
     }
 
     @POST
@@ -134,22 +143,4 @@ public class IzpitVir {
 //        }
 //        return Response.ok().entity(prijavaIzpit).build();
 //    }
-
-    @POST
-    @Path("prijavljeni")
-    public Response vrniPrijavljeneStudente(PrijavaIzpit prijavaIzpit) {
-        int sifraPredmeta, studentId, studijskoLeto;
-        try {
-            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
-            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
-            studijskoLeto = prijavaIzpit.getPredmetStudent().getVpis().getStudijskoLeto().getId();
-        } catch (NullPointerException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        List<Student> prijavljeniStudenti = izpitZrno.vrniPrijavljeneStudente(sifraPredmeta, studentId, studijskoLeto);
-        if (prijavljeniStudenti != null && !prijavljeniStudenti.isEmpty()) {
-            return Response.ok().entity(prijavljeniStudenti).build();
-        }
-        return Response.status(Response.Status.BAD_REQUEST).build();
-    }
 }

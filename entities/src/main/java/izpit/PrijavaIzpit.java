@@ -49,6 +49,11 @@ import student.PredmetStudent;
                 "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto " +
                 "AND p.rok.datumCasIzvajanja = :datumCas " +
                 "AND p.zakljucena = FALSE " +
+                "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.prijavljeniStudentje", query = "SELECT p FROM PrijavaIzpit p WHERE " +
+                "p.predmetStudent.predmet.sifra = :predmet " +
+                "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto " +
+                "AND p.rok.datumCasIzvajanja = :datumCas " +
                 "AND p.brisana = FALSE")
 })
 public class PrijavaIzpit {
