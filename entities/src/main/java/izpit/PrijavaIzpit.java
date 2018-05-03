@@ -41,7 +41,8 @@ import student.PredmetStudent;
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.preveriZaOpravljenIzpit", query = "SELECT i FROM Izpit i WHERE " +
                 "i.predmet.sifra = :predmet " +
-                "AND i.student.id = :student"),
+                "AND i.student.id = :student " +
+                "AND i.koncnaOcena > 5"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.aktivnePrijave", query = "SELECT p FROM PrijavaIzpit p WHERE " +
                 "p.predmetStudent.predmet.sifra = :predmet " +
                 "AND p.predmetStudent.vpis.student.id = :student " +

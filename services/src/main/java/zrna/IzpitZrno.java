@@ -5,6 +5,7 @@ import izpit.*;
 import student.PredmetStudent;
 import student.PredmetStudentId;
 import vloge.Student;
+import vloge.Uporabnik;
 import vpis.VpisId;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -183,8 +184,52 @@ public class IzpitZrno {
             e.printStackTrace();
         }
     }
+    @Transactional
+    public void returnApplication(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
+        logger.info("Odjava od izpita");
+        IzpitniRok izpitniRok = getIzpitniRok(prijavniPodatki);
+        LocalDateTime lastValidDate = izpitniRok
+                .getDatumCasIzvajanja()
+                .minusDays(2)
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(0);
+
+        if (lastValidDate.isBefore(LocalDateTime.now())) {
+            throw new Exception("");
+        }
+        PrijavaIzpit prijavaIzpit = getPrijavaIzpit(prijavniPodatki);
+
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setCasOdjave(LocalDateTime.now());
+        odjavaIzpit.setPrijavaIzpit(prijavaIzpit);
+
+        em.persist(odjavaIzpit);
+
+        logger.info("Označujem prijavo kot brisano...");
+        prijavaIzpit.setBrisana(true);
+
+        em.persist(prijavaIzpit);
+        logger.info("Prijava uspešno vrnjena");
+    }
 
     private PredmetStudent getPredmetStudent(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        return em.find(PredmetStudent.class, getPredmetStudentId(prijavniPodatkiIzpit));
+    }
+
+    private IzpitniRok getIzpitniRok(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        return em.find(IzpitniRok.class, getIzpitniRokId(prijavniPodatkiIzpit));
+    }
+
+    private PrijavaIzpit getPrijavaIzpit(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        PrijavaIzpitId id = new PrijavaIzpitId();
+        id.setPredmetStudent(getPredmetStudentId(prijavniPodatkiIzpit));
+        id.setRok(getIzpitniRokId(prijavniPodatkiIzpit));
+
+        return em.find(PrijavaIzpit.class, id);
+    }
+
+    private PredmetStudentId getPredmetStudentId(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
         VpisId vpis = new VpisId();
         vpis.setStudent(prijavniPodatkiIzpit.getStudent());
         vpis.setStudijskoLeto(prijavniPodatkiIzpit.getStudijskoLeto());
@@ -192,8 +237,18 @@ public class IzpitZrno {
         PredmetStudentId id = new PredmetStudentId();
         id.setPredmet(prijavniPodatkiIzpit.getPredmet());
         id.setVpis(vpis);
+        return id;
+    }
 
-        return em.find(PredmetStudent.class, id);
+    private IzpitniRokId getIzpitniRokId(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        IzvajanjePredmetaId izvajanjePredmetaId = new IzvajanjePredmetaId();
+        izvajanjePredmetaId.setPredmet(prijavniPodatkiIzpit.getPredmet());
+        izvajanjePredmetaId.setStudijskoLeto(prijavniPodatkiIzpit.getStudijskoLeto());
+
+        IzpitniRokId id = new IzpitniRokId();
+        id.setDatumCasIzvajanja(prijavniPodatkiIzpit.getDatumIzvajanja());
+        id.setIzvajanjePredmeta(izvajanjePredmetaId);
+        return id;
     }
 
     public List<IzpitniRok> vrniRokeZaPredmet(int sifraPredmeta) {
@@ -223,38 +278,6 @@ public class IzpitZrno {
                  .setParameter("studentId", studentId)
                  .getSingleResult();
     }
-
-//    public void returnApplication(PrijavniPodatki prijavniPodatki) throws Exception {
-//
-//        IzpitniRok izpitniRok = odjava.getPrijavaIzpit().getRok();
-//        em.refresh(izpitniRok);
-//
-//        LocalDateTime lastValidDate = izpitniRok
-//                .getDatumCasIzvajanja()
-//                .minusDays(2)
-//                .withHour(23)
-//                .withMinute(59)
-//                .withSecond(0);
-//
-//        if (lastValidDate.isBefore(LocalDateTime.now())) {
-//            throw new Exception("");
-//        }
-//
-//        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
-//        odjavaIzpit.setCasOdjave(LocalDateTime.now());
-//        odjavaIzpit.setOdjavitelj(odjava.getOdjavitelj());
-//        odjavaIzpit.setPrijavaIzpit(odjava.getPrijavaIzpit());
-//
-//        em.persist(odjavaIzpit);
-//        em.refresh(odjavaIzpit);
-//
-//        logger.info("Označujem prijavo kot brisano...");
-//        PrijavaIzpit prijavaIzpit = odjavaIzpit.getPrijavaIzpit();
-//        prijavaIzpit.setBrisana(true);
-//
-//        em.persist(prijavaIzpit);
-//        logger.info("Prijava uspešno vrnjena");
-//    }
 
 //    public boolean vrniPrijavoZaPredmet(int sifraPredmeta, int studentId, int studijskoLeto) {
 //        logger.info("Vracanje prijave");

@@ -45,6 +45,22 @@ public class IzpitVir {
     }
 
     @POST
+    @Path("odjava")
+    public Response odjavaOdIzpita(PrijavniPodatki prijavniPodatki) {
+        try {
+            izpitZrno.returnApplication(new PrijavniPodatkiIzpit(
+                    prijavniPodatki.getStudent(),
+                    prijavniPodatki.getPredmet(),
+                    prijavniPodatki.getStudijskoLeto(),
+                    prijavniPodatki.getDatumIzvajanja()));
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+
+        return Response.ok().build();
+    }
+
+    @POST
     @Path("roki")
     public Response vrniRokeZaPredmet(PrijavaIzpit prijavaIzpit) {
         int sifraPredmeta;
@@ -136,11 +152,4 @@ public class IzpitVir {
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
-
-//    @POST
-//    @Path("odjava")
-//    public Response odjavaOdIzpita(PrijavniPodatki prijavniPodatki) {
-//
-//        izpitZrno.returnApplication(prijavniPodatki);
-//    }
 }

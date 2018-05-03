@@ -242,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `predmet_student` (
 DROP TABLE IF EXISTS `prijava_izpit`;
 CREATE TABLE IF NOT EXISTS `prijava_izpit` (
   `brisana` tinyint(1) DEFAULT 0,
-  `cas_prijave` datetime DEFAULT NULL,
+  `cas_prijave` datetime NOT NULL,
   `studijsko_leto` int(11) NOT NULL,
   `student` int(11) NOT NULL,
   `predmet` int(11) NOT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `prijava_izpit` (
   `cena` decimal(7,2) DEFAULT NULL,
   `valuta` varchar(20) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `zakljucena` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
+  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`, `cas_prijave`),
   KEY `FK_prijava_izpit_datum_izvajanja` (`datum_izvajanja`,`studijsko_leto`,`predmet`),
   KEY `FK_prijava_izpit_predmet` (`predmet`,`studijsko_leto`,`student`),
   CONSTRAINT `FK_prijava_izpit_datum_izvajanja` FOREIGN KEY (`datum_izvajanja`, `studijsko_leto`, `predmet`) REFERENCES `rok` (`datum_cas`, `studijsko_leto`, `predmet`),
