@@ -29,7 +29,7 @@ public class FileExporter {
         FontFactory.register(NOTOSANS_BOLD, "notosans-bold");
         FontFactory.register(NOTOSANS_REGULAR, "notosans-regular");
 
-        notoRegular = FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12);
+        notoRegular = FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 8);
     }
 
     public File createFile(orodja.export.Document document) {
@@ -59,6 +59,7 @@ public class FileExporter {
         try {
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(fileName));
             writer.setPageEvent(new Footer());
+            doc.setPageSize(PageSize.A4.rotate());
             doc.open();
 
             addDocumentHeaders(document.getMetadata(), doc);
@@ -124,7 +125,7 @@ public class FileExporter {
             try {
                 if (course != null) {
                     chunk = new Chunk(course + " (" + courseCode + ")",
-                            FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+                            FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12));
                     paragraph.add(chunk);
                     paragraph.add(Chunk.NEWLINE);
                 }
