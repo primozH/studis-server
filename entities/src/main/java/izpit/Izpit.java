@@ -42,9 +42,9 @@ public class Izpit {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "student", referencedColumnName = "student"),
-            @JoinColumn(name = "predmet", referencedColumnName = "predmet"),
-            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto"),
+            @JoinColumn(name = "student", referencedColumnName = "student", insertable = false, updatable = false),
+            @JoinColumn(name = "predmet", referencedColumnName = "predmet", insertable = false, updatable = false),
+            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto", insertable = false, updatable = false),
             @JoinColumn(name = "datum_izvajanja", referencedColumnName = "datum_izvajanja")
     })
     private PrijavaIzpit prijavaIzpit;

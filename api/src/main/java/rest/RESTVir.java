@@ -24,6 +24,7 @@ public class RESTVir extends Application {
         resources.add(PredmetnikVir.class);
         resources.add(SifrantiVir.class);
         resources.add(IzvozVir.class);
+        resources.add(IzpitVir.class);
 
         resources.add(MultiPartFeature.class);
 
