@@ -1,15 +1,25 @@
 package izpit;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 import sifranti.Predmet;
 import sifranti.StudijskoLeto;
 import vloge.Ucitelj;
-
-import javax.persistence.*;
 
 
 @Entity
 @Table(name = "predmet_izvajanje")
 @IdClass(IzvajanjePredmetaId.class)
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.izpit.IzvajanjePredmeta.vrniIzvajanjePredmetaZaPredmet", query = "SELECT i FROM IzvajanjePredmeta i WHERE i.predmet.sifra = :sifraPredmeta")
+})
 public class IzvajanjePredmeta {
 
     @Id
