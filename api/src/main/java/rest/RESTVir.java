@@ -3,6 +3,7 @@ package rest;
 //import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import rest.viri.*;
+import sifranti.Predmet;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -25,6 +26,7 @@ public class RESTVir extends Application {
         resources.add(SifrantiVir.class);
         resources.add(IzvozVir.class);
         resources.add(IzpitVir.class);
+        resources.add(PredmetVir.class);
 
         resources.add(MultiPartFeature.class);
 

@@ -4,17 +4,17 @@ import static javax.ws.rs.core.Response.Status.OK;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import authentication.Auth;
+import authentication.Role;
 import vloge.Ucitelj;
 import vloge.Uporabnik;
 import zrna.PredmetZrno;
+
+import java.util.logging.Logger;
 
 @ApplicationScoped
 @Consumes(MediaType.APPLICATION_JSON)
@@ -22,8 +22,10 @@ import zrna.PredmetZrno;
 @Path("predmet")
 public class PredmetVir {
 
+    private final static Logger log = Logger.getLogger(PredmetVir.class.getName());
+
     @Inject
-    PredmetZrno predmetZrno;
+    private PredmetZrno predmetZrno;
 
     @POST
     public Response vrniPodatkeOPredmetu(Uporabnik uporabnik,
@@ -39,5 +41,13 @@ public class PredmetVir {
         } else {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+    }
+
+    @GET
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
+    public Response vrniSeznamIzvajanihPredmetov(Uporabnik uporabnik,
+                                                 @QueryParam("studijsko-leto") Integer studijskoLeto) {
+
+        return Response.ok(uporabnik).build();
     }
 }
