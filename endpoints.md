@@ -338,10 +338,17 @@ localhost:8080/api/v1/
         	"datumIzvajanja": "2019-06-05T10:00:00"
         }
         ```
-    - GET /izpit/prijavljeni?[predmet={sifra}&studijsko_leto={sifra}&datum_cas={sifra}]
+    - GET /izpit/prijavljeni?[predmet={sifra}&studijsko-leto={sifra}&datum-cas={sifra}]
         - seznam vseh prijav na izpitni rok pri predmetu za studijsko leto in na izbrani rok
-        [localhost:8080/api/v1/izpit/prijavljeni?predmet=63208&studijsko_leto=2018&datum_cas=2019-06-05T10:00]()
-        
+        [localhost:8080/api/v1/izpit/prijavljeni?predmet=63208&studijsko-leto=2018&datum-cas=2019-06-05T10:00]()
+      
+- podatki o izvajanju predmetov:
+    - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
+        - seznam vseh študentov, vpisanih v predmet za študijsko leto
+    - GET /predmet/izvajanje?studijsko-leto={leto}
+        - seznam vseh predmetov, ki se izvajajo v {leto}. Referent dobi seznam vseh predmetov,
+        učitelj pa samo predmete, ki jih izvaja
+         
 - podatki o izpitu:
     - POST /izpit
     /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu),

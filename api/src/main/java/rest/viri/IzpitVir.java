@@ -61,8 +61,8 @@ public class IzpitVir {
     @GET
     @Path("prijavljeni")
     public Response vrniPrijavljeneStudente(@QueryParam("predmet") Integer predmet,
-                                            @QueryParam("studijsko_leto") Integer studijskoLeto,
-                                            @QueryParam("datum_cas") String datum_cas) {
+                                            @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                            @QueryParam("datum-cas") String datum_cas) {
         List<PrijavaIzpit> prijavaIzpit = izpitZrno.vrniPrijavljeneStudente(predmet,
                 studijskoLeto,
                 LocalDateTime.parse(datum_cas));
