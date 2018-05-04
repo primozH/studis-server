@@ -68,17 +68,6 @@ public class KandidatVir {
         return Response.accepted(kandidatList).header("X-Total-Count", kandidatList.size()).build();
 
     }
-
-    @GET
-    @Path("{id}/ustvariStudenta")
-    public Response candidateEnrollment(@PathParam("id") Integer id) {
-        try {
-            Zeton zeton = zetonZrno.createTokenForCandidate(id);
-            return Response.ok(zeton).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
 }
 
 

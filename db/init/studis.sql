@@ -11,7 +11,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-
 DROP USER IF EXISTS 'studis'@'localhost';
 
 CREATE USER 'studis'@'localhost' IDENTIFIED BY 'studisIS';
@@ -29,7 +28,15 @@ CREATE TABLE IF NOT EXISTS `del_predmetnika` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.del_predmetnika: ~4 rows (približno)
+/*!40000 ALTER TABLE `del_predmetnika` DISABLE KEYS */;
+INSERT INTO `del_predmetnika` (`sifra`, `tip`) VALUES
+	(1, 'obvezni predmet'),
+	(2, 'strokovni izbirni predmet'),
+	(3, 'splošni izbirni predmet'),
+	(4, 'modulski predmet');
+/*!40000 ALTER TABLE `del_predmetnika` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.drzava
 DROP TABLE IF EXISTS `drzava`;
 CREATE TABLE IF NOT EXISTS `drzava` (
@@ -43,7 +50,260 @@ CREATE TABLE IF NOT EXISTS `drzava` (
   UNIQUE KEY `iso_3_koda` (`iso_3_koda`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.drzava: ~249 rows (približno)
+/*!40000 ALTER TABLE `drzava` DISABLE KEYS */;
+INSERT INTO `drzava` (`numericna_oznaka`, `iso_naziv`, `iso_koda`, `opombe`, `slovenski_naziv`, `iso_3_koda`) VALUES
+	(4, 'Afghanistan ', 'AF', NULL, 'Afganistan', 'AFG'),
+	(8, 'Albania ', 'AL', NULL, 'Albanija', 'ALB'),
+	(10, 'Antarctica ', 'AQ', 'Koda pa francoskem nazivu: Antarctique.', 'Antarktika', 'ATA'),
+	(12, 'Algeria ', 'DZ', 'Koda po kabilskem nazivu: Dzayer.', 'Alžirija', 'DZA'),
+	(16, 'American Samoa ', 'AS', 'Zunanji teritorij ZDA v južnem Tihem oceanu.', 'Ameriška Samoa', 'ASM'),
+	(20, 'Andorra ', 'AD', NULL, 'Andora', 'AND'),
+	(24, 'Angola ', 'AO', NULL, 'Angola', 'AGO'),
+	(28, 'Antigua and Barbuda ', 'AG', 'Otoška država v malih Antilih v Karibskem morju.', 'Antigva in Barbuda', 'ATG'),
+	(31, 'Azerbaijan ', 'AZ', NULL, 'Azerbajdžan', 'AZE'),
+	(32, 'Argentina', 'AR', NULL, 'Argenitna', 'ARG'),
+	(36, 'Australia ', 'AU', NULL, 'Avstralija', 'AUS'),
+	(40, 'Austria ', 'AT', NULL, 'Avstrija', 'AUT'),
+	(44, 'Bahamas ', 'BS', NULL, 'Bahami', 'BHS'),
+	(48, 'Bahrain ', 'BH', NULL, 'Bahrajn', 'BHR'),
+	(50, 'Bangladesh ', 'BD', NULL, 'Bangladeš', 'BGD'),
+	(51, 'Armenia ', 'AM', NULL, 'Armenija', 'ARM'),
+	(52, 'Barbados ', 'BB', NULL, 'Barbados', 'BRB'),
+	(56, 'Belgium ', 'BE', NULL, 'Belgija', 'BEL'),
+	(60, 'Bermuda ', 'BM', NULL, 'Bermudi', 'BMU'),
+	(64, 'Bhutan ', 'BT', NULL, 'Butan', 'BTN'),
+	(68, 'Bolivia, Plurinational State of ', 'BO', NULL, 'Bolivija', 'BOL'),
+	(70, 'Bosnia and Herzegovina ', 'BA', NULL, 'Bosna in Hercegovina', 'BIH'),
+	(72, 'Botswana ', 'BW', NULL, 'Bocvana', 'BWA'),
+	(74, 'Bouvet Island ', 'BV', 'Norveški otok v južnem Atlantskem oceanu.', 'Bouvetov otok', 'BVT'),
+	(76, 'Brazil ', 'BR', NULL, 'Brazilija', 'BRA'),
+	(84, 'Belize ', 'BZ', NULL, 'Belize', 'BLZ'),
+	(86, 'British Indian Ocean Territory ', 'IO', NULL, 'Britansko ozemlje v Indijskem oceanu', 'IOT'),
+	(90, 'Solomon Islands ', 'SB', 'Koda izhaja iz starega naziva: British Solomon Islands.', 'Solomonovi otoki', 'SLB'),
+	(92, 'Virgin Islands, British ', 'VG', 'Čezmorska skupnost Velike Britanije v Karibskem morju.', 'Britanski Deviški otoki', 'VGB'),
+	(96, 'Brunei Darussalam ', 'BN', 'ISO naziv države po nazivu v ZN. Otoška država na otok Borneo v JV Aziji.', 'Brunej', 'BRN'),
+	(100, 'Bulgaria ', 'BG', NULL, 'Bolgarija', 'BGR'),
+	(104, 'Myanmar ', 'MM', 'Bivši naziv: Burma (BU).', 'Mjanmar', 'MMR'),
+	(108, 'Burundi ', 'BI', NULL, 'Burundi ', 'BDI'),
+	(112, 'Belarus ', 'BY', 'Bivši ISO naziv države: Byelorussian SSR.', 'Belorusija', 'BLR'),
+	(116, 'Cambodia ', 'KH', 'Koda po bivšem nazivu: Khmer Republic. Bivši ISO naziv države: Kampuchea.', 'Kambodža', 'KHM'),
+	(120, 'Cameroon ', 'CM', NULL, 'Kamerun', 'CMR'),
+	(124, 'Canada ', 'CA', NULL, 'Kanada', 'CAN'),
+	(132, 'Cape Verde ', 'CV', 'Otočje v Atlantskem oceanu ob Afriki.', 'Kapverdski otoki (Zelenortski otoki)', 'CPV'),
+	(136, 'Cayman Islands ', 'KY', NULL, 'Kajmanski otoki', 'CYM'),
+	(140, 'Central African Republic ', 'CF', 'Prej znana kot francoska kolonija Ubangi-Shari.', 'Srednjeafriška republika', 'CAF'),
+	(144, 'Sri Lanka ', 'LK', NULL, 'Šri Lanka', 'LKA'),
+	(148, 'Chad ', 'TD', 'Koda po francoskem nazivu: Tchad.', 'Čad', 'TCD'),
+	(152, 'Chile ', 'CL', NULL, 'Čile', 'CHL'),
+	(156, 'China ', 'CN', NULL, 'Kitajska', 'CHN'),
+	(158, 'Taiwan, Province of China ', 'TW', NULL, 'Tajvan', 'TWN'),
+	(162, 'Christmas Island ', 'CX', 'Avstralsko ozemlje v Indijskem oceanu.', 'Božični otok', 'CXR'),
+	(166, 'Cocos (Keeling) Islands ', 'CC', 'Otočje pod upravo Avstralije v Indijskem oceanu.', 'Kokosovi in Keelingovi otoki', 'CCK'),
+	(170, 'Colombia ', 'CO', NULL, 'Kolumbija', 'COL'),
+	(174, 'Comoros ', 'KM', 'Otočje v Indijskem oceanu. Koda po nazivu v komorščini: Komori.', 'Komori', 'COM'),
+	(175, 'Mayotte ', 'YT', 'Čezmorska skupnost Francije ob vzhodni obali Afrike.', 'Francoska skupnost Mejot', 'MYT'),
+	(178, 'Congo ', 'CG', 'Srednji Kongo (celinska država brez morja).', 'Kongo', 'COG'),
+	(180, 'Congo, the Democratic Republic of the ', 'CD', 'Bivše ime: Zaire (ZR), obmorska država.', 'Demokratična republika Kongo', 'COD'),
+	(184, 'Cook Islands ', 'CK', NULL, 'Cookovi otoki', 'COK'),
+	(188, 'Costa Rica ', 'CR', NULL, 'Kostarika', 'CRI'),
+	(191, 'Croatia ', 'HR', 'Koda po nazivu v hrvaščini: Hrvatska.', 'Hrvaška', 'HRV'),
+	(192, 'Cuba ', 'CU', NULL, 'Kuba', 'CUB'),
+	(196, 'Cyprus ', 'CY', NULL, 'Ciper', 'CYP'),
+	(203, 'Czech Republic ', 'CZ', NULL, 'Češka', 'CZE'),
+	(204, 'Benin ', 'BJ', 'Bivši ISO naziv države: Dahomey (DY).', 'Benin', 'BEN'),
+	(208, 'Denmark ', 'DK', NULL, 'Danska', 'DNK'),
+	(212, 'Dominica ', 'DM', 'Otoška država v malih Antilih v Karibskem morju.', 'Dominika', 'DMA'),
+	(214, 'Dominican Republic ', 'DO', NULL, 'Dominikanska republika', 'DOM'),
+	(218, 'Ecuador ', 'EC', NULL, 'Ekvador', 'ECU'),
+	(222, 'El Salvador ', 'SV', NULL, 'Salvador', 'SLV'),
+	(226, 'Equatorial Guinea ', 'GQ', 'Koda po francoskem nazivu: Guinée équatoriale.', 'Ekvatorialna Gvineja', 'GNQ'),
+	(231, 'Ethiopia ', 'ET', NULL, 'Etiopija', 'ETH'),
+	(232, 'Eritrea ', 'ER', NULL, 'Eritreja', 'ERI'),
+	(233, 'Estonia ', 'EE', 'Koda po estonskem nazivu: Eesti.', 'Estonija', 'EST'),
+	(234, 'Falkland Islands (Malvinas) ', 'FK', 'Čezmorsko otočje velike Britanije.', 'Falkalndski otoki', 'FRO'),
+	(238, 'Faroe Islands ', 'FO', NULL, 'Ferski otoki', 'FLK'),
+	(239, 'South Georgia and the South Sandwich Islands ', 'GS', 'Čezmorsko otočje Velike Britanije na jugu Atlantskega oceana.', 'Južna Georgia in Južni Sandwichevi otoki', 'SGS'),
+	(242, 'Fiji ', 'FJ', 'Otočje v južnem Tihem oceanu.', 'Fidži', 'FJI'),
+	(246, 'Finland ', 'FI', NULL, 'Finska', 'FIN'),
+	(248, 'Ålland Islands ', 'AX', 'Otočje v Baltiku.', 'Alandski otoki', 'ALA'),
+	(250, 'France ', 'FR', NULL, 'Francija', 'FRA'),
+	(254, 'French Guiana ', 'GF', 'Koda po francoskem nazivu: Guyane française.', 'Francoska Gvajana', 'GUF'),
+	(258, 'French Polynesia ', 'PF', 'Čezmorsko otočje Francije v južnem Tihem oceanu. Koda po francoskem nazivu: Polynésie française.', 'Francoska Polinezija', 'PYF'),
+	(260, 'French Southern Territories ', 'TF', 'Predstavlja francoske vulkanske otoke JV od Afrike v Indijskem oceanu in del antarktike, ki Franciji niso mednarodno priznani. Koda po francokem nazivu: Terres australes françaises.', 'Francoska južna ozemlja', 'ATF'),
+	(262, 'Djibouti ', 'DJ', 'Staro ime: French Afar and Issas (AI).', 'Džibuti', 'DJI'),
+	(266, 'Gabon ', 'GA', NULL, 'Gabon', 'GAB'),
+	(268, 'Georgia ', 'GE', 'Koda GE je prej predstavljala Gilbertove in Ellisijine otoke.', 'Gruzija', 'GEO'),
+	(270, 'Gambia ', 'GM', NULL, 'Gambija', 'GMB'),
+	(275, 'Palestinian Territory, Occupied ', 'PS', 'Sestavljena iz Zahodnega brega in Gaze.', 'Palestina', 'PSE'),
+	(276, 'Germany ', 'DE', 'Koda po nemškem nazivu: Deutschland. Koda pred 1990 v uporabi za Zahodno Nemčijo.', 'Nemčija', 'DEU'),
+	(288, 'Ghana ', 'GH', NULL, 'Gana', 'GHA'),
+	(292, 'Gibraltar ', 'GI', NULL, 'Gibraltar', 'GIB'),
+	(296, 'Kiribati ', 'KI', 'Razpršeno otočje v Tihem oceanu. Stari naziv: Gilbertovi otoki.', 'Kiribati', 'KIR'),
+	(300, 'Greece ', 'GR', NULL, 'Grčija', 'GRC'),
+	(304, 'Greenland ', 'GL', NULL, 'Grenlandija', 'GRL'),
+	(308, 'Grenada ', 'GD', NULL, 'Grenada', 'GRD'),
+	(312, 'Guadeloupe ', 'GP', 'Čezmorski otok Francije v Karibskem morju.', 'Guadeloupe', 'GLP'),
+	(316, 'Guam ', 'GU', 'Zunanji teritorij ZDA v Tihem oceanu (tudi Guahan).', 'Guam', 'GUM'),
+	(320, 'Guatemala ', 'GT', NULL, 'Gvatemala', 'GTM'),
+	(324, 'Guinea ', 'GN', NULL, 'Gvineja', 'GIN'),
+	(328, 'Guyana ', 'GY', NULL, 'Gvajana', 'GUY'),
+	(332, 'Haiti ', 'HT', NULL, 'Haiti', 'HTI'),
+	(334, 'Heard Island and McDonald Islands ', 'HM', 'Nenaseljeno otočje v Indijskem oceanu pod upravo Avstralije.', 'Otok Heard in otočje McDonald', 'HMD'),
+	(336, 'Holy See (Vatican City State) ', 'VA', 'Bivši ISO naziv države: Vatican City State (Vatikanska mestna država).', 'Vatikan', 'VAT'),
+	(340, 'Honduras ', 'HN', NULL, 'Honduras', 'HND'),
+	(344, 'Hong Kong ', 'HK', NULL, 'Hong Kong', 'HKG'),
+	(348, 'Hungary ', 'HU', NULL, 'Madžarska', 'HUN'),
+	(352, 'Iceland ', 'IS', 'Koda po nazivu v islandščini: Ísland.', 'Islandija', 'ISL'),
+	(356, 'India ', 'IN', NULL, 'Indija', 'IND'),
+	(360, 'Indonesia ', 'ID', NULL, 'Indonezija', 'IDN'),
+	(364, 'Iran, Islamic Republic of ', 'IR', NULL, 'Iran', 'IRN'),
+	(368, 'Iraq ', 'IQ', NULL, 'Irak', 'IRQ'),
+	(372, 'Ireland ', 'IE', NULL, 'Irska', 'IRL'),
+	(376, 'Israel ', 'IL', NULL, 'Izrael', 'ISR'),
+	(380, 'Italy ', 'IT', NULL, 'Italija', 'ITA'),
+	(384, 'Côte d\'Ivoire', 'CI', NULL, 'Slonokoščena obala', 'CIV'),
+	(388, 'Jamaica ', 'JM', NULL, 'Jamajka', 'JAM'),
+	(392, 'Japan ', 'JP', NULL, 'Japonska', 'JPN'),
+	(398, 'Kazakhstan ', 'KZ', 'Bivši ISO naziv države: Kazakstan.', 'Kazahstan', 'KAZ'),
+	(400, 'Jordan ', 'JO', NULL, 'Jordanija', 'JOR'),
+	(404, 'Kenya ', 'KE', NULL, 'Kenija', 'KEN'),
+	(408, 'Korea, Democratic People\'s Republic of ', 'KP', 'ISO naziv države po uradnem nazivu v ZN (splošno ime: Severna Koreja).', 'Severna Koreja', 'PRK'),
+	(410, 'Korea, Republic of ', 'KR', 'ISO naziv države po uradnem nazivu v ZN (splošno ime: Južna Koreja).', 'Južna Koreja', 'KOR'),
+	(414, 'Kuwait ', 'KW', NULL, 'Kuvajt', 'KWT'),
+	(417, 'Kyrgyzstan ', 'KG', NULL, 'Kirgizistan (Kirgizija)', 'KGZ'),
+	(418, 'Lao People\'s Democratic Republic ', 'LA', NULL, 'Laos', 'LAO'),
+	(422, 'Lebanon ', 'LB', NULL, 'Libanon', 'LBN'),
+	(426, 'Lesotho ', 'LS', NULL, 'Lesoto', 'LSO'),
+	(428, 'Latvia ', 'LV', NULL, 'Latvija', 'LVA'),
+	(430, 'Liberia ', 'LR', NULL, 'Liberija', 'LBR'),
+	(434, 'Libya ', 'LY', 'Bivši ISO naziv države: Libyan Arab Jamahiriya.', 'Libija', 'LBY'),
+	(438, 'Liechtenstein ', 'LI', NULL, 'Lihtenštajn', 'LIE'),
+	(440, 'Lithuania ', 'LT', NULL, 'Litva', 'LTU'),
+	(442, 'Luxembourg ', 'LU', NULL, 'Luksemburg', 'LUX'),
+	(446, 'Macao ', 'MO', 'Bivši ISO naziv države: Macau.', 'Makao', 'MAC'),
+	(450, 'Madagascar ', 'MG', NULL, 'Madagaskar', 'MDG'),
+	(454, 'Malawi ', 'MW', NULL, 'Malavi', 'MWI'),
+	(458, 'Malaysia ', 'MY', NULL, 'Malezija', 'MYS'),
+	(462, 'Maldives ', 'MV', NULL, 'Maldivi', 'MDV'),
+	(466, 'Mali ', 'ML', NULL, 'Mali', 'MLI'),
+	(470, 'Malta ', 'MT', NULL, 'Malta', 'MLT'),
+	(474, 'Martinique ', 'MQ', 'Čezmorski otok Francije v malih Antilih v Karibsekm morju.', 'Martinik', 'MTQ'),
+	(478, 'Mauritania ', 'MR', NULL, 'Mavretanija', 'MRT'),
+	(480, 'Mauritius ', 'MU', 'Domačini v kreolščini imenujejo otok: Moris.', 'Mauricius (Moris)', 'MUS'),
+	(484, 'Mexico ', 'MX', NULL, 'Mehika', 'MEX'),
+	(492, 'Monaco ', 'MC', NULL, 'Monako', 'MCO'),
+	(496, 'Mongolia ', 'MN', NULL, 'Mongolija', 'MNG'),
+	(498, 'Moldova, Republic of ', 'MD', NULL, 'Moldavija', 'MDA'),
+	(499, 'Montenegro ', 'ME', NULL, 'Črna Gora', 'MNE'),
+	(500, 'Montserrat ', 'MS', 'Otok v Antilih v Karibskem morju odvisen od Velike Britanije.', 'Montserat', 'MSR'),
+	(504, 'Morocco ', 'MA', NULL, 'Maroko', 'MAR'),
+	(508, 'Mozambique ', 'MZ', NULL, 'Mozambik', 'MOZ'),
+	(512, 'Oman ', 'OM', NULL, 'Oman', 'OMN'),
+	(516, 'Namibia ', 'NA', NULL, 'Namibija', 'NAM'),
+	(520, 'Nauru ', 'NR', 'Otoška država v Južnem Tihem oceanu.', 'Nauru', 'NRU'),
+	(524, 'Nepal ', 'NP', NULL, 'Nepal', 'NPL'),
+	(528, 'Netherlands ', 'NL', NULL, 'Nizozemska', 'NLD'),
+	(531, 'Curaçao ', 'CW', 'Spada v čezmorsko ozemlje Nizozemske, Nizozemski Antili.', 'Kurasao', 'CUW'),
+	(533, 'Aruba ', 'AW', 'Otok v Karibskem morju, del kraljevine Nizozemske.', 'Aruba', 'ABW'),
+	(534, 'Sint Maarten (Dutch part) ', 'SX', 'Francoski del otoka Sv. Martina ima ISO kodo MF. Nahaja se v Karibskem morju.', 'Otok svetega.Martina (Nizozemska)', 'SXM'),
+	(535, 'Bonaire, Sint Eustatius and Saba ', 'BQ', 'Otočje v karibih pod nizozemsko upravo (the BES Islands). Bivši ISO naziv države: Bonaire, Saint Eustatius and Saba. BQ je prej predstavljal: British Antarctic Territory.', 'Otočje Bonaire, Sv. Eustatij in Saba', 'BES'),
+	(540, 'New Caledonia ', 'NC', 'Čezmorsko otočje Francije v Pacifiku.', 'Nova Kaledonija', 'NCL'),
+	(548, 'Vanuatu ', 'VU', 'Stari naziv: New Hebrides (NH).', 'Republika Vanuatu', 'VUT'),
+	(554, 'New Zealand ', 'NZ', NULL, 'Nova Zelandija', 'NZL'),
+	(558, 'Nicaragua ', 'NI', NULL, 'Nikaragva', 'NIC'),
+	(562, 'Niger ', 'NE', NULL, 'Niger ', 'NER'),
+	(566, 'Nigeria ', 'NG', NULL, 'Nigerija', 'NGA'),
+	(570, 'Niue ', 'NU', 'Otoška država v Južnem Tihem oceanu.', 'Niu', 'NIU'),
+	(574, 'Norfolk Island ', 'NF', 'Del Avstralije s samoupravo.', 'Otok Norflok', 'NFK'),
+	(578, 'Norway ', 'NO', NULL, 'Norveška', 'NOR'),
+	(580, 'Northern Mariana Islands ', 'MP', 'Ameriško otočje v severnem Tihem oceanu.', 'Severni Marianski otoki', 'MNP'),
+	(581, 'United States Minor Outlying Islands ', 'UM', 'Sestavljeno iz devetih manjših otokov ZDA: Baker Island, Howland Island, Jarvis Island, Johnston Atoll, Kingman Reef, Midway Islands, Navassa Island, Palmyra Atoll, and Wake Island.', 'ZDA zunanji otoki', 'UMI'),
+	(583, 'Micronesia, Federated States of ', 'FM', 'Bivši ISO naziv države: Micronesia. Nahaja se v Tihem oceanu.', 'Mikronezija', 'FSM'),
+	(584, 'Marshall Islands ', 'MH', 'Majhno otočje v Tihem oceanu.', 'Maršalovi otoki', 'MHL'),
+	(585, 'Palau ', 'PW', 'Majhna otoška država v Tihem oceanu.', 'Palau ', 'PLW'),
+	(586, 'Pakistan ', 'PK', NULL, 'Pakistan', 'PAK'),
+	(591, 'Panama ', 'PA', NULL, 'Panama', 'PAN'),
+	(598, 'Papua New Guinea ', 'PG', NULL, 'Papua Nova Gvineja', 'PNG'),
+	(600, 'Paraguay ', 'PY', NULL, 'Paragvaj', 'PRY'),
+	(604, 'Peru ', 'PE', NULL, 'Peru', 'PER'),
+	(608, 'Philippines ', 'PH', NULL, 'Filipini', 'PHL'),
+	(612, 'Pitcairn ', 'PN', 'Čezmorsko otočje Velike Britanije v Tihem oceanu.', 'Pitcairnovi otoki', 'PCN'),
+	(616, 'Poland ', 'PL', NULL, 'Poljska', 'POL'),
+	(620, 'Portugal ', 'PT', NULL, 'Portugalska', 'PRT'),
+	(624, 'Guinea-Bissau ', 'GW', NULL, 'Gvineja-Bissau', 'GNB'),
+	(626, 'Timor-Leste ', 'TL', 'Bivši naziv: East Timor (TP). Majhna otoška država v JV Aziji.', 'Vzhodni Timor', 'TLS'),
+	(630, 'Puerto Rico ', 'PR', NULL, 'Portoriko', 'PRI'),
+	(634, 'Qatar ', 'QA', NULL, 'Katar', 'QAT'),
+	(638, 'Réunion ', 'RE', 'Čezmorska otoška skupnost Francije v Indijskem oceanu.', 'Francoska skupnost Reunion', 'REU'),
+	(642, 'Romania ', 'RO', NULL, 'Romunija', 'ROU'),
+	(643, 'Russian Federation ', 'RU', NULL, 'Ruska federacija', 'RUS'),
+	(646, 'Rwanda ', 'RW', NULL, 'Ruanda', 'RWA'),
+	(652, 'Saint Barthélemy ', 'BL', 'Čezmosrksa skupnost Francije.', 'Sveti Bartolomej', 'BLM'),
+	(654, 'Saint Helena, Ascension and Tristan da Cunha ', 'SH', 'Čezmorsko ozemlje Sveta Helena Velike Britanije v Atlantskem oceanu. Bivši ISO naziv države: Saint Helena.', 'Sveta Helena', 'SHN'),
+	(659, 'Saint Kitts and Nevis ', 'KN', 'Otoška državica v karibskih Malih Antilih. Bivši ISO naziv države: Saint Kitts-Nevis-Anguilla.', 'Sveti Kits in Nevis', 'KNA'),
+	(660, 'Anguilla ', 'AI', 'Čezmorska skupnost Velike Britanije, predhodno je AI predstavljal francoski: Afar and Issas.', 'Angvila', 'AIA'),
+	(662, 'Saint Lucia ', 'LC', 'Otoška država v južnem Karibskem morju.', 'Sveta Lucija', 'LCA'),
+	(663, 'Saint Martin (French part) ', 'MF', 'Čezmorsko otočje Francije v Karibskem morju. Nizozmski del otoka Sv. Martina ima kodo SX.', 'Otok svetega Martina', 'MAF'),
+	(666, 'Saint Pierre and Miquelon ', 'PM', 'Čezmorsko otočje Francije ob Kanadi in Grenlandiji.', 'Sveta Pierre in Miquelon', 'SPM'),
+	(670, 'Saint Vincent and the Grenadines ', 'VC', 'Majhna otoška država v Karibskem otočju.', 'Sveti Vincent in Grenadini', 'VCT'),
+	(674, 'San Marino ', 'SM', NULL, 'San Marino', 'SMR'),
+	(678, 'Sao Tome and Principe ', 'ST', 'Majhna otoška država v Gvinejskem zalivu ob Afriki.', 'Sao Tome in Principe', 'STP'),
+	(682, 'Saudi Arabia ', 'SA', NULL, 'Savdska Arabija', 'SAU'),
+	(686, 'Senegal ', 'SN', NULL, 'Senegal', 'SEN'),
+	(688, 'Serbia ', 'RS', 'Koda po uradnem nazivu: Republika Srbija.', 'Srbija', 'SRB'),
+	(690, 'Seychelles ', 'SC', NULL, 'Sejšeli', 'SYC'),
+	(694, 'Sierra Leone ', 'SL', NULL, 'Siera Leone', 'SLE'),
+	(702, 'Singapore ', 'SG', NULL, 'Singapur', 'SGP'),
+	(703, 'Slovakia ', 'SK', 'SK je prej predstavljal: Sikkim.', 'Slovaška', 'SVK'),
+	(704, 'Viet Nam ', 'VN', NULL, 'Vietnam', 'VNM'),
+	(705, 'Slovenia ', 'SI', NULL, 'Slovenija', 'SVN'),
+	(706, 'Somalia ', 'SO', NULL, 'Somalija', 'SOM'),
+	(710, 'South Africa ', 'ZA', 'Koda iz naziva v nizozemščini: Zuid-Afrika.', 'Južna afrika', 'ZAF'),
+	(716, 'Zimbabwe ', 'ZW', 'Naziv se je spremenil iz: Suthern Rhodesia (RH, Južna Rodezija).', 'Zimbabve', 'ZWE'),
+	(724, 'Spain ', 'ES', 'Koda po nazivu v spanščini: España.', 'Španija', 'ESP'),
+	(728, 'South Sudan ', 'SS', NULL, 'Južni Sudan', 'SSD'),
+	(729, 'Sudan ', 'SD', NULL, 'Sudan', 'SDN'),
+	(732, 'Western Sahara ', 'EH', 'Bivši ISO naziv države: Spanish Sahara (koda po španskem nazivu: Sahara español).', 'Zahodna Sahara', 'ESH'),
+	(740, 'Suriname ', 'SR', NULL, 'Surinam', 'SUR'),
+	(744, 'Svalbard and Jan Mayen ', 'SJ', 'Sestavljata ga dva arktična ozemlja pod suverenostjo Norveške: Svalbardski otoki in otok Jan Mayen.', 'Svalbard in Jan Majen ', 'SJM'),
+	(748, 'Swaziland ', 'SZ', NULL, 'Svazi', 'SWZ'),
+	(752, 'Sweden ', 'SE', NULL, 'Švedska', 'SWE'),
+	(756, 'Switzerland ', 'CH', 'Koda je narejena po nazivu v latinščini: Confoederatio Helvetica.', 'Švica', 'CHE'),
+	(760, 'Syrian Arab Republic ', 'SY', NULL, 'Sirija', 'SYR'),
+	(762, 'Tajikistan ', 'TJ', NULL, 'Tadžikistan', 'TJK'),
+	(764, 'Thailand ', 'TH', NULL, 'Tajska', 'THA'),
+	(768, 'Togo ', 'TG', NULL, 'Togo', 'TGO'),
+	(772, 'Tokelau ', 'TK', 'Trije koralni otoki pod upravo Nove Zelandije.', 'Tokelau', 'TKL'),
+	(776, 'Tonga ', 'TO', 'Majhna otoška država v Tihem oceanu.', 'Tonga', 'TON'),
+	(780, 'Trinidad and Tobago ', 'TT', NULL, 'Trinidad in Tobago', 'TTO'),
+	(784, 'United Arab Emirates ', 'AE', NULL, 'Združeni Arabski Emirati', 'ARE'),
+	(788, 'Tunisia ', 'TN', NULL, 'Tunizija', 'TUN'),
+	(792, 'Turkey ', 'TR', NULL, 'Turčija', 'TUR'),
+	(795, 'Turkmenistan ', 'TM', NULL, 'Turkmenistan', 'TKM'),
+	(796, 'Turks and Caicos Islands ', 'TC', 'Čezmorska skupnost Velike Britanije v Karibskem morju.', 'Tirški in Kajkoški otoki', 'TCA'),
+	(798, 'Tuvalu ', 'TV', 'Majhna otoška država v Tihem oceanu.', 'Tuvalu', 'TUV'),
+	(800, 'Uganda ', 'UG', NULL, 'Uganda', 'UGA'),
+	(804, 'Ukraine ', 'UA', 'Bivši ISO naziv države: Ukrainian SSR. ', 'Ukrajina', 'UKR'),
+	(807, 'Macedonia, the former Yugoslav Republic of ', 'MK', 'ISO naziv države glede na spor o nazivu države. Uradno domače ime države: Republika Makedonija.', 'Makedonija', 'MKD'),
+	(818, 'Egypt ', 'EG', NULL, 'Egipt', 'EGY'),
+	(826, 'United Kingdom ', 'GB', 'Koda po nazivu: Great Britain (iz uradnega naziva: United Kingdom of Great Britain and Northern Ireland). ', 'Velika Britanija', 'GBR'),
+	(831, 'Guernsey ', 'GG', 'Bailwick of Goursey je Britanski otok ob Franciji.', 'Otok Guernsey', 'GGY'),
+	(832, 'Jersey ', 'JE', 'Bailwick of Jersey je Britanski otok med Anglijo in Francijo.', 'Otok Jersey', 'JEY'),
+	(833, 'Isle of Man ', 'IM', 'Spada neposredno pod Britansko krono a ni del Velike Britanije, nahaja se med Irsko in Veliko Britanijo.', 'Otok Man', 'IMN'),
+	(834, 'Tanzania, United Republic of ', 'TZ', NULL, 'Tanzanija', 'TZA'),
+	(840, 'United States ', 'US', NULL, 'Združene države Amerike', 'USA'),
+	(850, 'Virgin Islands, U.S. ', 'VI', NULL, 'Ameriški Deviški otoki', 'VIR'),
+	(854, 'Burkina Faso ', 'BF', 'Bivši ISO naziv države: Upper Volta (HV).', 'Burkina Faso', 'BFA'),
+	(858, 'Uruguay ', 'UY', NULL, 'Urugvaj', 'URY'),
+	(860, 'Uzbekistan ', 'UZ', NULL, 'Uzbekistan', 'UZB'),
+	(862, 'Venezuela, Bolivarian Republic of ', 'VE', NULL, 'Venezuela', 'VEN'),
+	(876, 'Wallis and Futuna ', 'WF', 'Čezmorska skupnost Francije v Pacifiku.', 'Otočje Valis in Futuna', 'WLF'),
+	(882, 'Samoa ', 'WS', 'Koda nastala po bivšem nazivu: Western Samoa (Zahodna Samoa).', 'Samoa', 'WSM'),
+	(887, 'Yemen ', 'YE', 'Bivši ISO naziv države: Republic of Yemen, koda se je uporabljala za Severni Jemen pred letom 1990.', 'Jemen', 'YEM'),
+	(894, 'Zambia ', 'ZM', NULL, 'Zambija', 'ZMB');
+/*!40000 ALTER TABLE `drzava` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.izpit
 DROP TABLE IF EXISTS `izpit`;
 CREATE TABLE IF NOT EXISTS `izpit` (
@@ -61,22 +321,36 @@ CREATE TABLE IF NOT EXISTS `izpit` (
   CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_izpit` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.izpit: ~0 rows (približno)
+/*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `izpit` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.kandidat
 DROP TABLE IF EXISTS `kandidat`;
 CREATE TABLE IF NOT EXISTS `kandidat` (
-  `id_uporabnik` int(11) NOT NULL,
-  `geslo_plain` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
-  `izkoriscen` tinyint(1) DEFAULT 0,
-  `vpisna_stevilka` int(11) DEFAULT NULL,
-  `studijski_program` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_uporabnik`),
-  KEY `FK_kandidat_studijski_program` (`studijski_program`),
-  CONSTRAINT `FK_kandidat_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`) ON DELETE CASCADE,
-  CONSTRAINT `FK_kandidat_studijski_program` FOREIGN KEY (`studijski_program`) REFERENCES `studijski_program` (`sifra_evs`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ime` varchar(50) COLLATE utf8_slovenian_ci NOT NULL,
+  `priimek` varchar(100) COLLATE utf8_slovenian_ci NOT NULL,
+  `studijski_program` int(11) NOT NULL,
+  `email` varchar(100) COLLATE utf8_slovenian_ci NOT NULL,
+  `uporabnisko_ime` varchar(50) COLLATE utf8_slovenian_ci NOT NULL,
+  `geslo_plain` varchar(30) COLLATE utf8_slovenian_ci NOT NULL,
+  `vpisna_stevilka` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `kandidat_vpisna_stevilka_uindex` (`vpisna_stevilka`),
+  KEY `kandidat_studijski_program_sifra_evs_fk` (`studijski_program`),
+  CONSTRAINT `kandidat_studijski_program_sifra_evs_fk` FOREIGN KEY (`studijski_program`) REFERENCES `studijski_program` (`sifra_evs`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.kandidat: ~0 rows (približno)
+/*!40000 ALTER TABLE `kandidat` DISABLE KEYS */;
+INSERT INTO `kandidat` (`id`, `ime`, `priimek`, `studijski_program`, `email`, `uporabnisko_ime`, `geslo_plain`, `vpisna_stevilka`) VALUES
+	(5, 'Eva', 'Prepih', 1000471, 'eva.prepih@student.fri.si', 'ep2864', 'PUL4JQCISZ', 63180023),
+	(6, 'Gašper', 'Velik', 1000474, 'gasper@student.fri.si', 'gv6747', 'VCVMVHGTGN', 63180024),
+	(7, 'Luka', 'Kovač', 1000470, 'luka@student.fri.si', 'lk8462', 'QWQO3YMF1F', 63180025),
+	(8, 'Franc', 'Okoren', 1000470, 'franc.okoren@student.fri.si', 'fo6926', '8A6ISB9HFA', 63180026);
+/*!40000 ALTER TABLE `kandidat` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.klasius
 DROP TABLE IF EXISTS `klasius`;
 CREATE TABLE IF NOT EXISTS `klasius` (
@@ -87,7 +361,29 @@ CREATE TABLE IF NOT EXISTS `klasius` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.klasius: ~18 rows (približno)
+/*!40000 ALTER TABLE `klasius` DISABLE KEYS */;
+INSERT INTO `klasius` (`sifra`, `opis`, `raven_izobrazbe`, `strokovni_naslov`) VALUES
+	(12001, 'Osnovnošolska izobrazba', '1', 'zaključena osnovna šola'),
+	(13001, 'Nižja poklicna izobrazba', '3', 'zaključni izpit'),
+	(14001, 'Srednja poklicna izobrazba', '4', 'zaključni izpit'),
+	(15001, 'Srednja strokovna izobrazba', '5', 'poklicna matura/zaključni izpit'),
+	(15002, 'Srednja splošna izobrazba', '5', 'splošna matura'),
+	(16101, ' Višja strokovna izobrazba', '6/1', 'inženir/tehnolog'),
+	(16102, 'Višješolska izobrazba (predbolonjska)', '6/1', 'inženir/tehnolog/višji/drugo'),
+	(16201, 'Specializacija po višješolski izobrazbi (predbolonjska)', '6/2', 'specialist'),
+	(16202, 'Visokošolska strokovna izobrazba (predbolonjska)', '6/2', 'diplomirani/diplomirani inženir'),
+	(16203, 'Visokošolska strokovna izobrazba (prva bolonjska stopnja)', '6/2', 'diplomirani (VS)'),
+	(16204, 'Visokošolska univerzitetna izobrazba (prva bolonjska stopnja)', '6/2', 'diplomirani (UN)'),
+	(17001, 'Specializacija po visokošolski strokovni izobrazbi (predbolonjska)', '7', 'specialist'),
+	(17002, 'Visokošolska univerzitetna izobrazba (predbolonjska)', '7', 'univerzitetni diplomirani/akademski/profesor...'),
+	(17003, 'Magistrska izobrazba (druga bolonjska stopnja)', '7', 'magister'),
+	(18101, 'Specializacija po univerzitetni izobrazbi (predbolonjska)', '8/1', 'specialist'),
+	(18102, 'Magisterij znanosti (predbolonjska)', '8/1', 'magister znanosti/umetnosti'),
+	(18201, 'Doktorat znanosti (predbolonjska)', '8/2', 'doktor znanosti'),
+	(18202, 'Doktorat znanosti (tretja bolonjska stopnja)', '8/2', 'doktor zannosti');
+/*!40000 ALTER TABLE `klasius` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.letnik
 DROP TABLE IF EXISTS `letnik`;
 CREATE TABLE IF NOT EXISTS `letnik` (
@@ -95,7 +391,14 @@ CREATE TABLE IF NOT EXISTS `letnik` (
   PRIMARY KEY (`letnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.letnik: ~3 rows (približno)
+/*!40000 ALTER TABLE `letnik` DISABLE KEYS */;
+INSERT INTO `letnik` (`letnik`) VALUES
+	(1),
+	(2),
+	(3);
+/*!40000 ALTER TABLE `letnik` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.nacin_studija
 DROP TABLE IF EXISTS `nacin_studija`;
 CREATE TABLE IF NOT EXISTS `nacin_studija` (
@@ -105,7 +408,13 @@ CREATE TABLE IF NOT EXISTS `nacin_studija` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.nacin_studija: ~2 rows (približno)
+/*!40000 ALTER TABLE `nacin_studija` DISABLE KEYS */;
+INSERT INTO `nacin_studija` (`sifra`, `opis`, `opis_ang`) VALUES
+	(1, 'redni', 'full-time'),
+	(2, 'izredni', 'part-time');
+/*!40000 ALTER TABLE `nacin_studija` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.napacna_prijava
 DROP TABLE IF EXISTS `napacna_prijava`;
 CREATE TABLE IF NOT EXISTS `napacna_prijava` (
@@ -114,9 +423,12 @@ CREATE TABLE IF NOT EXISTS `napacna_prijava` (
   `IP` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `st_napacnih_poskusov` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_napacnega`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.napacna_prijava: ~0 rows (približno)
+/*!40000 ALTER TABLE `napacna_prijava` DISABLE KEYS */;
+/*!40000 ALTER TABLE `napacna_prijava` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.obcina
 DROP TABLE IF EXISTS `obcina`;
 CREATE TABLE IF NOT EXISTS `obcina` (
@@ -125,7 +437,223 @@ CREATE TABLE IF NOT EXISTS `obcina` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.obcina: ~212 rows (približno)
+/*!40000 ALTER TABLE `obcina` DISABLE KEYS */;
+INSERT INTO `obcina` (`sifra`, `ime`) VALUES
+	(1, 'Ajdovščina '),
+	(2, 'Beltinci '),
+	(3, 'Bled '),
+	(4, 'Bohinj '),
+	(5, 'Borovnica '),
+	(6, 'Bovec '),
+	(7, 'Brda '),
+	(8, 'Brezovica '),
+	(9, 'Brežice '),
+	(10, 'Tišina '),
+	(11, 'Celje '),
+	(12, 'Cerklje na Gorenjskem '),
+	(13, 'Cerknica '),
+	(14, 'Cerkno '),
+	(15, 'Črenšovci '),
+	(16, 'Črna na Koroškem '),
+	(17, 'Črnomelj '),
+	(18, 'Destrnik '),
+	(19, 'Divača '),
+	(20, 'Dobrepolje '),
+	(21, 'Dobrova - Polhov Gradec '),
+	(22, 'Dol pri Ljubljani '),
+	(23, 'Domžale '),
+	(24, 'Dornava '),
+	(25, 'Dravograd '),
+	(26, 'Duplek '),
+	(27, 'Gorenja vas - Poljane '),
+	(28, 'Gorišnica '),
+	(29, 'Gornja Radgona '),
+	(30, 'Gornji Grad '),
+	(31, 'Gornji Petrovci '),
+	(32, 'Grosuplje '),
+	(33, 'Šalovci '),
+	(34, 'Hrastnik '),
+	(35, 'Hrpelje - Kozina '),
+	(36, 'Idrija '),
+	(37, 'Ig '),
+	(38, 'Ilirska Bistrica '),
+	(39, 'Ivančna Gorica '),
+	(40, 'Izola '),
+	(41, 'Jesenice '),
+	(42, 'Juršinci '),
+	(43, 'Kamnik '),
+	(44, 'Kanal '),
+	(45, 'Kidričevo '),
+	(46, 'Kobarid '),
+	(47, 'Kobilje '),
+	(48, 'Kočevje '),
+	(49, 'Komen '),
+	(50, 'Koper '),
+	(51, 'Kozje '),
+	(52, 'Kranj '),
+	(53, 'Kranjska Gora '),
+	(54, 'Krško '),
+	(55, 'Kungota '),
+	(56, 'Kuzma '),
+	(57, 'Laško '),
+	(58, 'Lenart '),
+	(59, 'Lendava '),
+	(60, 'Litija '),
+	(61, 'Ljubljana '),
+	(62, 'Ljubno '),
+	(63, 'Ljutomer '),
+	(64, 'Logatec '),
+	(65, 'Loška dolina '),
+	(66, 'Loški Potok '),
+	(67, 'Luče '),
+	(68, 'Lukovica '),
+	(69, 'Majšperk '),
+	(70, 'Maribor '),
+	(71, 'Medvode '),
+	(72, 'Mengeš '),
+	(73, 'Metlika '),
+	(74, 'Mežica '),
+	(75, 'Miren - Kostanjevica '),
+	(76, 'Mislinja '),
+	(77, 'Moravče '),
+	(78, 'Moravske Toplice '),
+	(79, 'Mozirje '),
+	(80, 'Murska Sobota '),
+	(81, 'Muta '),
+	(82, 'Naklo '),
+	(83, 'Nazarje '),
+	(84, 'Nova Gorica '),
+	(85, 'Novo mesto '),
+	(86, 'Odranci '),
+	(87, 'Ormož '),
+	(88, 'Osilnica '),
+	(89, 'Pesnica '),
+	(90, 'Piran '),
+	(91, 'Pivka '),
+	(92, 'Podčetrtek '),
+	(93, 'Podvelka '),
+	(94, 'Postojna '),
+	(95, 'Preddvor '),
+	(96, 'Ptuj '),
+	(97, 'Puconci '),
+	(98, 'Rače - Fram '),
+	(99, 'Radeče '),
+	(100, 'Radenci '),
+	(101, 'Radlje ob Dravi '),
+	(102, 'Radovljica '),
+	(103, 'Ravne na Koroškem '),
+	(104, 'Ribnica '),
+	(105, 'Rogašovci '),
+	(106, 'Rogaška Slatina '),
+	(107, 'Rogatec '),
+	(108, 'Ruše '),
+	(109, 'Semič '),
+	(110, 'Sevnica '),
+	(111, 'Sežana '),
+	(112, 'Slovenj Gradec '),
+	(113, 'Slovenska Bistrica '),
+	(114, 'Slovenske Konjice '),
+	(115, 'Starše '),
+	(116, 'Sveti Jurij ob Ščavnici '),
+	(117, 'Šenčur '),
+	(118, 'Šentilj '),
+	(119, 'Šentjernej '),
+	(120, 'Šentjur pri Celju '),
+	(121, 'Škocjan '),
+	(122, 'Škofja Loka '),
+	(123, 'Škofljica '),
+	(124, 'Šmarje pri Jelšah '),
+	(125, 'Šmartno ob Paki '),
+	(126, 'Šoštanj '),
+	(127, 'Štore '),
+	(128, 'Tolmin '),
+	(129, 'Trbovlje '),
+	(130, 'Trebnje '),
+	(131, 'Tržič '),
+	(132, 'Turnišče '),
+	(133, 'Velenje '),
+	(134, 'Velike Lašče '),
+	(135, 'Videm '),
+	(136, 'Vipava '),
+	(137, 'Vitanje '),
+	(138, 'Vodice '),
+	(139, 'Vojnik '),
+	(140, 'Vrhnika '),
+	(141, 'Vuzenica '),
+	(142, 'Zagorje ob Savi '),
+	(143, 'Zavrč '),
+	(144, 'Zreče '),
+	(146, 'Železniki '),
+	(147, 'Žiri '),
+	(148, 'Benedikt '),
+	(149, 'Bistrica ob Sotli '),
+	(150, 'Bloke '),
+	(151, 'Braslovče '),
+	(152, 'Cankova '),
+	(153, 'Cerkvenjak '),
+	(154, 'Dobje '),
+	(155, 'Dobrna '),
+	(156, 'Dobrovnik '),
+	(157, 'Dolenjske Toplice '),
+	(158, 'Grad '),
+	(159, 'Hajdina '),
+	(160, 'Hoče - Slivnica '),
+	(161, 'Hodoš '),
+	(162, 'Horjul '),
+	(163, 'Jezersko '),
+	(164, 'Komenda '),
+	(165, 'Kostel '),
+	(166, 'Križevci '),
+	(167, 'Lovrenc na Pohorju '),
+	(168, 'Markovci '),
+	(169, 'Miklavž na Dravskem polju'),
+	(170, 'Mirna Peč '),
+	(171, 'Oplotnica '),
+	(172, 'Podlehnik '),
+	(173, 'Polzela '),
+	(174, 'Prebold '),
+	(175, 'Prevalje '),
+	(176, 'Razkrižje '),
+	(177, 'Ribnica na Pohorju '),
+	(178, 'Selnica ob Dravi '),
+	(179, 'Sodražica '),
+	(180, 'Solčava '),
+	(181, 'Sveta Ana '),
+	(182, 'Sveti Andraž v Slov. Goricah '),
+	(183, 'Šempeter - Vrtojba '),
+	(184, 'Tabor '),
+	(185, 'Trnovska vas '),
+	(186, 'Trzin '),
+	(187, 'Velika Polana '),
+	(188, 'Veržej '),
+	(189, 'Vransko '),
+	(190, 'Žalec '),
+	(191, 'Žetale '),
+	(192, 'Žirovnica '),
+	(193, 'Žužemberk '),
+	(194, 'Šmartno pri Litiji '),
+	(195, 'Apače '),
+	(196, 'Cirkulane '),
+	(197, 'Kostanjevica na Krki '),
+	(198, 'Makole '),
+	(199, 'Mokronog - Trebelno '),
+	(200, 'Poljčane '),
+	(201, 'Renče - Vogrsko '),
+	(202, 'Središče ob Dravi '),
+	(203, 'Straža '),
+	(204, 'Sv. Trojica v Slov. Goricah '),
+	(205, 'Sveti Tomaž '),
+	(206, 'Šmarješke Toplice '),
+	(207, 'Gorje '),
+	(208, 'Log - Dragomer '),
+	(209, 'Rečica ob Savinji '),
+	(210, 'Sveti Jurij v Slov. Goricah '),
+	(211, 'Šentrupert '),
+	(212, 'Mirna '),
+	(213, 'Ankaran');
+/*!40000 ALTER TABLE `obcina` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.oblika_studija
 DROP TABLE IF EXISTS `oblika_studija`;
 CREATE TABLE IF NOT EXISTS `oblika_studija` (
@@ -135,7 +663,14 @@ CREATE TABLE IF NOT EXISTS `oblika_studija` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.oblika_studija: ~3 rows (približno)
+/*!40000 ALTER TABLE `oblika_studija` DISABLE KEYS */;
+INSERT INTO `oblika_studija` (`sifra`, `opis`, `opis_ang`) VALUES
+	(1, 'na lokaciji', 'on site'),
+	(2, 'na daljavo', 'distance learning'),
+	(3, 'e-študij', 'e-learning');
+/*!40000 ALTER TABLE `oblika_studija` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.odjava
 DROP TABLE IF EXISTS `odjava`;
 CREATE TABLE IF NOT EXISTS `odjava` (
@@ -151,7 +686,10 @@ CREATE TABLE IF NOT EXISTS `odjava` (
   CONSTRAINT `FK_odjava_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_izpit` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.odjava: ~0 rows (približno)
+/*!40000 ALTER TABLE `odjava` DISABLE KEYS */;
+/*!40000 ALTER TABLE `odjava` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.posta
 DROP TABLE IF EXISTS `posta`;
 CREATE TABLE IF NOT EXISTS `posta` (
@@ -160,7 +698,489 @@ CREATE TABLE IF NOT EXISTS `posta` (
   PRIMARY KEY (`postna_stevilka`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.posta: ~478 rows (približno)
+/*!40000 ALTER TABLE `posta` DISABLE KEYS */;
+INSERT INTO `posta` (`postna_stevilka`, `naziv_poste`) VALUES
+	(1000, 'Ljubljana '),
+	(1001, 'Ljubljana - poštni predali'),
+	(1210, 'Ljubljana - Šentvid'),
+	(1211, 'Ljubljana - Šmartno'),
+	(1215, 'Medvode'),
+	(1216, 'Smlednik'),
+	(1217, 'Vodice'),
+	(1218, 'Komenda'),
+	(1219, 'Laze v Tuhinju'),
+	(1221, 'Motnik'),
+	(1222, 'Trojane'),
+	(1223, 'Blagovica'),
+	(1225, 'Lukovica'),
+	(1230, 'Domžale'),
+	(1231, 'Ljubljana - Črnuče'),
+	(1233, 'Dob'),
+	(1234, 'Mengeš'),
+	(1235, 'Radomlje'),
+	(1236, 'Trzin'),
+	(1241, 'Kamnik'),
+	(1242, 'Stahovica'),
+	(1251, 'Moravče'),
+	(1252, 'Vače'),
+	(1260, 'Ljubljana - Polje'),
+	(1261, 'Ljubljana - Dobrunje'),
+	(1262, 'Dol pri Ljubljani'),
+	(1270, 'Litija'),
+	(1272, 'Polšnik'),
+	(1273, 'Dole pri Litiji'),
+	(1274, 'Gabrovka'),
+	(1275, 'Šmartno pri Litiji'),
+	(1276, 'Primskovo '),
+	(1281, 'Kresnice'),
+	(1282, 'Sava'),
+	(1290, 'Grosuplje'),
+	(1291, 'Škofljica'),
+	(1292, 'Ig'),
+	(1293, 'Šmarje - Sap'),
+	(1294, 'Višnja Gora'),
+	(1295, 'Ivančna Gorica'),
+	(1296, 'Šentvid pri Stični'),
+	(1301, 'Krka'),
+	(1303, 'Zagradec'),
+	(1310, 'Ribnica'),
+	(1311, 'Turjak'),
+	(1312, 'Videm - Dobrepolje'),
+	(1313, 'Struge'),
+	(1314, 'Rob'),
+	(1315, 'Velike Lašče'),
+	(1316, 'Ortnek'),
+	(1317, 'Sodražica'),
+	(1318, 'Loški Potok'),
+	(1319, 'Draga'),
+	(1330, 'Kočevje'),
+	(1331, 'Dolenja vas'),
+	(1332, 'Stara Cerkev'),
+	(1336, 'Kostel'),
+	(1337, 'Osilnica'),
+	(1338, 'Kočevska Reka'),
+	(1351, 'Brezovica pri Ljubljani'),
+	(1352, 'Preserje'),
+	(1353, 'Borovnica'),
+	(1354, 'Horjul'),
+	(1355, 'Polhov Gradec'),
+	(1356, 'Dobrova'),
+	(1357, 'Notranje Gorice'),
+	(1358, 'Log pri Brezovici'),
+	(1360, 'Vrhnika'),
+	(1370, 'Logatec'),
+	(1371, 'Logatec'),
+	(1372, 'Hotedršica'),
+	(1373, 'Rovte'),
+	(1380, 'Cerknica'),
+	(1381, 'Rakek'),
+	(1382, 'Begunje pri Cerknici'),
+	(1384, 'Grahovo'),
+	(1385, 'Nova vas'),
+	(1386, 'Stari trg pri Ložu'),
+	(1410, 'Zagorje ob Savi'),
+	(1411, 'Izlake'),
+	(1412, 'Kisovec'),
+	(1413, 'Čemšenik'),
+	(1414, 'Podkum'),
+	(1420, 'Trbovlje'),
+	(1423, 'Dobovec'),
+	(1430, 'Hrastnik'),
+	(1431, 'Dol pri Hrastniku'),
+	(1432, 'Zidani Most'),
+	(1433, 'Radeče'),
+	(1434, 'Loka pri Zidanem Mostu'),
+	(2000, 'Maribor '),
+	(2001, 'Maribor - poštni predali'),
+	(2201, 'Zgornja Kungota'),
+	(2204, 'Miklavž na Dravskem polju'),
+	(2205, 'Starše'),
+	(2206, 'Marjeta na Dravskem polju'),
+	(2208, 'Pohorje'),
+	(2211, 'Pesnica pri Mariboru'),
+	(2212, 'Šentilj v Slovenskih goricah'),
+	(2213, 'Zgornja Velka'),
+	(2214, 'Sladki Vrh'),
+	(2215, 'Ceršak'),
+	(2221, 'Jarenina'),
+	(2222, 'Jakobski Dol'),
+	(2223, 'Jurovski Dol'),
+	(2229, 'Malečnik'),
+	(2230, 'Lenart v Slovenskih goricah'),
+	(2231, 'Pernica'),
+	(2232, 'Voličina'),
+	(2233, 'Sv. Ana v Slovenskih goricah'),
+	(2234, 'Benedikt'),
+	(2235, 'Sv. Trojica v Slovenskih goricah'),
+	(2236, 'Cerkvenjak'),
+	(2241, 'Spodnji Duplek'),
+	(2242, 'Zgornja Korena'),
+	(2250, 'Ptuj'),
+	(2252, 'Dornava'),
+	(2253, 'Destrnik'),
+	(2254, 'Trnovska vas'),
+	(2255, 'Vitomarci'),
+	(2256, 'Juršinci'),
+	(2257, 'Polenšak'),
+	(2258, 'Sveti Tomaž'),
+	(2259, 'Ivanjkovci'),
+	(2270, 'Ormož'),
+	(2272, 'Gorišnica'),
+	(2273, 'Podgorci'),
+	(2274, 'Velika Nedelja'),
+	(2275, 'Miklavž pri Ormožu'),
+	(2276, 'Kog'),
+	(2277, 'Središče ob Dravi'),
+	(2281, 'Markovci'),
+	(2282, 'Cirkulane'),
+	(2283, 'Zavrč'),
+	(2284, 'Videm pri Ptuju'),
+	(2285, 'Zgornji Leskovec'),
+	(2286, 'Podlehnik'),
+	(2287, 'Žetale'),
+	(2288, 'Hajdina'),
+	(2289, 'Stoperce'),
+	(2310, 'Slovenska Bistrica'),
+	(2311, 'Hoče'),
+	(2312, 'Orehova vas'),
+	(2313, 'Fram'),
+	(2314, 'Zgornja Polskava'),
+	(2315, 'Šmartno na Pohorju'),
+	(2316, 'Zgornja Ložnica'),
+	(2317, 'Oplotnica'),
+	(2318, 'Laporje'),
+	(2319, 'Poljčane'),
+	(2321, 'Makole'),
+	(2322, 'Majšperk'),
+	(2323, 'Ptujska Gora'),
+	(2324, 'Lovrenc na Dravskem polju'),
+	(2325, 'Kidričevo'),
+	(2326, 'Cirkovce'),
+	(2327, 'Rače'),
+	(2331, 'Pragersko'),
+	(2341, 'Limbuš'),
+	(2342, 'Ruše'),
+	(2343, 'Fala'),
+	(2344, 'Lovrenc na Pohorju'),
+	(2345, 'Bistrica ob Dravi'),
+	(2351, 'Kamnica'),
+	(2352, 'Selnica ob Dravi'),
+	(2353, 'Sveti Duh na Ostrem Vrhu'),
+	(2354, 'Bresternica'),
+	(2360, 'Radlje ob Dravi'),
+	(2361, 'Ožbalt'),
+	(2362, 'Kapla'),
+	(2363, 'Podvelka'),
+	(2364, 'Ribnica na Pohorju'),
+	(2365, 'Vuhred'),
+	(2366, 'Muta'),
+	(2367, 'Vuzenica'),
+	(2370, 'Dravograd'),
+	(2371, 'Trbonje'),
+	(2372, 'Libeliče'),
+	(2373, 'Šentjanž pri Dravogradu'),
+	(2380, 'Slovenj Gradec'),
+	(2381, 'Podgorje pri Slovenj Gradcu'),
+	(2382, 'Mislinja'),
+	(2383, 'Šmartno pri Slovenj Gradcu'),
+	(2390, 'Ravne na Koroškem'),
+	(2391, 'Prevalje'),
+	(2392, 'Mežica'),
+	(2393, 'Črna na Koroškem'),
+	(2394, 'Kotlje'),
+	(3000, 'Celje '),
+	(3001, 'Celje - poštni predali'),
+	(3201, 'Šmartno v Rožni dolini'),
+	(3202, 'Ljubečna'),
+	(3203, 'Nova Cerkev'),
+	(3204, 'Dobrna'),
+	(3205, 'Vitanje'),
+	(3206, 'Stranice'),
+	(3210, 'Slovenske Konjice'),
+	(3211, 'Škofja vas'),
+	(3212, 'Vojnik'),
+	(3213, 'Frankolovo'),
+	(3214, 'Zreče'),
+	(3215, 'Loče'),
+	(3220, 'Štore'),
+	(3221, 'Teharje'),
+	(3222, 'Dramlje'),
+	(3223, 'Loka pri Žusmu'),
+	(3224, 'Dobje pri Planini'),
+	(3225, 'Planina pri Sevnici'),
+	(3230, 'Šentjur'),
+	(3231, 'Grobelno'),
+	(3232, 'Ponikva'),
+	(3233, 'Kalobje'),
+	(3240, 'Šmarje pri Jelšah'),
+	(3241, 'Podplat'),
+	(3250, 'Rogaška Slatina'),
+	(3252, 'Rogatec'),
+	(3253, 'Pristava pri Mestinju'),
+	(3254, 'Podčetrtek'),
+	(3255, 'Buče'),
+	(3256, 'Bistrica ob Sotli'),
+	(3257, 'Podsreda'),
+	(3260, 'Kozje'),
+	(3261, 'Lesično'),
+	(3262, 'Prevorje'),
+	(3263, 'Gorica pri Slivnici'),
+	(3264, 'Sveti Štefan'),
+	(3270, 'Laško'),
+	(3271, 'Šentrupert'),
+	(3272, 'Rimske Toplice'),
+	(3273, 'Jurklošter'),
+	(3301, 'Petrovče'),
+	(3302, 'Griže'),
+	(3303, 'Gomilsko'),
+	(3304, 'Tabor'),
+	(3305, 'Vransko'),
+	(3310, 'Žalec'),
+	(3311, 'Šempeter v Savinjski dolini'),
+	(3312, 'Prebold'),
+	(3313, 'Polzela'),
+	(3314, 'Braslovče'),
+	(3320, 'Velenje '),
+	(3322, 'Velenje - poštni predali'),
+	(3325, 'Šoštanj'),
+	(3326, 'Topolšica'),
+	(3327, 'Šmartno ob Paki'),
+	(3330, 'Mozirje'),
+	(3331, 'Nazarje'),
+	(3332, 'Rečica ob Savinji'),
+	(3333, 'Ljubno ob Savinji'),
+	(3334, 'Luče'),
+	(3335, 'Solčava'),
+	(3341, 'Šmartno ob Dreti'),
+	(3342, 'Gornji Grad'),
+	(4000, 'Kranj '),
+	(4001, 'Kranj - poštni predali'),
+	(4201, 'Zgornja Besnica'),
+	(4202, 'Naklo'),
+	(4203, 'Duplje'),
+	(4204, 'Golnik'),
+	(4205, 'Preddvor'),
+	(4206, 'Zgornje Jezersko'),
+	(4207, 'Cerklje na Gorenjskem'),
+	(4208, 'Šenčur'),
+	(4209, 'Žabnica'),
+	(4210, 'Brnik - Aerodrom'),
+	(4211, 'Mavčiče'),
+	(4212, 'Visoko'),
+	(4220, 'Škofja Loka'),
+	(4223, 'Poljane nad Škofjo Loko'),
+	(4224, 'Gorenja vas'),
+	(4225, 'Sovodenj'),
+	(4226, 'Žiri'),
+	(4227, 'Selca'),
+	(4228, 'Železniki'),
+	(4229, 'Sorica'),
+	(4240, 'Radovljica'),
+	(4243, 'Brezje'),
+	(4244, 'Podnart'),
+	(4245, 'Kropa'),
+	(4246, 'Kamna Gorica'),
+	(4247, 'Zgornje Gorje'),
+	(4248, 'Lesce'),
+	(4260, 'Bled'),
+	(4263, 'Bohinjska Bela'),
+	(4264, 'Bohinjska Bistrica'),
+	(4265, 'Bohinjsko jezero'),
+	(4267, 'Srednja vas v Bohinju'),
+	(4270, 'Jesenice'),
+	(4273, 'Blejska Dobrava'),
+	(4274, 'Žirovnica'),
+	(4275, 'Begunje na Gorenjskem'),
+	(4276, 'Hrušica'),
+	(4280, 'Kranjska Gora'),
+	(4281, 'Mojstrana'),
+	(4282, 'Gozd Martuljek'),
+	(4283, 'Rateče - Planica'),
+	(4290, 'Tržič'),
+	(4294, 'Križe'),
+	(5000, 'Nova Gorica '),
+	(5001, 'Nova Gorica - poštni predali'),
+	(5210, 'Deskle'),
+	(5211, 'Kojsko'),
+	(5212, 'Dobrovo v Brdih'),
+	(5213, 'Kanal'),
+	(5214, 'Kal nad Kanalom'),
+	(5215, 'Ročinj'),
+	(5216, 'Most na Soči'),
+	(5220, 'Tolmin'),
+	(5222, 'Kobarid'),
+	(5223, 'Breginj'),
+	(5224, 'Srpenica'),
+	(5230, 'Bovec'),
+	(5231, 'Log pod Mangartom'),
+	(5232, 'Soča'),
+	(5242, 'Grahovo ob Bači'),
+	(5243, 'Podbrdo'),
+	(5250, 'Solkan'),
+	(5251, 'Grgar'),
+	(5252, 'Trnovo pri Gorici'),
+	(5253, 'Čepovan'),
+	(5261, 'Šempas'),
+	(5262, 'Črniče'),
+	(5263, 'Dobravlje'),
+	(5270, 'Ajdovščina'),
+	(5271, 'Vipava'),
+	(5272, 'Podnanos'),
+	(5273, 'Col'),
+	(5274, 'Črni Vrh nad Idrijo'),
+	(5275, 'Godovič'),
+	(5280, 'Idrija'),
+	(5281, 'Spodnja Idrija'),
+	(5282, 'Cerkno'),
+	(5283, 'Slap ob Idrijci'),
+	(5290, 'Šempeter pri Gorici'),
+	(5291, 'Miren'),
+	(5292, 'Renče'),
+	(5293, 'Volčja Draga'),
+	(5294, 'Dornberk'),
+	(5295, 'Branik'),
+	(5296, 'Kostanjevica na Krasu'),
+	(5297, 'Prvačina'),
+	(6000, 'Koper/Capodistria '),
+	(6001, 'Koper/Capodistria - poštni predali'),
+	(6210, 'Sežana'),
+	(6215, 'Divača'),
+	(6216, 'Podgorje'),
+	(6217, 'Vremski Britof'),
+	(6219, 'Lokev'),
+	(6221, 'Dutovlje'),
+	(6222, 'Štanjel'),
+	(6223, 'Komen'),
+	(6224, 'Senožeče'),
+	(6225, 'Hruševje'),
+	(6230, 'Postojna'),
+	(6232, 'Planina'),
+	(6240, 'Kozina'),
+	(6242, 'Materija'),
+	(6243, 'Obrov'),
+	(6244, 'Podgrad'),
+	(6250, 'Ilirska Bistrica'),
+	(6251, 'Ilirska Bistrica-Trnovo'),
+	(6253, 'Knežak'),
+	(6254, 'Jelšane'),
+	(6255, 'Prem'),
+	(6256, 'Košana'),
+	(6257, 'Pivka'),
+	(6258, 'Prestranek'),
+	(6271, 'Dekani'),
+	(6272, 'Gračišče'),
+	(6273, 'Marezige'),
+	(6274, 'Šmarje'),
+	(6275, 'Črni Kal'),
+	(6276, 'Pobegi'),
+	(6280, 'Ankaran/Ancarano'),
+	(6281, 'Škofije'),
+	(6310, 'Izola/Isola'),
+	(6320, 'Portorož/Portorose'),
+	(6330, 'Piran/Pirano'),
+	(6333, 'Sečovlje/Sicciole'),
+	(8000, 'Novo mesto'),
+	(8001, 'Novo mesto - poštni predali'),
+	(8210, 'Trebnje'),
+	(8211, 'Dobrnič'),
+	(8212, 'Velika Loka'),
+	(8213, 'Veliki Gaber'),
+	(8216, 'Mirna Peč'),
+	(8220, 'Šmarješke Toplice'),
+	(8222, 'Otočec'),
+	(8230, 'Mokronog'),
+	(8231, 'Trebelno '),
+	(8232, 'Šentrupert'),
+	(8233, 'Mirna'),
+	(8250, 'Brežice'),
+	(8251, 'Čatež ob Savi'),
+	(8253, 'Artiče'),
+	(8254, 'Globoko'),
+	(8255, 'Pišece'),
+	(8256, 'Sromlje '),
+	(8257, 'Dobova'),
+	(8258, 'Kapele'),
+	(8259, 'Bizeljsko'),
+	(8261, 'Jesenice na Dolenjskem'),
+	(8262, 'Krška vas'),
+	(8263, 'Cerklje ob Krki'),
+	(8270, 'Krško'),
+	(8272, 'Zdole '),
+	(8273, 'Leskovec pri Krškem'),
+	(8274, 'Raka'),
+	(8275, 'Škocjan'),
+	(8276, 'Bučka '),
+	(8280, 'Brestanica'),
+	(8281, 'Senovo'),
+	(8282, 'Koprivnica'),
+	(8283, 'Blanca'),
+	(8290, 'Sevnica'),
+	(8292, 'Zabukovje '),
+	(8293, 'Studenec'),
+	(8294, 'Boštanj'),
+	(8295, 'Tržišče'),
+	(8296, 'Krmelj'),
+	(8297, 'Šentjanž'),
+	(8310, 'Šentjernej'),
+	(8311, 'Kostanjevica na Krki'),
+	(8312, 'Podbočje'),
+	(8321, 'Brusnice'),
+	(8322, 'Stopiče'),
+	(8323, 'Uršna sela'),
+	(8330, 'Metlika'),
+	(8331, 'Suhor'),
+	(8332, 'Gradac'),
+	(8333, 'Semič'),
+	(8340, 'Črnomelj'),
+	(8341, 'Adlešiči'),
+	(8342, 'Stari trg ob Kolpi'),
+	(8343, 'Dragatuš'),
+	(8344, 'Vinica'),
+	(8350, 'Dolenjske Toplice'),
+	(8351, 'Straža'),
+	(8360, 'Žužemberk'),
+	(8361, 'Dvor'),
+	(8362, 'Hinje'),
+	(9000, 'Murska Sobota '),
+	(9001, 'Murska Sobota - poštni predali'),
+	(9201, 'Puconci'),
+	(9202, 'Mačkovci'),
+	(9203, 'Petrovci'),
+	(9204, 'Šalovci'),
+	(9205, 'Hodoš/Hodos'),
+	(9206, 'Križevci'),
+	(9207, 'Prosenjakovci/Partosfalva'),
+	(9208, 'Fokovci'),
+	(9220, 'Lendava/Lendva'),
+	(9221, 'Martjanci'),
+	(9222, 'Bogojina'),
+	(9223, 'Dobrovnik/Dobronak '),
+	(9224, 'Turnišče'),
+	(9225, 'Velika Polana'),
+	(9226, 'Moravske Toplice'),
+	(9227, 'Kobilje'),
+	(9231, 'Beltinci'),
+	(9232, 'Črenšovci'),
+	(9233, 'Odranci'),
+	(9240, 'Ljutomer'),
+	(9241, 'Veržej'),
+	(9242, 'Križevci pri Ljutomeru'),
+	(9243, 'Mala Nedelja'),
+	(9244, 'Sveti Jurij ob Ščavnici'),
+	(9245, 'Spodnji Ivanjci'),
+	(9246, 'Razkrižje'),
+	(9250, 'Gornja Radgona'),
+	(9251, 'Tišina'),
+	(9252, 'Radenci'),
+	(9253, 'Apače'),
+	(9261, 'Cankova'),
+	(9262, 'Rogašovci'),
+	(9263, 'Kuzma'),
+	(9264, 'Grad'),
+	(9265, 'Bodonci');
+/*!40000 ALTER TABLE `posta` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.praznik
 DROP TABLE IF EXISTS `praznik`;
 CREATE TABLE IF NOT EXISTS `praznik` (
@@ -168,9 +1188,29 @@ CREATE TABLE IF NOT EXISTS `praznik` (
   `datum` date NOT NULL,
   `ime` varchar(100) COLLATE utf8_slovenian_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.praznik: ~16 rows (približno)
+/*!40000 ALTER TABLE `praznik` DISABLE KEYS */;
+INSERT INTO `praznik` (`id`, `datum`, `ime`) VALUES
+	(17, '1900-01-01', 'Novo leto'),
+	(18, '1900-01-02', 'Novo leto'),
+	(19, '1900-02-08', 'Prešernov dan'),
+	(20, '1900-04-27', 'dan upora proti okupatorju'),
+	(21, '1900-05-01', 'praznik dela'),
+	(22, '1900-05-02', 'praznik dela'),
+	(23, '1900-06-25', 'dan državnosti'),
+	(24, '1900-08-15', 'Marijino vnebovzetje'),
+	(25, '1900-10-31', 'dan reformacije'),
+	(26, '1900-11-01', 'dan spomina na mrtve'),
+	(27, '1900-12-25', 'božič'),
+	(28, '1900-12-26', 'dan samostojnosti in enotnosti'),
+	(29, '2019-04-22', 'velikonočni ponedeljek'),
+	(30, '2020-04-13', 'velikonočni ponedeljek'),
+	(31, '2021-04-05', 'velikonočni ponedeljek'),
+	(32, '2022-04-18', 'velikonočni ponedeljek');
+/*!40000 ALTER TABLE `praznik` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.predmet
 DROP TABLE IF EXISTS `predmet`;
 CREATE TABLE IF NOT EXISTS `predmet` (
@@ -181,7 +1221,104 @@ CREATE TABLE IF NOT EXISTS `predmet` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.predmet: ~93 rows (približno)
+/*!40000 ALTER TABLE `predmet` DISABLE KEYS */;
+INSERT INTO `predmet` (`sifra`, `ects`, `naziv`, `semester`) VALUES
+	(63202, 6, 'Osnove matematične analize', 0),
+	(63203, 6, 'Diskretne strukture', 0),
+	(63204, 6, 'Osnove digitalnih vezij', 0),
+	(63205, 6, 'Fizika', 0),
+	(63207, 6, 'Linearna algebra', 1),
+	(63208, 6, 'Osnove podatkovnih baz', 0),
+	(63209, 6, 'Računalniške komunikacije', 1),
+	(63212, 6, 'Arhitektura računalniških sistemov', 1),
+	(63213, 6, 'Verjetnost in statistika', 0),
+	(63214, 6, 'Osnove umetne inteligence', 0),
+	(63215, 6, 'Osnove informacijskih sistemov', 1),
+	(63216, 6, 'Teorija informacij in sistemov', 1),
+	(63217, 6, 'Operacijski sistemi', 1),
+	(63218, 6, 'Organizacija računalniških sistemov', 0),
+	(63219, 6, 'Matematično modeliranje', 1),
+	(63220, 6, 'Principi programskih jezikov', 1),
+	(63221, 6, 'Računalniške tehnologije', 1),
+	(63222, 3, 'Angleški jezik nivo A', 1),
+	(63223, 3, 'Angleški jezik nivo B', 0),
+	(63224, 3, 'Angleški jezik nivo C', 1),
+	(63225, 6, 'Izbrana poglavja iz računalništva in informatike', 0),
+	(63226, 6, 'Tehnologija upravljanja podatkov', 0),
+	(63241, 3, 'Računalništvo v praksi 1', 0),
+	(63242, 3, 'Računalništvo v praksi 2', 1),
+	(63248, 6, 'Ekonomika in podjetništvo', 1),
+	(63249, 6, 'Elektronsko poslovanje', 0),
+	(63250, 6, 'Organizacija in management', 1),
+	(63251, 6, 'Uvod v odkrivanje znanj iz podatkov', 0),
+	(63252, 6, 'Razvoj informacijskih sistemov', 0),
+	(63253, 6, 'Planiranje in upravljanje informatike', 1),
+	(63254, 6, 'Postopki razvoja programske opreme', 0),
+	(63255, 6, 'Spletno programiranje', 0),
+	(63256, 6, 'Tehnologije programske opreme', 1),
+	(63257, 6, 'Modeliranje računalniških omrežij', 0),
+	(63258, 6, 'Komunikacijski protokoli', 0),
+	(63259, 6, 'Brezžična in mobilna omrežja', 1),
+	(63260, 6, 'Digitalno načrtovanje', 0),
+	(63261, 6, 'Porazdeljeni sistemi', 0),
+	(63262, 6, 'Zanesljivost in zmogljivost računalniških sistemov', 1),
+	(63263, 6, 'Analiza algoritmov in hevristično reševanje problemov', 0),
+	(63264, 6, 'Sistemska programska oprema', 0),
+	(63265, 6, 'Prevajalniki', 1),
+	(63266, 6, 'Inteligentni sistemi', 0),
+	(63267, 6, 'Umetno zaznavanje', 0),
+	(63268, 6, 'Razvoj inteligentnih sistemov', 1),
+	(63269, 6, 'Računalniška grafika in tehnologija iger', 0),
+	(63270, 6, 'Multimedijski sistemi', 0),
+	(63271, 6, 'Osnove oblikovanja', 1),
+	(63277, 6, 'Programiranje 1', 0),
+	(63278, 6, 'Programiranje 2', 1),
+	(63279, 6, 'Algoritmi in podatkovne strukture 1', 0),
+	(63280, 6, 'Algoritmi in podatkovne strukture 2', 1),
+	(63281, 6, 'Diplomski seminar', 1),
+	(63283, 6, 'Izračunljivost in računska zahtevnost', 0),
+	(63284, 3, 'Tehnične veščine', 0),
+	(63287, 6, 'Programiranje specifičnih platform', 1),
+	(63701, 6, 'Uvod v računalništvo', 0),
+	(63702, 6, 'Programiranje 1', 0),
+	(63703, 6, 'Računalniška arhitektura', 0),
+	(63704, 6, 'Matematika', 0),
+	(63705, 6, 'Diskretne strukture', 0),
+	(63706, 6, 'Programiranje 2', 1),
+	(63707, 6, 'Podatkovne baze', 1),
+	(63708, 6, 'Računalniške komunikacije', 1),
+	(63709, 6, 'Operacijski sistemi', 1),
+	(63710, 6, 'Osnove verjetnosti in statistike', 1),
+	(63711, 6, 'Algoritmi in podatkovne strukture 1', 0),
+	(63712, 6, 'Elektronsko in mobilno poslovanje', 0),
+	(63713, 6, 'Podatkovne baze 2', 0),
+	(63714, 6, 'Informacijski sistemi', 0),
+	(63715, 6, 'Grafično oblikovanje', 0),
+	(63716, 6, 'Komunikacijsko protokoli in omrežna varnost', 0),
+	(63717, 6, 'Organizacija računalnikov', 0),
+	(63718, 6, 'Digitalna vezja', 0),
+	(63719, 6, 'Računalniška grafika', 0),
+	(63720, 6, 'Umetna inteligenca', 0),
+	(63721, 6, 'Uporabniški vmesniki', 1),
+	(63722, 6, ' Prevajalniki in navidezni stroji', 1),
+	(63723, 6, 'Algoritmi in podatkovne strukture 2', 1),
+	(63724, 6, 'Testiranje in kakovost', 1),
+	(63725, 6, 'Razvoj informacijskih sistemov', 1),
+	(63726, 6, 'Produkcija multimedijskih gradiv', 1),
+	(63727, 6, 'Spletne tehnologije', 1),
+	(63728, 6, 'Vhodno-izhodne naprave', 1),
+	(63729, 6, 'Načrtovanje digitalnih naprav', 1),
+	(63732, 6, 'Tehnologija programske opreme', 0),
+	(63744, 6, 'Digitalno procesiranje signalov', 0),
+	(63749, 6, 'Izbrana poglavja iz računalništva in informatike', 0),
+	(63765, 6, 'Podatkovno rudarjenje', 1),
+	(63766, 3, 'Tehnične veščine 2', 1),
+	(63767, 3, 'Tehnične veščine', 0),
+	(63769, 6, 'Programski jezik C', 0),
+	(63770, 6, 'Diplomski seminar', 1);
+/*!40000 ALTER TABLE `predmet` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.predmetnik
 DROP TABLE IF EXISTS `predmetnik`;
 CREATE TABLE IF NOT EXISTS `predmetnik` (
@@ -203,7 +1340,88 @@ CREATE TABLE IF NOT EXISTS `predmetnik` (
   CONSTRAINT `FK_predmetnik_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.predmetnik: ~77 rows (približno)
+/*!40000 ALTER TABLE `predmetnik` DISABLE KEYS */;
+INSERT INTO `predmetnik` (`modul`, `del_predmetnika`, `letnik`, `predmet`, `studijski_program`, `studijsko_leto`) VALUES
+	(NULL, 1, 1, 63202, 1000468, 2018),
+	(NULL, 1, 1, 63203, 1000468, 2018),
+	(NULL, 1, 1, 63204, 1000468, 2018),
+	(NULL, 1, 1, 63205, 1000468, 2018),
+	(NULL, 1, 1, 63207, 1000468, 2018),
+	(NULL, 1, 1, 63209, 1000468, 2018),
+	(NULL, 1, 1, 63212, 1000468, 2018),
+	(NULL, 1, 1, 63215, 1000468, 2018),
+	(NULL, 1, 1, 63277, 1000468, 2018),
+	(NULL, 1, 1, 63278, 1000468, 2018),
+	(NULL, 1, 1, 63701, 1000470, 2018),
+	(NULL, 1, 1, 63702, 1000470, 2018),
+	(NULL, 1, 1, 63703, 1000470, 2018),
+	(NULL, 1, 1, 63704, 1000470, 2018),
+	(NULL, 1, 1, 63705, 1000470, 2018),
+	(NULL, 1, 1, 63706, 1000470, 2018),
+	(NULL, 1, 1, 63707, 1000470, 2018),
+	(NULL, 1, 1, 63708, 1000470, 2018),
+	(NULL, 1, 1, 63709, 1000470, 2018),
+	(NULL, 1, 1, 63710, 1000470, 2018),
+	(NULL, 1, 2, 63208, 1000468, 2018),
+	(NULL, 1, 2, 63213, 1000468, 2018),
+	(NULL, 1, 2, 63216, 1000468, 2018),
+	(NULL, 1, 2, 63217, 1000468, 2018),
+	(NULL, 1, 2, 63218, 1000468, 2018),
+	(NULL, 1, 2, 63279, 1000468, 2018),
+	(NULL, 1, 2, 63280, 1000468, 2018),
+	(NULL, 1, 2, 63283, 1000468, 2018),
+	(NULL, 1, 3, 63214, 1000468, 2018),
+	(NULL, 1, 3, 63256, 1000468, 2018),
+	(NULL, 1, 3, 63281, 1000468, 2018),
+	(NULL, 2, 2, 63219, 1000468, 2018),
+	(NULL, 2, 2, 63220, 1000468, 2018),
+	(NULL, 2, 2, 63221, 1000468, 2018),
+	(NULL, 3, 2, 63222, 1000468, 2018),
+	(NULL, 3, 2, 63223, 1000468, 2018),
+	(NULL, 3, 2, 63224, 1000468, 2018),
+	(NULL, 3, 2, 63225, 1000468, 2018),
+	(NULL, 3, 2, 63241, 1000468, 2018),
+	(NULL, 3, 2, 63242, 1000468, 2018),
+	(NULL, 3, 2, 63248, 1000468, 2018),
+	(NULL, 3, 2, 63284, 1000468, 2018),
+	(NULL, 3, 3, 63219, 1000468, 2018),
+	(NULL, 3, 3, 63220, 1000468, 2018),
+	(NULL, 3, 3, 63221, 1000468, 2018),
+	(NULL, 3, 3, 63222, 1000468, 2018),
+	(NULL, 3, 3, 63223, 1000468, 2018),
+	(NULL, 3, 3, 63224, 1000468, 2018),
+	(NULL, 3, 3, 63225, 1000468, 2018),
+	(NULL, 3, 3, 63241, 1000468, 2018),
+	(NULL, 3, 3, 63242, 1000468, 2018),
+	(NULL, 3, 3, 63248, 1000468, 2018),
+	(NULL, 3, 3, 63284, 1000468, 2018),
+	(1, 4, 3, 63226, 1000468, 2018),
+	(0, 4, 3, 63249, 1000468, 2018),
+	(0, 4, 3, 63250, 1000468, 2018),
+	(0, 4, 3, 63251, 1000468, 2018),
+	(1, 4, 3, 63252, 1000468, 2018),
+	(1, 4, 3, 63253, 1000468, 2018),
+	(2, 4, 3, 63254, 1000468, 2018),
+	(2, 4, 3, 63255, 1000468, 2018),
+	(3, 4, 3, 63257, 1000468, 2018),
+	(3, 4, 3, 63258, 1000468, 2018),
+	(3, 4, 3, 63259, 1000468, 2018),
+	(4, 4, 3, 63260, 1000468, 2018),
+	(4, 4, 3, 63261, 1000468, 2018),
+	(4, 4, 3, 63262, 1000468, 2018),
+	(5, 4, 3, 63263, 1000468, 2018),
+	(5, 4, 3, 63264, 1000468, 2018),
+	(5, 4, 3, 63265, 1000468, 2018),
+	(6, 4, 3, 63266, 1000468, 2018),
+	(6, 4, 3, 63267, 1000468, 2018),
+	(6, 4, 3, 63268, 1000468, 2018),
+	(7, 4, 3, 63269, 1000468, 2018),
+	(7, 4, 3, 63270, 1000468, 2018),
+	(7, 4, 3, 63271, 1000468, 2018),
+	(2, 4, 3, 63287, 1000468, 2018);
+/*!40000 ALTER TABLE `predmetnik` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.predmet_izvajanje
 DROP TABLE IF EXISTS `predmet_izvajanje`;
 CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
@@ -224,7 +1442,76 @@ CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
   CONSTRAINT `FK_predmet_izvajanje_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.predmet_izvajanje: ~65 rows (približno)
+/*!40000 ALTER TABLE `predmet_izvajanje` DISABLE KEYS */;
+INSERT INTO `predmet_izvajanje` (`nosilec1`, `nosilec2`, `nosilec3`, `predmet`, `studijsko_leto`) VALUES
+	(20, NULL, NULL, 63202, 2018),
+	(15, NULL, NULL, 63203, 2018),
+	(21, NULL, NULL, 63204, 2018),
+	(22, NULL, NULL, 63205, 2018),
+	(25, NULL, NULL, 63207, 2018),
+	(6, NULL, NULL, 63208, 2018),
+	(8, NULL, NULL, 63209, 2018),
+	(26, NULL, NULL, 63212, 2018),
+	(18, NULL, NULL, 63213, 2018),
+	(8, NULL, NULL, 63214, 2018),
+	(24, NULL, NULL, 63215, 2018),
+	(29, NULL, NULL, 63216, 2018),
+	(28, NULL, NULL, 63217, 2018),
+	(10, NULL, NULL, 63218, 2018),
+	(20, NULL, NULL, 63219, 2018),
+	(7, NULL, NULL, 63220, 2018),
+	(31, NULL, NULL, 63221, 2018),
+	(11, NULL, NULL, 63222, 2018),
+	(11, NULL, NULL, 63223, 2018),
+	(11, NULL, NULL, 63224, 2018),
+	(NULL, NULL, NULL, 63225, 2018),
+	(34, NULL, NULL, 63226, 2018),
+	(15, NULL, NULL, 63242, 2018),
+	(14, NULL, NULL, 63248, 2018),
+	(32, NULL, NULL, 63249, 2018),
+	(16, NULL, NULL, 63250, 2018),
+	(33, NULL, NULL, 63251, 2018),
+	(6, NULL, NULL, 63252, 2018),
+	(35, NULL, NULL, 63253, 2018),
+	(17, NULL, NULL, 63254, 2018),
+	(24, NULL, NULL, 63255, 2018),
+	(19, NULL, NULL, 63256, 2018),
+	(36, NULL, NULL, 63257, 2018),
+	(12, NULL, NULL, 63258, 2018),
+	(21, NULL, NULL, 63259, 2018),
+	(10, NULL, NULL, 63260, 2018),
+	(29, NULL, NULL, 63261, 2018),
+	(36, NULL, NULL, 63262, 2018),
+	(37, NULL, NULL, 63263, 2018),
+	(13, NULL, NULL, 63264, 2018),
+	(23, NULL, NULL, 63265, 2018),
+	(27, NULL, NULL, 63266, 2018),
+	(38, NULL, NULL, 63267, 2018),
+	(39, NULL, NULL, 63268, 2018),
+	(40, NULL, NULL, 63269, 2018),
+	(38, NULL, NULL, 63270, 2018),
+	(9, NULL, NULL, 63271, 2018),
+	(19, NULL, NULL, 63277, 2018),
+	(23, NULL, NULL, 63278, 2018),
+	(27, NULL, NULL, 63279, 2018),
+	(28, NULL, NULL, 63280, 2018),
+	(30, NULL, NULL, 63281, 2018),
+	(28, NULL, NULL, 63283, 2018),
+	(NULL, NULL, NULL, 63284, 2018),
+	(8, NULL, NULL, 63287, 2018),
+	(39, NULL, NULL, 63701, 2018),
+	(41, NULL, NULL, 63702, 2018),
+	(42, NULL, NULL, 63703, 2018),
+	(43, NULL, NULL, 63704, 2018),
+	(15, NULL, NULL, 63705, 2018),
+	(13, NULL, NULL, 63706, 2018),
+	(34, NULL, NULL, 63707, 2018),
+	(12, NULL, NULL, 63708, 2018),
+	(44, NULL, NULL, 63709, 2018),
+	(18, NULL, NULL, 63710, 2018);
+/*!40000 ALTER TABLE `predmet_izvajanje` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.predmet_student
 DROP TABLE IF EXISTS `predmet_student`;
 CREATE TABLE IF NOT EXISTS `predmet_student` (
@@ -237,7 +1524,51 @@ CREATE TABLE IF NOT EXISTS `predmet_student` (
   CONSTRAINT `FK_predmet_student_student` FOREIGN KEY (`student`, `studijsko_leto`) REFERENCES `vpis` (`student`, `studijsko_leto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.predmet_student: ~0 rows (približno)
+/*!40000 ALTER TABLE `predmet_student` DISABLE KEYS */;
+INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
+	(63202, 2018, 58),
+	(63203, 2018, 58),
+	(63204, 2018, 58),
+	(63205, 2018, 58),
+	(63207, 2018, 58),
+	(63208, 2018, 51),
+	(63208, 2018, 57),
+	(63209, 2018, 58),
+	(63212, 2018, 58),
+	(63213, 2018, 51),
+	(63213, 2018, 57),
+	(63214, 2018, 59),
+	(63215, 2018, 58),
+	(63216, 2018, 51),
+	(63216, 2018, 57),
+	(63217, 2018, 51),
+	(63217, 2018, 57),
+	(63218, 2018, 51),
+	(63218, 2018, 57),
+	(63219, 2018, 57),
+	(63220, 2018, 51),
+	(63225, 2018, 51),
+	(63225, 2018, 57),
+	(63225, 2018, 59),
+	(63226, 2018, 59),
+	(63249, 2018, 59),
+	(63250, 2018, 59),
+	(63251, 2018, 59),
+	(63252, 2018, 59),
+	(63253, 2018, 59),
+	(63256, 2018, 59),
+	(63277, 2018, 58),
+	(63278, 2018, 58),
+	(63279, 2018, 51),
+	(63279, 2018, 57),
+	(63280, 2018, 51),
+	(63280, 2018, 57),
+	(63281, 2018, 59),
+	(63283, 2018, 51),
+	(63283, 2018, 57);
+/*!40000 ALTER TABLE `predmet_student` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.prijava_izpit
 DROP TABLE IF EXISTS `prijava_izpit`;
 CREATE TABLE IF NOT EXISTS `prijava_izpit` (
@@ -250,14 +1581,19 @@ CREATE TABLE IF NOT EXISTS `prijava_izpit` (
   `cena` decimal(7,2) DEFAULT NULL,
   `valuta` varchar(20) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `zakljucena` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`, `cas_prijave`),
+  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`,`cas_prijave`),
   KEY `FK_prijava_izpit_datum_izvajanja` (`datum_izvajanja`,`studijsko_leto`,`predmet`),
   KEY `FK_prijava_izpit_predmet` (`predmet`,`studijsko_leto`,`student`),
   CONSTRAINT `FK_prijava_izpit_datum_izvajanja` FOREIGN KEY (`datum_izvajanja`, `studijsko_leto`, `predmet`) REFERENCES `rok` (`datum_cas`, `studijsko_leto`, `predmet`),
   CONSTRAINT `FK_prijava_izpit_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`, `student`) REFERENCES `predmet_student` (`predmet`, `studijsko_leto`, `student`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.prijava_izpit: ~0 rows (približno)
+/*!40000 ALTER TABLE `prijava_izpit` DISABLE KEYS */;
+INSERT INTO `prijava_izpit` (`brisana`, `cas_prijave`, `studijsko_leto`, `student`, `predmet`, `datum_izvajanja`, `cena`, `valuta`, `zakljucena`) VALUES
+	(0, '2018-05-03 16:23:38', 2018, 58, 63207, '2019-06-12 10:00:00', NULL, NULL, 0);
+/*!40000 ALTER TABLE `prijava_izpit` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.referent
 DROP TABLE IF EXISTS `referent`;
 CREATE TABLE IF NOT EXISTS `referent` (
@@ -266,7 +1602,15 @@ CREATE TABLE IF NOT EXISTS `referent` (
   CONSTRAINT `FK_referent_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.referent: ~4 rows (približno)
+/*!40000 ALTER TABLE `referent` DISABLE KEYS */;
+INSERT INTO `referent` (`id_uporabnik`) VALUES
+	(2),
+	(3),
+	(4),
+	(5);
+/*!40000 ALTER TABLE `referent` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.rok
 DROP TABLE IF EXISTS `rok`;
 CREATE TABLE IF NOT EXISTS `rok` (
@@ -282,7 +1626,40 @@ CREATE TABLE IF NOT EXISTS `rok` (
   CONSTRAINT `FK_rok_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`) REFERENCES `predmet_izvajanje` (`predmet`, `studijsko_leto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.rok: ~0 rows (približno)
+/*!40000 ALTER TABLE `rok` DISABLE KEYS */;
+INSERT INTO `rok` (`datum_cas`, `prostor`, `izvajalec`, `studijsko_leto`, `predmet`) VALUES
+	('2019-06-04 10:00:00', 'P02', 40, 2018, 63202),
+	('2019-06-04 10:00:00', 'P02', 40, 2018, 63214),
+	('2019-06-04 10:00:00', 'P02', 40, 2018, 63279),
+	('2019-06-05 10:00:00', 'P02', 40, 2018, 63208),
+	('2019-06-05 10:00:00', 'P02', 40, 2018, 63256),
+	('2019-06-05 10:00:00', 'P02', 40, 2018, 63277),
+	('2019-06-06 10:00:00', 'P02', 40, 2018, 63203),
+	('2019-06-06 10:00:00', 'P02', 40, 2018, 63213),
+	('2019-06-06 10:00:00', 'P02', 40, 2018, 63281),
+	('2019-06-07 10:00:00', 'P02', 40, 2018, 63204),
+	('2019-06-07 10:00:00', 'P02', 40, 2018, 63218),
+	('2019-06-07 10:00:00', 'P02', 40, 2018, 63249),
+	('2019-06-08 10:00:00', 'P02', 40, 2018, 63205),
+	('2019-06-08 10:00:00', 'P02', 40, 2018, 63250),
+	('2019-06-08 10:00:00', 'P02', 40, 2018, 63283),
+	('2019-06-11 10:00:00', 'P02', 40, 2018, 63216),
+	('2019-06-11 10:00:00', 'P02', 40, 2018, 63251),
+	('2019-06-11 10:00:00', 'P02', 40, 2018, 63278),
+	('2019-06-12 10:00:00', 'P02', 40, 2018, 63207),
+	('2019-06-12 10:00:00', 'P02', 40, 2018, 63252),
+	('2019-06-12 10:00:00', 'P02', 40, 2018, 63280),
+	('2019-06-13 10:00:00', 'P02', 40, 2018, 63212),
+	('2019-06-13 10:00:00', 'P02', 40, 2018, 63217),
+	('2019-06-13 10:00:00', 'P02', 40, 2018, 63226),
+	('2019-06-14 10:00:00', 'P02', 40, 2018, 63215),
+	('2019-06-14 10:00:00', 'P02', 40, 2018, 63219),
+	('2019-06-14 10:00:00', 'P02', 40, 2018, 63253),
+	('2019-06-15 10:00:00', 'P02', 40, 2018, 63209),
+	('2019-06-15 10:00:00', 'P02', 40, 2018, 63225);
+/*!40000 ALTER TABLE `rok` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.skrbnik
 DROP TABLE IF EXISTS `skrbnik`;
 CREATE TABLE IF NOT EXISTS `skrbnik` (
@@ -291,7 +1668,12 @@ CREATE TABLE IF NOT EXISTS `skrbnik` (
   CONSTRAINT `FK_skrbnik_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.skrbnik: ~0 rows (približno)
+/*!40000 ALTER TABLE `skrbnik` DISABLE KEYS */;
+INSERT INTO `skrbnik` (`id_uporabnik`) VALUES
+	(1);
+/*!40000 ALTER TABLE `skrbnik` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.student
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
@@ -326,7 +1708,45 @@ CREATE TABLE IF NOT EXISTS `student` (
   CONSTRAINT `FK_student_posta_zacasno` FOREIGN KEY (`posta_zacasno`) REFERENCES `posta` (`postna_stevilka`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.student: ~12 rows (približno)
+/*!40000 ALTER TABLE `student` DISABLE KEYS */;
+INSERT INTO `student` (`id_uporabnik`, `drzava_rojstva`, `kraj_rojstva`, `naslov_stalno`, `privzeti_naslov`, `naslov_zacasno`, `obcina_rojstva`, `tel_stevilka`, `vpisna_stevilka`, `drzava_stalno`, `drzava_zacasno`, `obcina_stalno`, `obcina_zacasno`, `posta_stalno`, `posta_zacasno`) VALUES
+	(51, 'Slovenija', 'Koper', 'Ljubljanska cesta 15b', 'Novomeška 1', 'Kropa 22', 'Koper', '070123123', 63150001, 705, 222, 13, NULL, 9265, NULL),
+	(52, NULL, NULL, NULL, 'Mariborska 15', 'Mariborska 14', NULL, '070123123', 63150002, 705, NULL, NULL, NULL, NULL, NULL),
+	(53, 'Slovenija', 'Novo mesto', 'Pod bregom 22', 'Pod bregom 22', NULL, 'Novo mesto', '070123123', 63150003, 4, 705, NULL, 150, NULL, 9231),
+	(54, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150004, NULL, NULL, NULL, NULL, NULL, NULL),
+	(55, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150005, NULL, NULL, NULL, NULL, NULL, NULL),
+	(56, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150006, NULL, NULL, NULL, NULL, NULL, NULL),
+	(57, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150007, NULL, NULL, NULL, NULL, NULL, NULL),
+	(58, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150008, NULL, NULL, NULL, NULL, NULL, NULL),
+	(59, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150009, NULL, NULL, NULL, NULL, NULL, NULL),
+	(60, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150010, NULL, NULL, NULL, NULL, NULL, NULL),
+	(61, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150011, NULL, NULL, NULL, NULL, NULL, NULL),
+	(62, NULL, NULL, NULL, NULL, NULL, NULL, '070123123', 63150012, NULL, NULL, NULL, NULL, NULL, NULL),
+	(63, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180001, NULL, NULL, NULL, NULL, NULL, NULL),
+	(70, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180002, NULL, NULL, NULL, NULL, NULL, NULL),
+	(77, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180003, NULL, NULL, NULL, NULL, NULL, NULL),
+	(84, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180004, NULL, NULL, NULL, NULL, NULL, NULL),
+	(91, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180005, NULL, NULL, NULL, NULL, NULL, NULL),
+	(98, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180006, NULL, NULL, NULL, NULL, NULL, NULL),
+	(105, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180007, NULL, NULL, NULL, NULL, NULL, NULL),
+	(112, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180008, NULL, NULL, NULL, NULL, NULL, NULL),
+	(113, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180009, NULL, NULL, NULL, NULL, NULL, NULL),
+	(114, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180010, NULL, NULL, NULL, NULL, NULL, NULL),
+	(115, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180011, NULL, NULL, NULL, NULL, NULL, NULL),
+	(116, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180012, NULL, NULL, NULL, NULL, NULL, NULL),
+	(117, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180013, NULL, NULL, NULL, NULL, NULL, NULL),
+	(118, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180014, NULL, NULL, NULL, NULL, NULL, NULL),
+	(119, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180015, NULL, NULL, NULL, NULL, NULL, NULL),
+	(120, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180016, NULL, NULL, NULL, NULL, NULL, NULL),
+	(121, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180017, NULL, NULL, NULL, NULL, NULL, NULL),
+	(122, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180018, NULL, NULL, NULL, NULL, NULL, NULL),
+	(126, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180020, NULL, NULL, NULL, NULL, NULL, NULL),
+	(127, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180019, NULL, NULL, NULL, NULL, NULL, NULL),
+	(128, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180021, NULL, NULL, NULL, NULL, NULL, NULL),
+	(129, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180022, NULL, NULL, NULL, NULL, NULL, NULL);
+/*!40000 ALTER TABLE `student` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.studijski_program
 DROP TABLE IF EXISTS `studijski_program`;
 CREATE TABLE IF NOT EXISTS `studijski_program` (
@@ -341,7 +1761,16 @@ CREATE TABLE IF NOT EXISTS `studijski_program` (
   CONSTRAINT `FK_studijski_program_klasius` FOREIGN KEY (`klasius`) REFERENCES `klasius` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.studijski_program: ~5 rows (približno)
+/*!40000 ALTER TABLE `studijski_program` DISABLE KEYS */;
+INSERT INTO `studijski_program` (`sifra_evs`, `naziv`, `sifra`, `stevilo_semestrov`, `stopnja`, `klasius`) VALUES
+	(1000407, 'Računalništvo in matematika UNI-1.st', 'VV', 6, 2, 16204),
+	(1000468, 'Računalništvo in informatika UNI-1.st', 'VT', 6, 2, 16204),
+	(1000470, 'Računalništvo in informatika VS-1.st', 'VU', 6, 1, 16203),
+	(1000471, 'Računalništvo in matematika MAG 2.st', 'L1', 4, 3, 17003),
+	(1000474, 'Računalništvo in informatika DR-3.st', 'X6', 6, 4, 18202);
+/*!40000 ALTER TABLE `studijski_program` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.studijsko_leto
 DROP TABLE IF EXISTS `studijsko_leto`;
 CREATE TABLE IF NOT EXISTS `studijsko_leto` (
@@ -350,7 +1779,15 @@ CREATE TABLE IF NOT EXISTS `studijsko_leto` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.studijsko_leto: ~4 rows (približno)
+/*!40000 ALTER TABLE `studijsko_leto` DISABLE KEYS */;
+INSERT INTO `studijsko_leto` (`sifra`, `studijsko_leto`) VALUES
+	(2015, '2015/2016'),
+	(2016, '2016/2017'),
+	(2017, '2017/2018'),
+	(2018, '2018/2019');
+/*!40000 ALTER TABLE `studijsko_leto` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.ucitelj
 DROP TABLE IF EXISTS `ucitelj`;
 CREATE TABLE IF NOT EXISTS `ucitelj` (
@@ -359,7 +1796,56 @@ CREATE TABLE IF NOT EXISTS `ucitelj` (
   CONSTRAINT `FK_ucitelj_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.ucitelj: ~45 rows (približno)
+/*!40000 ALTER TABLE `ucitelj` DISABLE KEYS */;
+INSERT INTO `ucitelj` (`id_uporabnik`) VALUES
+	(6),
+	(7),
+	(8),
+	(9),
+	(10),
+	(11),
+	(12),
+	(13),
+	(14),
+	(15),
+	(16),
+	(17),
+	(18),
+	(19),
+	(20),
+	(21),
+	(22),
+	(23),
+	(24),
+	(25),
+	(26),
+	(27),
+	(28),
+	(29),
+	(30),
+	(31),
+	(32),
+	(33),
+	(34),
+	(35),
+	(36),
+	(37),
+	(38),
+	(39),
+	(40),
+	(41),
+	(42),
+	(43),
+	(44),
+	(45),
+	(46),
+	(47),
+	(48),
+	(49),
+	(50);
+/*!40000 ALTER TABLE `ucitelj` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.uporabnik
 DROP TABLE IF EXISTS `uporabnik`;
 CREATE TABLE IF NOT EXISTS `uporabnik` (
@@ -381,9 +1867,97 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   PRIMARY KEY (`id_uporabnik`),
   KEY `FK_uporabnik_drzavljanstvo` (`drzavljanstvo`),
   CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.uporabnik: ~62 rows (približno)
+/*!40000 ALTER TABLE `uporabnik` DISABLE KEYS */;
+INSERT INTO `uporabnik` (`id_uporabnik`, `tip`, `datum_rojstva`, `davcna_stevilka`, `email`, `emso`, `geslo`, `ime`, `priimek`, `spol`, `spremenjeno`, `uporabnisko_ime`, `ustvarjeno`, `zadnja_prijava`, `drzavljanstvo`) VALUES
+	(1, 'Skrbnik', NULL, NULL, 'admin@fri.uni-lj.si', NULL, '$31$16$8_suS4gpyEmol2ldJyOIwOMU9es7_Nqsn83n9zepQeY', 'Slavko', 'Horvat', NULL, NULL, 'admin', '2018-04-05 21:10:52', NULL, NULL),
+	(2, 'Referent', NULL, NULL, 'sonja.zagorc@fri.uni-lj.si', NULL, '$31$16$jsM957_X1cP9IvSvKCtIxyC0M1CHXJLv_cyqPllLbh0', 'Sonja', 'Zagorc', NULL, NULL, 'sz1077', '2018-04-05 21:10:52', NULL, NULL),
+	(3, 'Referent', NULL, NULL, 'slavko.cebasevic@fri.uni-lj.si', NULL, '$31$16$cU-rrWNRRm7USv1cdXhAcATqFRk1WZTIPHf0Dzmh2hg', 'Slavko', 'Čebašević', NULL, NULL, 'sc7447', '2018-04-05 21:10:52', NULL, NULL),
+	(4, 'Referent', NULL, NULL, 'peter.pirnar@fri.uni-lj.si', NULL, '$31$16$tEUzOB8z3wQUNgepU0zAEp6DDFyYIbWW9cwaronbXoQ', 'Peter', 'Pirnar', NULL, NULL, 'pp1544', '2018-04-05 21:10:52', NULL, NULL),
+	(5, 'Referent', NULL, NULL, 'andraz.omrzel@fri.uni-lj.si', NULL, '$31$16$-KWTHd5UbQyE7eITecdCY632fPkcV62k8Fj1qc7C6j0', 'Andraž', 'Omrzel', NULL, NULL, 'ao4054', '2018-04-05 21:10:52', NULL, NULL),
+	(6, 'Ucitelj', NULL, NULL, 'marko.bajec@fri.uni-lj.si', NULL, '$31$16$x-HNnK7qPj7aXp1llR2DICOADdQbyq1u7HXqyUAzLVs', 'Marko', 'Bajec', NULL, NULL, 'mb1234', '2018-04-05 21:10:52', NULL, NULL),
+	(7, 'Ucitelj', NULL, NULL, 'andrej.bauer@fri.uni-lj.si', NULL, '$31$16$1_UlAawVY_8fs84NJgbdwZjJvLPxa_ZbYeO3OvBCyeU', 'Andrej', 'Bauer', NULL, NULL, 'ab5548', '2018-04-05 21:10:52', NULL, NULL),
+	(8, 'Ucitelj', NULL, NULL, 'zoran.bosnic@fri.uni-lj.si', NULL, '$31$16$VcdI73VpZwsnL8ZRUi17RkdQL0dmuovs8EPrNHw-mq8', 'Zoran', 'Bosnić', NULL, NULL, 'zb4478', '2018-04-05 21:10:52', NULL, NULL),
+	(9, 'Ucitelj', NULL, NULL, 'narvika.bovcon@fri.uni-lj.si', NULL, '$31$16$bP4DKTzrykawfZFQS4eBXF3Yt2tBV2-kRII4-RQEODM', 'Narvika', 'Bocon', NULL, NULL, 'nb9852', '2018-04-05 21:10:53', NULL, NULL),
+	(10, 'Ucitelj', NULL, NULL, 'patricio.bulic@fri.uni-lj.si', NULL, '$31$16$H275BPAqlrxvWr28LwwWmAQR2EMe58dF8l7C1fkTtn4', 'Patricio', 'Bulić', NULL, NULL, 'pb5264', '2018-04-05 21:10:53', NULL, NULL),
+	(11, 'Ucitelj', NULL, NULL, 'nina.bostic.bishop@fri.uni-lj.si', NULL, '$31$16$pyWiStDESyFya0KcLmCcGkLLrpUa7PYVwa_GAnjrfgA', 'Nina', 'Bostič Bishop', NULL, NULL, 'nb2012', '2018-04-05 21:10:53', NULL, NULL),
+	(12, 'Ucitelj', NULL, NULL, 'mojca.ciglaric@fri.uni-lj.si', NULL, '$31$16$ekpNcIfqlOHV9BHRdehB_MIomr4uDR2eXNx1WmuBhV8', 'Mojca', 'Ciglarič', NULL, NULL, 'mc1922', '2018-04-05 21:10:53', NULL, NULL),
+	(13, 'Ucitelj', NULL, NULL, 'tomaz.dobravec@fri.uni-lj.si', NULL, '$31$16$T02iycjlqQEOqBtYyF6PRV9-cA0U0_xgXZMgqbTUaWQ', 'Tomaž', 'Dobravec', NULL, NULL, 'td2201', '2018-04-05 21:10:53', NULL, NULL),
+	(14, 'Ucitelj', NULL, NULL, 'mateja.drnovsek@fri.uni-lj.si', NULL, '$31$16$cOZk-iRl0ohGxOy_dTmER-vsNjY1QW06CxRUmNeWrVI', 'Mateja', 'Drnovšek', NULL, NULL, 'md2093', '2018-04-05 21:10:53', NULL, NULL),
+	(15, 'Ucitelj', NULL, NULL, 'gasper.fijavz@fri.uni-lj.si', NULL, '$31$16$u7Aq3eXNi3_yEUds1niqhltc-qZTH-llSGgLG4ISHis', 'Gašper', 'Fijavž', NULL, NULL, 'gf9842', '2018-04-05 21:10:53', NULL, NULL),
+	(16, 'Ucitelj', NULL, NULL, 'tomaz.hovelja@fri.uni-lj.si', NULL, '$31$16$emIyV32d_qjY86QR-0oxX-5v6IFmtAbc6MHr7EAn05w', 'Tomaž', 'Hovelja', NULL, NULL, 'th2193', '2018-04-05 21:10:53', NULL, NULL),
+	(17, 'Ucitelj', NULL, NULL, 'matjaz.branko.juric@fri.uni-lj.si', NULL, '$31$16$kC2hJTOXHtad_21T5KAVky-ilcmCSS7j4u5ZYpwO5PU', 'Matjaž Branko', 'Jurič', NULL, NULL, 'mj2932', '2018-04-05 21:10:53', NULL, NULL),
+	(18, 'Ucitelj', NULL, NULL, 'aleksandar.jurisic@fri.uni-lj.si', NULL, '$31$16$hXYp10ZVFYd1cgIqPuyllojqSKRa8DBfetvP5ijkwZk', 'Aleksandar', 'Jurišić', NULL, NULL, 'aj4837', '2018-04-05 21:10:53', NULL, NULL),
+	(19, 'Ucitelj', NULL, NULL, 'viljan.mahnic@fri.uni-lj.si', NULL, '$31$16$COPnLqyIvhuckOg_wYB7Xth5GcSc_wL_O6z-iOVaUmE', 'Viljan', 'Mahnič', NULL, NULL, 'vm2938', '2018-04-05 21:10:53', NULL, NULL),
+	(20, 'Ucitelj', NULL, NULL, 'nezka.mramor.kosta@fri.uni-lj.si', NULL, '$31$16$w0eoQt_VoJp0loVBd6db7-t0f5l2xZjTQQkdYbB-UHc', 'Nežka', 'Mramor Kosta', NULL, NULL, 'nm8378', '2018-04-05 21:10:54', NULL, NULL),
+	(21, 'Ucitelj', NULL, NULL, 'nikolaj.zimic@fri.uni-lj.si', NULL, '$31$16$Eq4VOArjFAbS8-w1o4OcXvHI5Qo13GGUyprC7g-Z4kw', 'Nikolaj', 'Zimic', NULL, NULL, 'nz1111', '2018-04-05 21:10:54', NULL, NULL),
+	(22, 'Ucitelj', NULL, NULL, 'borut.paul.kersevan@fri.uni-lj.si', NULL, '$31$16$8Hgvvfnej7GFyRaQE3WMLorvUwzf8G4mlWLLE_rSgcM', 'Borut Paul', 'Kerševan', NULL, NULL, 'bk1923', '2018-04-05 21:10:54', NULL, NULL),
+	(23, 'Ucitelj', NULL, NULL, 'bostjan.slivnik@fri.uni-lj.si', NULL, '$31$16$K2y7_iwRDFs1K1U3dZI-1lu5EMliy7aAoyPWaKDoX5U', 'Boštjan', 'Slivnik', NULL, NULL, 'bs2239', '2018-04-05 21:10:54', NULL, NULL),
+	(24, 'Ucitelj', NULL, NULL, 'dejan.lavbic@fri.uni-lj.si', NULL, '$31$16$n5e03P7dlA4-nfe2ZcGh4e9DEgKAWkjtnyYi9xusvXM', 'Dejan', 'Lavbič', NULL, NULL, 'dl5432', '2018-04-05 21:10:54', NULL, NULL),
+	(25, 'Ucitelj', NULL, NULL, 'bojan.orel@fri.uni-lj.si', NULL, '$31$16$2WDfzK8Qv8oRCdBpmOLgdYoQ6B65CfyycvZ27h6fPUI', 'Bojan', 'Orel', NULL, NULL, 'bo8765', '2018-04-05 21:10:54', NULL, NULL),
+	(26, 'Ucitelj', NULL, NULL, 'branko.ster@fri.uni-lj.si', NULL, '$31$16$IqHIKBp9b3J-jcxJL0HtfDCsTIwG1C3Y8zEXXqWAtqo', 'Branko', 'Šter', NULL, NULL, 'bs4483', '2018-04-05 21:10:54', NULL, NULL),
+	(27, 'Ucitelj', NULL, NULL, 'igor.kononenko@fri.uni-lj.si', NULL, '$31$16$vYttEx7W--iPQUuRGRRB2ehK4HlQK5VGHtvKyZu83qg', 'Igor', 'Kononenko', NULL, NULL, 'ik1111', '2018-04-05 21:10:54', NULL, NULL),
+	(28, 'Ucitelj', NULL, NULL, 'borut.robic@fri.uni-lj.si', NULL, '$31$16$mFbY8P1w48EETNq0GgXe-__QUl5Lv42cGi9cMvZUI-0', 'Borut', 'Robič', NULL, NULL, 'br2322', '2018-04-05 21:10:54', NULL, NULL),
+	(29, 'Ucitelj', NULL, NULL, 'zan.horvat@fri.uni-lj.si', NULL, '$31$16$q9S0PqoH7a6OidZduIeZkCUxb5A_fEc0myccHv8wU6o', 'Uroš', 'Lotrič', NULL, NULL, 'ul9382', '2018-04-05 21:10:54', NULL, NULL),
+	(30, 'Ucitelj', NULL, NULL, 'franc.solina@fri.uni-lj.si', NULL, '$31$16$fxiJrNsmvo6LYsuAhqcnKvFsMXlLQid7PUIoQaqRL6g', 'Franc', 'Solina', NULL, NULL, 'fs9878', '2018-04-05 21:10:54', NULL, NULL),
+	(31, 'Ucitelj', NULL, NULL, 'rok.zitko@fri.uni-lj.si', NULL, '$31$16$S7Qos2FPOao3qf11_cVvfYdFcvYpCgJRuUUgMpGq8EU', 'Rok', 'Žitko', NULL, NULL, 'rz3141', '2018-04-05 21:10:55', NULL, 705),
+	(32, 'Ucitelj', NULL, NULL, 'denis.trcek@fri.uni-lj.si', NULL, '$31$16$WQ6uAUZnRKvD_f6mPA4tysICTFbgBvjOvgSRzasTJ_0', 'Denis', 'Trček', NULL, NULL, 'dt2345', '2018-04-05 21:10:55', NULL, 705),
+	(33, 'Ucitelj', NULL, NULL, 'blaz.zupan@fri.uni-lj.si', NULL, '$31$16$-q_BR4rg9Zc9hoS2LraY7NvrYnXN35Pfcm0aupWmaEQ', 'Blaž', 'Zupan', NULL, NULL, 'bz9875', '2018-04-05 21:10:55', NULL, NULL),
+	(34, 'Ucitelj', NULL, NULL, 'matjaz.kukar@fri.uni-lj.si', NULL, '$31$16$xpJ51Uc9cn7XkixsMCPBEsxQ-WDYFn9As9De1Euje74', 'Matjaž', 'Kukar', NULL, NULL, 'mk2234', '2018-04-05 21:10:55', NULL, 705),
+	(35, 'Ucitelj', NULL, NULL, 'rok.rupnik@fri.uni-lj.si', NULL, '$31$16$HvkVckLNpfckr8Jnt2fp5HeHgNbNqmqAlEyX8O1SqdE', 'Rok', 'Rupnik', NULL, NULL, 'rr2231', '2018-04-05 21:10:55', NULL, NULL),
+	(36, 'Ucitelj', NULL, NULL, 'miha.mraz@fri.uni-lj.si', NULL, '$31$16$SYRIIu99VaaiJJPuTc--iVQXPxe7086P8deny6vOq2E', 'Miha', 'Mraz', NULL, NULL, 'mm8876', '2018-04-05 21:10:55', NULL, NULL),
+	(37, 'Ucitelj', NULL, NULL, 'marko.robnik.sikonja@fri.uni-lj.si', NULL, '$31$16$vNca_PNgXoxfvn6c1tR9GoFQ5vicOVQqJ3p6NxSGVFE', 'Marko', 'Robnik Šikonja', NULL, NULL, 'mr2121', '2018-04-05 21:10:55', NULL, NULL),
+	(38, 'Ucitelj', NULL, NULL, 'matej.kristan@fri.uni-lj.si', NULL, '$31$16$L4Keh7wD51csVV50lsO4vjIdcAyIVI5Q_CCe7i9GnnY', 'Matej', 'Kristan', NULL, NULL, 'mk4586', '2018-04-05 21:10:55', NULL, NULL),
+	(39, 'Ucitelj', NULL, NULL, 'danijel.skocaj@fri.uni-lj.si', NULL, '$31$16$sYx-basBhftKLF_Xi7kAWlfsvj2bIY8SaHgeXH7389Y', 'Danijel', 'Skočaj', NULL, NULL, 'ds4568', '2018-04-05 21:10:55', NULL, NULL),
+	(40, 'Ucitelj', NULL, NULL, 'matija.marolt@fri.uni-lj.si', NULL, '$31$16$QvLXOkylRe_pUyc92mlC8N9SmIt12Ic4hVABPskmFRs', 'Matija', 'Marolt', NULL, NULL, 'mm3596', '2018-04-05 21:10:55', NULL, NULL),
+	(41, 'Ucitelj', NULL, NULL, 'janez.demsar@fri.uni-lj.si', NULL, '$31$16$zAFPA2-MlDomzmZkkZyv4vwfxfOROyh2dNBhBp0XALg', 'Janez', 'Demšar', NULL, NULL, 'jd4235', '2018-04-05 21:10:56', NULL, NULL),
+	(42, 'Ucitelj', NULL, NULL, 'robert.rozman@fri.uni-lj.si', NULL, '$31$16$13KSKA2qacwTa7-vDhwtVjtMqf1zPqHbAfwWLTNf2iM', 'Robert', 'Rozman', NULL, NULL, 'rr1234', '2018-04-05 21:10:56', NULL, NULL),
+	(43, 'Ucitelj', NULL, NULL, 'polona.oblak@fri.uni-lj.si', NULL, '$31$16$CUKA-4IrX8sJ-uPvQAJ3yCdeUlz7XiTwuIsGl8Milqs', 'Polona', 'Oblak', NULL, NULL, 'po5874', '2018-04-05 21:10:56', NULL, NULL),
+	(44, 'Ucitelj', NULL, NULL, 'peter.peer@fri.uni-lj.si', NULL, '$31$16$YdkOKNj3Ijl2_UcL0QU6djMozZqs8uHG1ziLufl0Jyw', 'Peter', 'Peer', NULL, NULL, 'pp6542', '2018-04-05 21:10:56', NULL, NULL),
+	(45, 'Ucitelj', NULL, NULL, 'andraz.sustar@student.uni-lj.si', NULL, '$31$16$0AceQKwB2UlF9O86cp7AMsjJCVMVBkY6hnDuGmCP_iY', 'Andraž', 'Šuštar', NULL, NULL, 'as2959', '2018-04-05 21:10:56', NULL, NULL),
+	(46, 'Ucitelj', NULL, NULL, 'luka.pirnar@student.uni-lj.si', NULL, '$31$16$VJy6ZXbxfT218gDsDFj5NbfNhcOXfn3nUlLR95CM8eE', 'Luka', 'Pirnar', NULL, NULL, 'lp5724', '2018-04-05 21:10:56', NULL, NULL),
+	(47, 'Ucitelj', NULL, NULL, 'peter.hrovat@student.uni-lj.si', NULL, '$31$16$i90SnKBdsVTR4g3CQ1Y67MmQpA4bKVx5EEgYR9ISBcU', 'Peter', 'Hrovat', NULL, NULL, 'ph2482', '2018-04-05 21:10:56', NULL, NULL),
+	(48, 'Ucitelj', NULL, NULL, 'pavel.zagorc@student.uni-lj.si', NULL, '$31$16$lf98YWTIFOgC-XbFuC0lA05YhmCRyXOQTj46KhmXVJo', 'Pavel', 'Zagorc', NULL, NULL, 'pz8896', '2018-04-05 21:10:56', NULL, NULL),
+	(49, 'Ucitelj', NULL, NULL, 'klara.zagorc@student.uni-lj.si', NULL, '$31$16$7B_zXCntHSXA9v_krT1uqwFh8Qy2oyjo4jP4BQvvLo8', 'Klara', 'Zagorc', NULL, NULL, 'kz8472', '2018-04-05 21:10:56', NULL, NULL),
+	(50, 'Ucitelj', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Luka', 'Kovač', NULL, NULL, 'lk3317', '2018-04-05 21:10:56', NULL, NULL),
+	(51, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@gmx.com', '2301996500052', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Matjaž', 'Črednik', 1, '2018-05-04 17:40:55', 'mc5552', '2018-04-05 21:10:56', NULL, 705),
+	(52, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Špela', 'Šuštar', NULL, NULL, 'ss1235', '2018-04-05 21:10:56', NULL, NULL),
+	(53, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@gmx.com', '2301996500052', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Marko', 'Čop', 1, '2018-05-04 09:52:09', 'mc5689', '2018-04-05 21:10:56', NULL, 705),
+	(54, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Mitja', 'Ćusar', NULL, NULL, 'mc5546', '2018-04-05 21:10:56', NULL, NULL),
+	(55, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Primož', 'Žmire', NULL, NULL, 'pz4587', '2018-04-05 21:10:56', NULL, NULL),
+	(56, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Miha', 'Novak', NULL, NULL, 'mn1256', '2018-04-05 21:10:56', NULL, NULL),
+	(57, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Patricija', 'Kos', NULL, NULL, 'pk5397', '2018-04-05 21:10:56', NULL, NULL),
+	(58, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Franc', 'Dren', NULL, NULL, 'fd3354', '2018-04-05 21:10:56', NULL, NULL),
+	(59, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Eva', 'Marolt', NULL, NULL, 'em6875', '2018-04-05 21:10:56', NULL, NULL),
+	(60, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Mojca', 'Neber', NULL, NULL, 'mn9823', '2018-04-05 21:10:56', NULL, NULL),
+	(61, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Ana', 'Morder', NULL, NULL, 'am3165', '2018-04-05 21:10:56', NULL, NULL),
+	(62, 'Student', NULL, NULL, 'primoz.hrovat@gmx.com', NULL, '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Neja', 'Goluša', NULL, NULL, 'ng1689', '2018-04-05 21:10:56', NULL, NULL),
+	(63, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$mCUVC7xZja6mpJ8XiD48KwlFQgDyBgjyPdluGvsK76s', 'Matija', 'Mlakar', NULL, NULL, 'mm6452', '2018-05-04 17:42:51', NULL, NULL),
+	(70, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$GDpBfZ9DuN4yRcfWzM4wfWbmuaHkBHPEBbioekSVg-E', 'Matija', 'Mlakar', NULL, NULL, 'mm7243', '2018-05-04 18:07:17', NULL, NULL),
+	(77, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$lpMM04vjBUjARYGhH9yCt0kz185bCqjPMZRYheXu4gs', 'Matija', 'Mlakar', NULL, NULL, 'mm7514', '2018-05-04 18:12:11', NULL, NULL),
+	(84, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$kRBEQMNsFYm836IAbQUJcut993kUJR3ibyEbCrcUL50', 'Matija', 'Mlakar', NULL, NULL, 'mm2763', '2018-05-04 18:13:22', NULL, NULL),
+	(91, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$nbqEWoM992lPNG0Twr2fRT5MIEvGn68IjUEFSH1PZY4', 'Matija', 'Mlakar', NULL, NULL, 'mm2611', '2018-05-04 18:15:09', NULL, NULL),
+	(98, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$Qp-BQJXMlLUXO50BlXDirVUh0yhTgQbI27U8F-_svFg', 'Matija', 'Mlakar', NULL, NULL, 'mm7546', '2018-05-04 18:17:57', NULL, NULL),
+	(105, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$E6V4dn_QJfpn7-NnqaYOKAmS1l-LQvA-pFu0vACeav8', 'Matija', 'Mlakar', NULL, NULL, 'mm3345', '2018-05-04 18:21:13', NULL, NULL),
+	(112, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$UzpWrRSM4MrIFUBW3X7c456VvRdo9nGhgUPZ-18AYvE', 'Matija', 'Mlakar', NULL, NULL, 'mm8822', '2018-05-04 18:22:36', NULL, NULL),
+	(113, 'Student', NULL, NULL, 'primoz.hrovat@student.fri.si', NULL, '$31$16$CNoamIOzP27FTzt9y8MqHFFE7O7NekSm29ApxUNepSo', 'Primož', 'Hrovat', NULL, NULL, 'ph8476', '2018-05-04 18:22:36', NULL, NULL),
+	(114, 'Student', NULL, NULL, 'marko.potocar@student.fri.si', NULL, '$31$16$-D1iMz-RHMtHTB70PM3X_FpS76JqUrq06Dzxa_C8_RM', 'Marko', 'Potočar', NULL, NULL, 'mp9186', '2018-05-04 18:22:36', NULL, NULL),
+	(115, 'Student', NULL, NULL, 'eva.prepih@student.fri.si', NULL, '$31$16$ctoe2z42se5A0mQ5glunyjgf8_Q_4QkNMlm1SGDqTLI', 'Eva', 'Prepih', NULL, NULL, 'ep1082', '2018-05-04 18:22:36', NULL, NULL),
+	(116, 'Student', NULL, NULL, 'gasper@student.fri.si', NULL, '$31$16$4IX7xmy6lXuS23Mh40PIn0U1VeJP4ZZ_UAs1-VAmlzk', 'Gašper', 'Velik', NULL, NULL, 'gv7716', '2018-05-04 18:22:36', NULL, NULL),
+	(117, 'Student', NULL, NULL, 'luka@student.fri.si', NULL, '$31$16$MHWa89DyQ-chgHOA1iYlvc6P6lztvz2RHAPmrg6SA5U', 'Luka', 'Kovač', NULL, NULL, 'lk6333', '2018-05-04 18:22:36', NULL, NULL),
+	(118, 'Student', NULL, NULL, 'franc.okoren@student.fri.si', NULL, '$31$16$-KNXiVHCd5iq2z8EpTi1hZSSSEVbyacjKpHH1fOLj7s', 'Franc', 'Okoren', NULL, NULL, 'fo2209', '2018-05-04 18:22:36', NULL, NULL),
+	(119, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$4kSCq5b-cMzfaWJmjWlEA0AdxuIxe0j_k71L0bNkblE', 'Matija', 'Mlakar', NULL, NULL, 'mm7518', '2018-05-04 18:42:48', NULL, NULL),
+	(120, 'Student', NULL, NULL, 'primoz.hrovat@student.fri.si', NULL, '$31$16$6w8n5eunY4YZ12ES0Fua3a3MQxMQcUK82MsEv6In1WA', 'Primož', 'Hrovat', NULL, NULL, 'ph7833', '2018-05-04 18:42:48', NULL, NULL),
+	(121, 'Student', NULL, NULL, 'marko.potocar@student.fri.si', NULL, '$31$16$cYO_HWEsiq7HPbd-g_cRG-oDOj8Q3ln2z8mZgW2zs6g', 'Marko', 'Potočar', NULL, NULL, 'mp2147', '2018-05-04 18:42:49', NULL, NULL),
+	(122, 'Student', NULL, NULL, 'eva.prepih@student.fri.si', NULL, '$31$16$5Mv6YL0YC4cdmOo8bz9MExSm7eRnAnCnjN3HdyY0ayo', 'Eva', 'Prepih', NULL, NULL, 'ep5701', '2018-05-04 18:42:49', NULL, NULL),
+	(126, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$NWmwHRwy708jb7laFhmrAoRW6WnoW4Qv6xe1xdyYyl4', 'Matija', 'Mlakar', NULL, NULL, 'mm2423', '2018-05-04 23:57:13', NULL, NULL),
+	(127, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$9cSFN36HrP3nwabzfPz2er_NiEQ_qmIcmNVtKuKP0p0', 'Matija', 'Mlakar', NULL, NULL, 'mm2306', '2018-05-05 00:01:52', NULL, NULL),
+	(128, 'Student', NULL, NULL, 'primoz.hrovat@student.fri.si', NULL, '$31$16$Q65s5zQIdv-O5ummsco-MfXpR6A77G2Ji28dsYbtM00', 'Primož', 'Hrovat', NULL, NULL, 'ph5199', '2018-05-05 00:09:19', NULL, NULL),
+	(129, 'Student', NULL, NULL, 'marko.potocar@student.fri.si', NULL, '$31$16$PTrPdNuN4T5RHOiREtSIQbnrlP6GKNC8s_K465Iq72k', 'Marko', 'Potočar', NULL, NULL, 'mp6508', '2018-05-05 00:12:22', NULL, NULL);
+/*!40000 ALTER TABLE `uporabnik` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.vpis
 DROP TABLE IF EXISTS `vpis`;
 CREATE TABLE IF NOT EXISTS `vpis` (
@@ -411,7 +1985,27 @@ CREATE TABLE IF NOT EXISTS `vpis` (
   CONSTRAINT `FK_vpis_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.vpis: ~11 rows (približno)
+/*!40000 ALTER TABLE `vpis` DISABLE KEYS */;
+INSERT INTO `vpis` (`potrjen`, `letnik`, `nacin_studija`, `oblika_studija`, `student`, `studijski_program`, `studijsko_leto`, `vrsta_vpisa`) VALUES
+	(1, 1, 1, 1, 51, 1000468, 2015, 1),
+	(0, 2, 1, 1, 51, 1000468, 2018, 1),
+	(1, 1, 1, 1, 52, 1000468, 2015, 1),
+	(1, 1, 1, 1, 52, 1000468, 2016, 1),
+	(1, 2, 1, 1, 53, 1000468, 2015, 1),
+	(1, 1, 1, 1, 54, 1000470, 2015, 1),
+	(1, 1, 1, 1, 55, 1000471, 2015, 1),
+	(1, 1, 1, 1, 56, 1000468, 2015, 1),
+	(1, 2, 1, 1, 56, 1000468, 2016, 1),
+	(1, 1, 2, 2, 57, 1000470, 2016, 1),
+	(1, 2, 2, 2, 57, 1000470, 2017, 1),
+	(1, 2, 2, 2, 57, 1000470, 2018, 2),
+	(1, 1, 1, 1, 58, 1000468, 2018, 1),
+	(1, 1, 1, 1, 59, 1000468, 2016, 1),
+	(1, 2, 1, 1, 59, 1000468, 2017, 1),
+	(1, 3, 1, 1, 59, 1000468, 2018, 1);
+/*!40000 ALTER TABLE `vpis` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.vrsta_vpisa
 DROP TABLE IF EXISTS `vrsta_vpisa`;
 CREATE TABLE IF NOT EXISTS `vrsta_vpisa` (
@@ -420,7 +2014,19 @@ CREATE TABLE IF NOT EXISTS `vrsta_vpisa` (
   PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.vrsta_vpisa: ~8 rows (približno)
+/*!40000 ALTER TABLE `vrsta_vpisa` DISABLE KEYS */;
+INSERT INTO `vrsta_vpisa` (`sifra`, `vrsta_vpisa`) VALUES
+	(1, 'Prvi vpis v letnik/dodatno leto'),
+	(2, 'Ponavljanje letnika'),
+	(3, 'Nadaljevanje letnika'),
+	(4, 'Podaljšanje statusa študenta'),
+	(5, 'Vpis po merilih za prehode v višji letnik'),
+	(6, 'Vpis v semester skupnega št. programa'),
+	(7, 'Vpis po merilih za prehode v isti letnik'),
+	(98, 'Vpis za zaključek');
+/*!40000 ALTER TABLE `vrsta_vpisa` ENABLE KEYS */;
+
 -- Dumping structure for tabela studis.zeton
 DROP TABLE IF EXISTS `zeton`;
 CREATE TABLE IF NOT EXISTS `zeton` (
@@ -449,7 +2055,32 @@ CREATE TABLE IF NOT EXISTS `zeton` (
   CONSTRAINT `FK_zeton_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table studis.zeton: ~6 rows (približno)
+/*!40000 ALTER TABLE `zeton` DISABLE KEYS */;
+INSERT INTO `zeton` (`izkoriscen`, `prosta_izbira`, `letnik`, `nacin_studija`, `oblika_studija`, `student`, `studijski_program`, `studijsko_leto`, `vrsta_vpisa`) VALUES
+	(1, 0, 2, 1, 1, 51, 1000468, 2018, 1),
+	(1, 0, 2, 1, 1, 51, 1000468, 2018, 2),
+	(0, 0, 2, 1, 1, 52, 1000468, 2018, 1),
+	(0, 1, 3, 1, 1, 53, 1000468, 2018, 1),
+	(1, 0, 3, 1, 1, 54, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 55, 1000470, 2018, 1),
+	(0, 0, 1, 1, 1, 63, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 70, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 91, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 98, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 105, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 112, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 113, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 114, 1000470, 2018, 1),
+	(0, 0, 1, 1, 1, 115, 1000471, 2018, 1),
+	(0, 0, 1, 1, 1, 116, 1000474, 2018, 1),
+	(0, 0, 1, 1, 1, 121, 1000470, 2018, 1),
+	(0, 0, 1, 1, 1, 122, 1000471, 2018, 1),
+	(0, 0, 1, 1, 1, 126, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 128, 1000468, 2018, 1),
+	(0, 0, 1, 1, 1, 129, 1000470, 2018, 1);
+/*!40000 ALTER TABLE `zeton` ENABLE KEYS */;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
