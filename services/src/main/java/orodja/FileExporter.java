@@ -34,8 +34,8 @@ public class FileExporter {
 
     public File createFile(orodja.export.Document document) {
         StringBuilder sb = new StringBuilder();
-        sb.append(GENERATED_FILES);
-        sb.append("/");
+//        sb.append(GENERATED_FILES);
+//        sb.append("/");
         sb.append(document.getName());
         sb.append("_");
         sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")));
@@ -61,6 +61,10 @@ public class FileExporter {
             writer.setPageEvent(new Footer());
             doc.setPageSize(PageSize.A4.rotate());
             doc.open();
+
+            Chunk chunk = new Chunk(document.getName() != null ? document.getName() : "",
+                    FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+            doc.add(chunk);
 
             addDocumentHeaders(document.getMetadata(), doc);
             PdfPTable table = createTable(document);
