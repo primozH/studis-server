@@ -62,9 +62,10 @@ public class FileExporter {
             doc.setPageSize(PageSize.A4.rotate());
             doc.open();
 
-            Chunk chunk = new Chunk(document.getName() != null ? document.getName() : "",
-                    FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
-            doc.add(chunk);
+            Paragraph paragraph = new Paragraph();
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+            paragraph.add(new Chunk(document.getName() != null ? document.getName() : ""));
+            doc.add(paragraph);
 
             addDocumentHeaders(document.getMetadata(), doc);
             PdfPTable table = createTable(document);
