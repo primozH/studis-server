@@ -351,58 +351,30 @@ localhost:8080/api/v1/
         učitelj pa samo predmete, ki jih izvaja
          
 - podatki o izpitu:
-    - POST /izpit
-    /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu),
-    /brisi-prijavo (Error.NOT_ACCEPTABLE ce ni v bazi oz. ce je prepozen za odjavo),
-
-
-    Error.BAD_GATEWAY (ce katerakoli od spodnjih informacij manjka v jsonu)
+    - POST /izpit/stevilo-polaganj?studijsko-leto={sifra}&sifra-predmeta={sifra}
+            - vrne stevilo polaganj
+      ```json
+      {    "id":[id_uporabnika] }
+      ```
+    - POST /izpit/izpit-za-leto?studijsko-leto={sifra}&sifra-predmeta={sifra}
+         - vrne izpit za doloceno studijsko leto
+      ```json
+      {    "id":[id_uporabnika] }
+      ```
+    - POST /izpit/zadnja-prijava?sifra-predmeta={sifra}
+                  - vrne zadnjo prijavo
+      ```json
+      {    "id":[id_uporabnika] }
+      ```
+    - POST /izpit/vnos-rezultatov?studijsko-leto={sifra}&sifra-predmeta={sifra}
+         - vnese rezultat za pisni del
     ```json
-    {
-        "predmetStudent": {
-            "predmet":{
-                "sifra": sifra_predmeta
-            },
-            "vpis":{
-                "student":{
-                    "id_uporabnik": student_id
-                },
-                "studijskoLeto":{
-                    "id": studijsko_leto_letnica
-                }
-            }
-        }
-    }
+    {    "ocenaPisno":[ocenaPisno] }
     ```
-
-    POST
-    /vnos-rezultatov (BAD_REQUEST v kolikor so podatki(sifra predmeta, student id in studijsko leto) napacni)
-    ```json
-        {
-            "izpit" : {
-                "prijavaIzpit" : {
-                    "predmetStudent": {
-                        "predmet":{
-                            "sifra": sifra_predmeta
-                        },
-                        "vpis":{
-                            "student":{
-                                "id_uporabnik": student_id
-                            },
-                            "studijskoLeto":{
-                                "id": studijsko_leto_letnica
-                            }
-                        }
-                    }
-                },
-                "ocenaPisno": [ocena]
-            }
-        }
-        ```
-    /vrni-vpisane-ocene (BAD_REQUEST v kolikor so podatki(sifra predmeta in studijsko leto) napacni)
-    Enak POST request kot zgoraj, razen, da se ne potrebuje "id_uporabnika" in "ocenaPisno".
-
-    Vrne se List<Student> v JSON obliki
-
-    /razveljavi-oceno
-    Enak POST request kot zgoraj, razen, da se ne potrebuje "ocenaPisno"
+    - POST /izpit/razveljavi-oceno?studijsko-leto={sifra}&sifra-predmeta={sifra}
+           - razveljavi oceno pisnega dela in nastavi defaultno vrednost v bazi (-1)
+     ```json
+     {    "id":[id_uporabnika] }
+     ```
+     - GET /izpit/vrni-vpisane-ocene?studijsko-leto={sifra}&sifra-predmeta={sifra}
+           - vrne izpite, ki ze imajo vpisano oceno za ta predmet
