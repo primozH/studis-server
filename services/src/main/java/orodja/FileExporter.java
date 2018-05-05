@@ -29,13 +29,13 @@ public class FileExporter {
         FontFactory.register(NOTOSANS_BOLD, "notosans-bold");
         FontFactory.register(NOTOSANS_REGULAR, "notosans-regular");
 
-        notoRegular = FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12);
+        notoRegular = FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 8);
     }
 
     public File createFile(orodja.export.Document document) {
         StringBuilder sb = new StringBuilder();
-        sb.append(GENERATED_FILES);
-        sb.append("/");
+//        sb.append(GENERATED_FILES);
+//        sb.append("/");
         sb.append(document.getName());
         sb.append("_");
         sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")));
@@ -59,7 +59,13 @@ public class FileExporter {
         try {
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(fileName));
             writer.setPageEvent(new Footer());
+            doc.setPageSize(PageSize.A4.rotate());
             doc.open();
+
+            Paragraph paragraph = new Paragraph();
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+            paragraph.add(new Chunk(document.getName() != null ? document.getName() : ""));
+            doc.add(paragraph);
 
             addDocumentHeaders(document.getMetadata(), doc);
             PdfPTable table = createTable(document);
@@ -124,7 +130,7 @@ public class FileExporter {
             try {
                 if (course != null) {
                     chunk = new Chunk(course + " (" + courseCode + ")",
-                            FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+                            FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12));
                     paragraph.add(chunk);
                     paragraph.add(Chunk.NEWLINE);
                 }

@@ -1,20 +1,38 @@
 package zrna;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
 
+import helpers.PrijavniPodatkiIzpit;
 import izpit.Izpit;
 import izpit.IzpitniRok;
+import izpit.IzpitniRokId;
+import izpit.IzvajanjePredmetaId;
 import izpit.OdjavaIzpit;
 import izpit.PrijavaIzpit;
-import vloge.Student;
+import izpit.PrijavaIzpitId;
+import sifranti.Predmet;
+import student.PredmetStudent;
+import student.PredmetStudentId;
+import vloge.Uporabnik;
+import vpis.VpisId;
 
 @ApplicationScoped
 public class IzpitZrno {
@@ -24,38 +42,39 @@ public class IzpitZrno {
     @PersistenceContext
     private EntityManager em;
 
-    public void applyForExam(PrijavaIzpit prijavaIzpit) throws Exception {
+    @Inject
+    private UserTransaction userTransaction;
+
+    public void applyForExam(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
 
         // preveri število polaganj
         // celotno število polaganj (največ 6), polaganja v tekočem letu (največ 3)
-        checkApplicationCount(prijavaIzpit);
+        checkApplicationCount(prijavniPodatki);
 
         // prijava na izpit iz prejšnjega letnika
 
         // preveri roke (prijava po izteku)
-        checkDates(prijavaIzpit);
+        IzpitniRok izpitniRok = checkDates(prijavniPodatki);
 
         // preveri prijavo na že opravljen izpit
-        checkForPassedExam(prijavaIzpit);
+        checkForPassedExam(prijavniPodatki);
         // praveri za obstoječo prijavo
         // preveri za prijavo z nezaključeno oceno
-        checkIfApplicationExistsOrNotClosed(prijavaIzpit);
+        checkIfApplicationExistsOrNotClosed(prijavniPodatki);
 
-        // preveri za plačilo
-        // ponavljalcu se odštejejo polaganja iz prvega vpisa
-        setPayment(prijavaIzpit);
+        createApplication(izpitniRok, prijavniPodatki);
     }
 
-    private void checkApplicationCount(PrijavaIzpit prijavaIzpit) throws Exception {
+    private void checkApplicationCount(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
         logger.info("Preverjam stevilo polaganj");
-        Integer countStudyYear = em.createNamedQuery("entitete.izpit.PrijavaIzpit.stejPrijaveStudijskoLeto", Integer.class)
-                .setParameter("student", prijavaIzpit.getPredmetStudent().getVpis().getStudent())
-                .setParameter("studijskoLeto", prijavaIzpit.getPredmetStudent().getVpis().getStudijskoLeto())
-                .setParameter("predmet", prijavaIzpit.getPredmetStudent().getPredmet())
+        Long countStudyYear = em.createNamedQuery("entitete.izpit.PrijavaIzpit.stejPrijaveStudijskoLeto", Long.class)
+                .setParameter("student", prijavniPodatki.getStudent())
+                .setParameter("studijskoLeto", prijavniPodatki.getStudijskoLeto())
+                .setParameter("predmet", prijavniPodatki.getPredmet())
                 .getSingleResult();
-        Integer countAll = em.createNamedQuery("entitete.izpit.PrijavaIzpit.stejPrijave", Integer.class)
-                .setParameter("student", prijavaIzpit.getPredmetStudent().getVpis().getStudent())
-                .setParameter("predmet", prijavaIzpit.getPredmetStudent().getPredmet())
+        Long countAll = em.createNamedQuery("entitete.izpit.PrijavaIzpit.stejPrijave", Long.class)
+                .setParameter("student", prijavniPodatki.getStudent())
+                .setParameter("predmet", prijavniPodatki.getPredmet())
                 .getSingleResult();
 
         logger.info("Stevilo prijav na izpit za tekoce studijsko leto: " + countStudyYear);
@@ -72,12 +91,28 @@ public class IzpitZrno {
         }
     }
 
-    private void checkDates(PrijavaIzpit prijavaIzpit) throws Exception {
-        LocalDateTime lastValidDate = prijavaIzpit.getRok().getDatumCasIzvajanja()
-                                                  .minusDays(2)
-                                                  .withHour(23)
-                                                  .withMinute(59)
-                                                  .withSecond(0);
+    private IzpitniRok checkDates(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
+        IzpitniRok izpitniRok;
+        try {
+            izpitniRok = em.createQuery("SELECT i FROM IzpitniRok i WHERE " +
+                    "i.izvajanjePredmeta.predmet.sifra = :predmet AND " +
+                    "i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto AND " +
+                    "i.datumCasIzvajanja = :datum", IzpitniRok.class)
+                    .setParameter("predmet", prijavniPodatki.getPredmet())
+                    .setParameter("studijskoLeto", prijavniPodatki.getStudijskoLeto())
+                    .setParameter("datum", prijavniPodatki.getDatumIzvajanja())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new Exception("Ni razpisanega roka.");
+        }
+
+        LocalDateTime lastValidDate = izpitniRok
+                .getDatumCasIzvajanja()
+                .minusDays(2)
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(0);
+
         logger.info("Preverjam veljaven cas prijave na izpit. Zadnji rok za prijavo: " +
                 "" + lastValidDate.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         LocalDateTime now = LocalDateTime.now();
@@ -87,28 +122,42 @@ public class IzpitZrno {
             throw new Exception("Prepozna prijava na izpit! Rok za prijavo je potekel ob " +
             lastValidDate.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         }
+
+        return izpitniRok;
     }
 
-    private void checkForPassedExam(PrijavaIzpit prijavaIzpit) throws Exception {
+    private void checkForPassedExam(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
         logger.info("Preverjam, ce obstaja pozitivna ocena za izpit");
-        Izpit i = em.createNamedQuery("entitete.izpit.PrijavaIzpit.preveriZaOpravljenIzpit", Izpit.class)
-                .setParameter("student", prijavaIzpit.getPredmetStudent().getVpis().getStudent())
-                .setParameter("predmet", prijavaIzpit.getPredmetStudent().getPredmet())
-                .getSingleResult();
+        Izpit izpit;
+        try {
+            izpit = em.createNamedQuery("entitete.izpit.PrijavaIzpit.preveriZaOpravljenIzpit", Izpit.class)
+                    .setParameter("student", prijavniPodatki.getStudent())
+                    .setParameter("predmet", prijavniPodatki.getPredmet())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            izpit = null;
+        }
 
-        if (i != null) {
+        if (izpit != null) {
             logger.info("Ocena za predmet že obstaja");
             throw new Exception("Pozitivna ocena za ta predmet že obstaja!");
         }
         logger.info("Ocena za ta predmet še ne obstaja");
     }
 
-    private void checkIfApplicationExistsOrNotClosed(PrijavaIzpit prijavaIzpit) throws Exception {
+    private void checkIfApplicationExistsOrNotClosed(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
         logger.info("Preverjam za obstoječe prijave...");
-        PrijavaIzpit stored = em.createNamedQuery("entitete.izpit.PrijavaIzpit.aktivnePrijave", PrijavaIzpit.class)
-                .setParameter("predmetStudent", prijavaIzpit.getPredmetStudent())
-                .setParameter("rok", prijavaIzpit.getRok())
-                .getSingleResult();
+        PrijavaIzpit stored;
+        try {
+            stored = em.createNamedQuery("entitete.izpit.PrijavaIzpit.aktivnePrijave", PrijavaIzpit.class)
+                    .setParameter("predmet", prijavniPodatki.getPredmet())
+                    .setParameter("studijskoLeto", prijavniPodatki.getStudijskoLeto())
+                    .setParameter("student", prijavniPodatki.getStudent())
+                    .setParameter("datumCas", prijavniPodatki.getDatumIzvajanja())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            stored = null;
+        }
 
         if (stored != null) {
             logger.info("Prijava obstaja!");
@@ -117,11 +166,132 @@ public class IzpitZrno {
 
     }
 
-    private void setPayment(PrijavaIzpit prijavaIzpit) { }
+    private BigDecimal setPayment() {
+        return null;
+    }
 
-    public List<IzpitniRok> vrniRokeZaPredmet(int sifraPredmeta) {
-        return em.createNamedQuery("entities.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", IzpitniRok.class)
-                .setParameter("sifraPredmeta", sifraPredmeta)
+    private void createApplication(IzpitniRok rok, PrijavniPodatkiIzpit prijavniPodatki) {
+        BigDecimal cena = setPayment();
+        PredmetStudent predmetStudent = getPredmetStudent(prijavniPodatki);
+
+        PrijavaIzpit prijavaIzpit = new PrijavaIzpit();
+        prijavaIzpit.setCasPrijave(LocalDateTime.now());
+        prijavaIzpit.setRok(rok);
+        prijavaIzpit.setPredmetStudent(predmetStudent);
+        prijavaIzpit.setCena(cena);
+
+        try {
+            userTransaction.begin();
+            em.persist(prijavaIzpit);
+            userTransaction.commit();
+        } catch (NotSupportedException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        } catch (HeuristicMixedException e) {
+            e.printStackTrace();
+        } catch (HeuristicRollbackException e) {
+            e.printStackTrace();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+        }
+    }
+    @Transactional
+    public void returnApplication(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
+        logger.info("Odjava od izpita");
+        IzpitniRok izpitniRok = getIzpitniRok(prijavniPodatki);
+        LocalDateTime lastValidDate = izpitniRok
+                .getDatumCasIzvajanja()
+                .minusDays(2)
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(0);
+
+        if (lastValidDate.isBefore(LocalDateTime.now())) {
+            throw new Exception("");
+        }
+        PrijavaIzpit prijavaIzpit = getPrijavaIzpit(prijavniPodatki);
+
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setCasOdjave(LocalDateTime.now());
+        odjavaIzpit.setPrijavaIzpit(prijavaIzpit);
+
+        em.persist(odjavaIzpit);
+
+        logger.info("Označujem prijavo kot brisano...");
+        prijavaIzpit.setBrisana(true);
+
+        em.persist(prijavaIzpit);
+        logger.info("Prijava uspešno vrnjena");
+    }
+
+    private PredmetStudent getPredmetStudent(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        return em.find(PredmetStudent.class, getPredmetStudentId(prijavniPodatkiIzpit));
+    }
+
+    private IzpitniRok getIzpitniRok(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        return em.find(IzpitniRok.class, getIzpitniRokId(prijavniPodatkiIzpit));
+    }
+
+    private PrijavaIzpit getPrijavaIzpit(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        PrijavaIzpitId id = new PrijavaIzpitId();
+        id.setPredmetStudent(getPredmetStudentId(prijavniPodatkiIzpit));
+        id.setRok(getIzpitniRokId(prijavniPodatkiIzpit));
+
+        return em.find(PrijavaIzpit.class, id);
+    }
+
+    private PredmetStudentId getPredmetStudentId(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        VpisId vpis = new VpisId();
+        vpis.setStudent(prijavniPodatkiIzpit.getStudent());
+        vpis.setStudijskoLeto(prijavniPodatkiIzpit.getStudijskoLeto());
+
+        PredmetStudentId id = new PredmetStudentId();
+        id.setPredmet(prijavniPodatkiIzpit.getPredmet());
+        id.setVpis(vpis);
+        return id;
+    }
+
+    private IzpitniRokId getIzpitniRokId(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        IzvajanjePredmetaId izvajanjePredmetaId = new IzvajanjePredmetaId();
+        izvajanjePredmetaId.setPredmet(prijavniPodatkiIzpit.getPredmet());
+        izvajanjePredmetaId.setStudijskoLeto(prijavniPodatkiIzpit.getStudijskoLeto());
+
+        IzpitniRokId id = new IzpitniRokId();
+        id.setDatumCasIzvajanja(prijavniPodatkiIzpit.getDatumIzvajanja());
+        id.setIzvajanjePredmeta(izvajanjePredmetaId);
+        return id;
+    }
+
+    public List<IzpitniRok> vrniIzpitneRoke(Integer uporabnikId, Integer sifraPredmeta, Integer studijskoLeto) {
+        Uporabnik u = em.find(Uporabnik.class, uporabnikId);
+        if (!u.getTip().equalsIgnoreCase("student")) {
+            logger.info("Pridobivanje izpitnih rokov za predmet " + sifraPredmeta + " in studijsko leto " + studijskoLeto);
+            return em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", IzpitniRok.class)
+                    .setParameter("sifraPredmeta", sifraPredmeta)
+                    .setParameter("studijskoLeto", studijskoLeto)
+                    .getResultList();
+        } else {
+            logger.info("Pridobivanje izpitnih rokov za študenta " + uporabnikId);
+            List<IzpitniRok> roki = em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRoke", IzpitniRok.class)
+                    .setParameter("student", uporabnikId)
+                    .setParameter("studijskoLeto", studijskoLeto)
+                    .getResultList();
+
+            List<Predmet> opravljeniPredmeti = em.createNamedQuery("entitete.izpit.Izpit.opravljeniPredmeti", Predmet.class)
+                    .setParameter("student", uporabnikId)
+                    .getResultList();
+
+
+            return roki.stream().filter(rok -> !opravljeniPredmeti.contains(rok.getIzvajanjePredmeta().getPredmet()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public List<PrijavaIzpit> vrniPrijaveNaIzpit(Uporabnik uporabnik, Integer studijskoLeto) {
+        return em.createNamedQuery("entitete.izpit.PrijavaIzpit.prijaveZaStudenta", PrijavaIzpit.class)
+                .setParameter("student", uporabnik.getId())
+                .setParameter("studijskoLeto", studijskoLeto)
                 .getResultList();
     }
 
@@ -147,32 +317,38 @@ public class IzpitZrno {
                  .getSingleResult();
     }
 
-    public boolean odjavaOdIzpita(int sifraPredmeta, int studentId, int studijskoLeto) {
-        PrijavaIzpit prijavaIzpit =  em.createNamedQuery("entities.izpit.PrijavaIzpit.vrniPrijavo", PrijavaIzpit.class)
-                 .setParameter("sifraPredmeta", sifraPredmeta)
-                 .setParameter("studentId", studentId)
-                 .setParameter("studijskoLeto", studijskoLeto)
-                 .getSingleResult();
-        if (prijavaIzpit == null) return false;
-        long casIzvajanjaIzpita = prijavaIzpit.getRok().getDatumCasIzvajanja().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long trenutniCas = System.currentTimeMillis();
-        if (trenutniCas + 24 * 60 * 60 * 1000 >= casIzvajanjaIzpita) return false;
-        prijavaIzpit.setBrisana(true);
-        em.merge(prijavaIzpit);
-        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
-        odjavaIzpit.setCasOdjave(LocalDateTime.now());
-        odjavaIzpit.setPrijavaIzpit(prijavaIzpit);
-        odjavaIzpit.setOdjavitelj(prijavaIzpit.getPredmetStudent().getVpis().getStudent());
-        em.merge(odjavaIzpit);
-        return true;
-    }
+//    public boolean vrniPrijavoZaPredmet(int sifraPredmeta, int studentId, int studijskoLeto) {
+//        logger.info("Vracanje prijave");
+//
+//        PrijavaIzpit prijavaIzpit =  em.createNamedQuery("entities.izpit.PrijavaIzpit.vrniPrijavo", PrijavaIzpit.class)
+//                 .setParameter("sifraPredmeta", sifraPredmeta)
+//                 .setParameter("studentId", studentId)
+//                 .setParameter("studijskoLeto", studijskoLeto)
+//                 .getSingleResult();
+//
+//        if (prijavaIzpit == null) return false;
+//
+//        long casIzvajanjaIzpita = prijavaIzpit.getRok().getDatumCasIzvajanja().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+//        long trenutniCas = System.currentTimeMillis();
+//        if (trenutniCas + 24 * 60 * 60 * 1000 >= casIzvajanjaIzpita) return false;
+//        prijavaIzpit.setBrisana(true);
+//        em.merge(prijavaIzpit);
+//        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+//        odjavaIzpit.setCasOdjave(LocalDateTime.now());
+//        odjavaIzpit.setPrijavaIzpit(prijavaIzpit);
+//        odjavaIzpit.setOdjavitelj(prijavaIzpit.getPredmetStudent().getVpis().getStudent());
+//        em.merge(odjavaIzpit);
+//        return true;
+//    }
 
-    public List<Student> vrniPrijavljeneStudente(int sifraPredmeta, int studentId, int studijskoLeto) {
-        return   em.createNamedQuery("entities.izpit.Izpit.vrniPrijavljeneStudente", Student.class)
-                                       .setParameter("sifraPredmeta", sifraPredmeta)
-                                       .setParameter("studentId", studentId)
-                                       .setParameter("studijskoLeto", studijskoLeto)
-                                       .getResultList();
+    public List<PrijavaIzpit> vrniPrijavljeneStudente(int sifraPredmeta, int studijskoLeto, LocalDateTime datumCas) {
+        logger.info("Iskanje vseh prijavljenih studentov na izpit. Predmet: " + sifraPredmeta +
+        ", studijsko leto: " + studijskoLeto + ", datum: " + datumCas);
+        return   em.createNamedQuery("entitete.izpit.PrijavaIzpit.prijavljeniStudentje", PrijavaIzpit.class)
+                .setParameter("predmet", sifraPredmeta)
+                .setParameter("studijskoLeto", studijskoLeto)
+                .setParameter("datumCas", datumCas)
+                .getResultList();
     }
 
     public boolean vnesiRezultatIzpita(Izpit izpit, int sifraPredmeta, int studentId, int studijskoLeto) {
@@ -193,17 +369,17 @@ public class IzpitZrno {
         return true;
     }
 
-    public List<Student> vrniZeVneseneRezultateIzpita(Izpit izpit, int sifraPredmeta, int studijskoLeto) {
-        List<Student> studenti = null;
+    public List<Izpit> vrniZeVneseneRezultateIzpita(int sifraPredmeta, int studijskoLeto) {
+        List<Izpit> izpiti = null;
         try {
-            studenti = em.createNamedQuery("entities.izpit.Izpit.vrniStudenteZZeVpisanoOceno", Student.class)
+            izpiti = em.createNamedQuery("entities.izpit.Izpit.vrniIzpiteZZeVpisanoOceno", Izpit.class)
                     .setParameter("sifraPredmeta", sifraPredmeta)
                     .setParameter("studijskoLeto", studijskoLeto)
                     .getResultList();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return studenti;
+        return izpiti;
     }
 
     public boolean razveljaviOceno(int sifraPredmeta, int studentId, int studijskoLeto) {

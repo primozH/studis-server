@@ -31,22 +31,36 @@ import student.PredmetStudent;
                         "AND p.predmetStudent.vpis.student.id = :studentId " +
                         "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.stejPrijave", query = "SELECT COUNT(p) FROM PrijavaIzpit p WHERE " +
-                "p.predmetStudent.vpis.student = :student " +
-                "AND p.predmetStudent.predmet = :predmet " +
+                "p.predmetStudent.vpis.student.id = :student " +
+                "AND p.predmetStudent.predmet.sifra = :predmet " +
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.stejPrijaveStudijskoLeto", query = "SELECT COUNT(p) FROM PrijavaIzpit p WHERE " +
-                "p.predmetStudent.vpis.student = :student " +
-                "AND p.predmetStudent.vpis.studijskoLeto = :studijskoLeto " +
-                "AND p.predmetStudent.predmet = :predmet " +
+                "p.predmetStudent.vpis.student.id = :student " +
+                "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto " +
+                "AND p.predmetStudent.predmet.sifra = :predmet " +
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.preveriZaOpravljenIzpit", query = "SELECT i FROM Izpit i WHERE " +
-                "i.predmet = :predmet " +
-                "AND i.student = :student"),
+                "i.predmet.sifra = :predmet " +
+                "AND i.student.id = :student " +
+                "AND i.koncnaOcena > 5"),
         @NamedQuery(name = "entitete.izpit.PrijavaIzpit.aktivnePrijave", query = "SELECT p FROM PrijavaIzpit p WHERE " +
-                "p.predmetStudent = :predmetStudent " +
-                "AND p.rok = :rok " +
+                "p.predmetStudent.predmet.sifra = :predmet " +
+                "AND p.predmetStudent.vpis.student.id = :student " +
+                "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto " +
+                "AND p.rok.datumCasIzvajanja = :datumCas " +
                 "AND p.zakljucena = FALSE " +
-                "AND p.brisana = FALSE")
+                "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.prijavljeniStudentje", query = "SELECT p FROM PrijavaIzpit p WHERE " +
+                "p.predmetStudent.predmet.sifra = :predmet " +
+                "AND p.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto " +
+                "AND p.rok.datumCasIzvajanja = :datumCas " +
+                "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaIzpit.prijaveZaStudenta",
+                query = "SELECT p FROM PrijavaIzpit p WHERE " +
+                        "p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
+                        "AND p.predmetStudent.vpis.student.id = :student " +
+                        "AND p.brisana = FALSE " +
+                        "AND p.zakljucena = FALSE")
 })
 public class PrijavaIzpit {
 

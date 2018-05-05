@@ -189,10 +189,6 @@ localhost:8080/api/v1/
         na število uspešno uvoženih
     - GET: kandidat/neuspesni
         - vrne .txt datoteko z neuspešnimo uvoženimi kandidati
-    - GET: kandidat/{id}/ustvariStudenta
-        - se kliče, ko se kandidat prijavi v sistem; spremeni tip iz kandidata v študenta,
-        ustvari potrebni žeton za vpis in ga vrne (naj se kliče takoj ob prijavi kandidata, ki se ga 
-        potem preusmeri na stran za vpis študenta (vpisni list))
 
 - žeton:
     - GET: zeton
@@ -327,11 +323,37 @@ localhost:8080/api/v1/
         Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
         mora zadostiti zgornjemu zgledu.
 
+- izpitni roki:
+    - POST /izpit/[prijava|odjava]
+        - prijava/odjava študenta na izpit:
+        ```json
+        {
+        	"student": 57,
+        	"predmet": 63208,
+        	"studijskoLeto": 2018,
+        	"datumIzvajanja": "2019-06-05T10:00:00"
+        }
+        ```
+    - GET /izpit/prijavljeni?[predmet={sifra}&studijsko-leto={sifra}&datum-cas={sifra}]
+        - seznam vseh prijav na izpitni rok pri predmetu za studijsko leto in na izbrani rok
+        [localhost:8080/api/v1/izpit/prijavljeni?predmet=63208&studijsko-leto=2018&datum-cas=2019-06-05T10:00]()
+    - GET /izpit/rok?studijsko-leto={sifra}&[predmet={sifra}]
+        - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
+        študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
+    - GET /izpit/prijave?studijsko-leto={sifra}
+        - seznam vseh prijav na izpite
+    
+- podatki o izvajanju predmetov:
+    - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
+        - seznam vseh študentov, vpisanih v predmet za študijsko leto
+    - GET /predmet/izvajanje?studijsko-leto={leto}
+        - seznam vseh predmetov, ki se izvajajo v {leto}. Referent dobi seznam vseh predmetov,
+        učitelj pa samo predmete, ki jih izvaja
+         
 - podatki o izpitu:
     - POST /izpit
     /roki, /stevilo-polaganj, /izpit-za-leto, /zadnja-prijava (podatki o zadnji prijavi pri predmetu),
     /brisi-prijavo (Error.NOT_ACCEPTABLE ce ni v bazi oz. ce je prepozen za odjavo),
-    /prijavljeni (vrne vse prijavljene studente na izpitni rok)
 
 
     Error.BAD_GATEWAY (ce katerakoli od spodnjih informacij manjka v jsonu)

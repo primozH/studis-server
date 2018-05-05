@@ -12,14 +12,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import helpers.adapters.LocalDateTimeAdapter;
 import vloge.Ucitelj;
 
 @Entity
 @Table(name = "rok")
 @IdClass(IzpitniRokId.class)
 @NamedQueries(value = {
-        @NamedQuery(name = "entities.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta")
+        @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +
+                "WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
+                "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRoke", query = "SELECT i " +
+                "FROM IzpitniRok i, PredmetStudent p " +
+                "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
+                "AND p.vpis.studijskoLeto.id = :studijskoLeto " +
+                "AND p.vpis.student.id = :student " +
+                "AND p.predmet = i.izvajanjePredmeta.predmet")
 })
 public class IzpitniRok {
 
@@ -33,6 +43,7 @@ public class IzpitniRok {
 
     @Id
     @Column(name = "datum_cas")
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime datumCasIzvajanja;
 
     @ManyToOne

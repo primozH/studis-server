@@ -18,7 +18,13 @@ import vloge.Ucitelj;
 @Table(name = "predmet_izvajanje")
 @IdClass(IzvajanjePredmetaId.class)
 @NamedQueries(value = {
-        @NamedQuery(name = "entities.izpit.IzvajanjePredmeta.vrniIzvajanjePredmetaZaPredmet", query = "SELECT i FROM IzvajanjePredmeta i WHERE i.predmet.sifra = :sifraPredmeta")
+        @NamedQuery(name = "entitete.izpit.IzvajanjePredmeta.vrniPredmete", query = "SELECT i FROM IzvajanjePredmeta i " +
+                "WHERE (i.nosilec1.id = :ucitelj " +
+                "OR i.nosilec2.id = :ucitelj " +
+                "OR i.nosilec3.id = :ucitelj) " +
+                "AND i.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.izpit.IzvajanjePredmeta.vrniVsePredmete", query = "SELECT i FROM IzvajanjePredmeta i " +
+                "WHERE i.studijskoLeto.id = :studijskoLeto")
 })
 public class IzvajanjePredmeta {
 
