@@ -5,7 +5,12 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -14,6 +19,7 @@ import authentication.Role;
 import common.CustomErrorMessage;
 import common.PrijavniPodatki;
 import helpers.PrijavniPodatkiIzpit;
+import izpit.Izpit;
 import izpit.IzpitniRok;
 import izpit.PrijavaIzpit;
 import vloge.Student;
@@ -97,44 +103,43 @@ public class IzpitVir {
 
     @POST
     @Path("stevilo-polaganj")
-    public Response vrniSteviloVsehPolaganjPredmetaZaStudenta(PrijavaIzpit prijavaIzpit) {
-        int sifraPredmeta;
+    public Response vrniSteviloVsehPolaganjPredmetaZaStudenta(@QueryParam("predmet") Integer predmet,
+                                                              @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                                              Student student) {
         int studentId;
         try {
-            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
-            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
-        } catch (NullPointerException e) {
+            studentId = student.getId();
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.ok().entity(izpitZrno.vrniSteviloVsehPolaganjPredmetaZaStudenta(studentId, sifraPredmeta)).build();
+        return Response.ok().entity(izpitZrno.vrniSteviloVsehPolaganjPredmetaZaStudenta(studentId, predmet)).build();
     }
 
     @POST
     @Path("izpit-za-leto")
-    public Response vrniIzpitZaLeto(PrijavaIzpit prijavaIzpit) {
-        int sifraPredmeta, studentId, studijskoLeto;
+    public Response vrniIzpitZaLeto(@QueryParam("predmet") Integer predmet,
+                                    @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                    Student student) {
+        int studentId;
         try {
-            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
-            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
-            studijskoLeto = prijavaIzpit.getPredmetStudent().getVpis().getStudijskoLeto().getId();
-        } catch (NullPointerException e) {
+            studentId = student.getId();
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.ok().entity(izpitZrno.vrniIzpitZaLeto(studentId, sifraPredmeta, studijskoLeto)).build();
+        return Response.ok().entity(izpitZrno.vrniIzpitZaLeto(studentId, predmet, studijskoLeto)).build();
     }
 
     @POST
     @Path("zadnja-prijava")
-    public Response vrniZadnjoPrijavoZaPredmet(PrijavaIzpit prijavaIzpit) {
-        int sifraPredmeta;
+    public Response vrniZadnjoPrijavoZaPredmet(@QueryParam("predmet") Integer predmet,
+                                               Student student) {
         int studentId;
         try {
-            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
-            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
-        } catch (NullPointerException e) {
+            studentId = student.getId();
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.ok().entity(izpitZrno.vrniZadnjoPrijavoZaPredmet(studentId, sifraPredmeta)).build();
+        return Response.ok().entity(izpitZrno.vrniZadnjoPrijavoZaPredmet(studentId, predmet)).build();
     }
 
 //    @POST
@@ -148,10 +153,55 @@ public class IzpitVir {
 //        } catch (NullPointerException e) {
 //            return Response.status(Response.Status.BAD_REQUEST).build();
 //        }
-//        boolean potrjeno = izpitZrno.vrniPrijavoZaPredmet(studentId, sifraPredmeta, studijskoLeto);
+//        boolean potrjeno = izpitZrno.odjavaOdIzpita(studentId, sifraPredmeta, studijskoLeto);
 //        if (!potrjeno) {
 //            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 //        }
 //        return Response.ok().entity(prijavaIzpit).build();
 //    }
+
+    @POST
+    @Path("vnos-rezultatov")
+    public Response vnesiRezultateVpisnegaDela(@QueryParam("predmet") Integer predmet,
+                                               @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                               Izpit izpit) {
+        int studentId;
+        try {
+            studentId = izpit.getStudent().getId();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (izpitZrno.vnesiRezultatIzpita(izpit, predmet, studentId, studijskoLeto)) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    }
+
+    @GET
+    @Path("vrni-vpisane-ocene")
+    public Response vrniZeVpisaneOcene(@QueryParam("predmet") Integer predmet,
+                                       @QueryParam("studijsko-leto") Integer studijskoLeto) {
+        List<Izpit> izpiti = izpitZrno.vrniZeVneseneRezultateIzpita(predmet, studijskoLeto);
+        if (izpiti != null) {
+            return Response.ok().entity(izpiti).build();
+        }
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    }
+
+    @POST
+    @Path("razveljavi-oceno")
+    public Response razveljaviOceno(@QueryParam("predmet") Integer predmet,
+                                    @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                    Student student) {
+        int studentId;
+        try {
+            studentId = student.getId();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (izpitZrno.razveljaviOceno(predmet, studentId, studijskoLeto)) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    }
 }

@@ -1,25 +1,38 @@
 package zrna;
 
-import helpers.PrijavniPodatkiIzpit;
-import izpit.*;
-import sifranti.Predmet;
-import student.PredmetStudent;
-import student.PredmetStudentId;
-import vloge.Uporabnik;
-import vpis.VpisId;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.transaction.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
+
+import helpers.PrijavniPodatkiIzpit;
+import izpit.Izpit;
+import izpit.IzpitniRok;
+import izpit.IzpitniRokId;
+import izpit.IzvajanjePredmetaId;
+import izpit.OdjavaIzpit;
+import izpit.PrijavaIzpit;
+import izpit.PrijavaIzpitId;
+import sifranti.Predmet;
+import student.PredmetStudent;
+import student.PredmetStudentId;
+import vloge.Uporabnik;
+import vpis.VpisId;
 
 @ApplicationScoped
 public class IzpitZrno {
@@ -336,5 +349,53 @@ public class IzpitZrno {
                 .setParameter("studijskoLeto", studijskoLeto)
                 .setParameter("datumCas", datumCas)
                 .getResultList();
+    }
+
+    public boolean vnesiRezultatIzpita(Izpit izpit, int sifraPredmeta, int studentId, int studijskoLeto) {
+        PrijavaIzpit prijavaIzpit =  null;
+        try{
+            prijavaIzpit = em.createNamedQuery("entities.izpit.PrijavaIzpit.vrniPrijavo", PrijavaIzpit.class)
+              .setParameter("sifraPredmeta", sifraPredmeta)
+              .setParameter("studentId", studentId)
+              .setParameter("studijskoLeto", studijskoLeto)
+              .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (prijavaIzpit == null
+            || prijavaIzpit.isBrisana()
+                || izpit.getOcenaPisno() > 100 || izpit.getOcenaPisno() < 0) return false;
+        em.merge(izpit);
+        return true;
+    }
+
+    public List<Izpit> vrniZeVneseneRezultateIzpita(int sifraPredmeta, int studijskoLeto) {
+        List<Izpit> izpiti = null;
+        try {
+            izpiti = em.createNamedQuery("entities.izpit.Izpit.vrniIzpiteZZeVpisanoOceno", Izpit.class)
+                    .setParameter("sifraPredmeta", sifraPredmeta)
+                    .setParameter("studijskoLeto", studijskoLeto)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return izpiti;
+    }
+
+    public boolean razveljaviOceno(int sifraPredmeta, int studentId, int studijskoLeto) {
+        Izpit izpit =  null;
+        try{
+            izpit = em.createNamedQuery("entities.izpit.Izpit.vrniIzpitZaLeto", Izpit.class)
+                             .setParameter("sifraPredmeta", sifraPredmeta)
+                             .setParameter("studentId", studentId)
+                             .setParameter("studijskoLeto", studijskoLeto)
+                             .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (izpit == null) return false;
+        izpit.setOcenaPisno(-1);
+        em.merge(izpit);
+        return true;
     }
 }
