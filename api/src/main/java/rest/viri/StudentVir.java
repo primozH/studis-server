@@ -164,4 +164,12 @@ public class StudentVir {
         }
     }
 
+    @POST
+    @Path("potrdi-vpis")
+    public Response potrdiVpisZaStudenta(@QueryParam("potrjevalec") Integer potrjevalec,
+            Vpis vpis){
+        if (!vpisZrno.potrdiVpis(vpis, potrjevalec)) return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        return Response.ok().build();
+    }
+
 }

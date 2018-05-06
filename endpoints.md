@@ -258,6 +258,13 @@ localhost:8080/api/v1/
 		"err": 20,
 		"msg": "nepotrjen"
 	}
+	- POST potrdi-vpis?potrjevalec=[id_referenta]
+	    -body: vpis
+	   ```json
+	   {
+	    podatkiOVpisu
+	   }
+	   ```
 
 - vrni vse vpisane studente za zadnje studijsko leto
 	- GET student/seznam-vpisanih

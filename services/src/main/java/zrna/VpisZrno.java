@@ -20,6 +20,7 @@ import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
+import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
 import predmetnik.Predmetnik;
@@ -35,6 +36,7 @@ import student.PredmetStudent;
 import student.Zeton;
 import student.ZetonId;
 import vloge.Student;
+import vloge.Uporabnik;
 import vpis.Vpis;
 import vpis.VpisniList;
 
@@ -345,6 +347,23 @@ public class VpisZrno {
                    .replace("SOLSKOLETO", "afeaa")
                    .replace("NACINSTUDIJA", "aaeaef")
                    .replace("STUDIJSKIPROGRAM", "studijskiProgram");
+    }
+
+    @Transactional
+    public boolean potrdiVpis(Vpis vpis, int potrjevalecId) {
+        Uporabnik uporabnik = null;
+        try {
+            uporabnik = em.createNamedQuery("entitete.vloge.Uporabnik.vrniUporabnika", Uporabnik.class)
+                         .setParameter("uporabnikId", potrjevalecId)
+                         .getSingleResult();
+        } catch (Exception e) {
+        }
+        if (uporabnik == null || !uporabnik.getTip().equals("Referent")) {
+            return false;
+        }
+        vpis.setPotrjen(true);
+        em.merge(vpis);
+        return true;
     }
 
 }
