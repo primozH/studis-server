@@ -29,7 +29,11 @@ import vloge.Ucitelj;
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
                 "AND p.vpis.studijskoLeto.id = :studijskoLeto " +
                 "AND p.vpis.student.id = :student " +
-                "AND p.predmet = i.izvajanjePredmeta.predmet")
+                "AND p.predmet = i.izvajanjePredmeta.predmet"),
+        @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
+        query = "SELECT i FROM IzpitniRok i " +
+                "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
+                "AND i.datumCasIzvajanja = :datumCas")
 })
 public class IzpitniRok {
 

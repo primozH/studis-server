@@ -1,10 +1,26 @@
 package sifranti;
 
-import javax.persistence.*;
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "praznik")
+@NamedQueries(value = {
+        @NamedQuery(name = "entities.sifranti.Praznik.vrniPraznikZaTaDatum",
+                query = "SELECT p FROM Praznik p WHERE " +
+                        "p.datum = :datum " +
+                        "OR SUBSTRING(p.datum, 1, 4) = 1900 " +
+                        "AND SUBSTRING(p.datum, 6, 7) = SUBSTRING(:datum, 6, 7) " +
+                        "AND SUBSTRING(p.datum, 9, 10) = SUBSTRING(:datum, 9, 10)")
+})
 public class Praznik {
 
     @Id
