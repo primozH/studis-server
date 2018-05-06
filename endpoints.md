@@ -342,7 +342,17 @@ localhost:8080/api/v1/
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
     - GET /izpit/prijave?studijsko-leto={sifra}
         - seznam vseh prijav na izpite
-    
+    - POST /izpit/vnos-roka?[predmet={sifra}&studijsko-leto={sifra}&vnasalec={uporabnik_id}]
+        - body: IzpitniRok
+        ```json{
+        {
+        	"prostor":"P03", // nek string
+        	"izvajalec":{
+        		"id":6 // id uporabnika
+        	},
+        	"datumCasIzvajanja":"2027-12-03T10:15:30" // tak format
+        }
+        ```
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
         - seznam vseh študentov, vpisanih v predmet za študijsko leto
