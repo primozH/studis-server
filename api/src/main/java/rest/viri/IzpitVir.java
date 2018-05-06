@@ -14,6 +14,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONObject;
+
 import authentication.Auth;
 import authentication.Role;
 import common.CustomErrorMessage;
@@ -22,6 +24,7 @@ import helpers.PrijavniPodatkiIzpit;
 import izpit.Izpit;
 import izpit.IzpitniRok;
 import izpit.PrijavaIzpit;
+import izpit.StatusRazpisaRoka;
 import vloge.Student;
 import vloge.Uporabnik;
 import zrna.IzpitZrno;
@@ -89,6 +92,19 @@ public class IzpitVir {
         if (izpitniRoki != null && !izpitniRoki.isEmpty())
             return Response.ok().entity(izpitniRoki).header("X-Total-Count", izpitniRoki.size()).build();
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @POST
+    @Path("vnos-roka")
+    public Response vnesiRokZaPredmet(@QueryParam("predmet") Integer predmet,
+                                      @QueryParam("studijsko-leto") Integer studijskoLeto,
+                                      @QueryParam("vnasalec") Integer vnasalecId,
+                                      IzpitniRok rok) {
+        StatusRazpisaRoka statusRazpisaRoka = izpitZrno.vnesiIzpitniRok(predmet, studijskoLeto, rok, vnasalecId);
+        if (statusRazpisaRoka != StatusRazpisaRoka.VELJAVEN_VNOS) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new JSONObject().put("error", statusRazpisaRoka.toString()).toString()).build();
+        }
+        return Response.ok().build();
     }
 
     @GET

@@ -21,7 +21,8 @@ import naslov.Drzava;
 @DiscriminatorColumn(name = "tip")
 @NamedQueries( value = {
         @NamedQuery(name = "entitete.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.uporabniskoIme = :uporabniskoIme"),
-        @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
+        @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email"),
+        @NamedQuery(name = "entitete.vloge.Uporabnik.vrniUporabnika", query = "SELECT u FROM Uporabnik u WHERE u.id = :uporabnikId")
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Uporabnik {
