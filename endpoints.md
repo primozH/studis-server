@@ -331,7 +331,7 @@ localhost:8080/api/v1/
         	"student": 57,
         	"predmet": 63208,
         	"studijskoLeto": 2018,
-        	"datumIzvajanja": "2019-06-05T10:00:00"
+        	"datumIzvajanja": "2019-06-05"
         }
         ```
     - GET /izpit/prijavljeni?[predmet={sifra}&studijsko-leto={sifra}&datum-cas={sifra}]
@@ -350,7 +350,8 @@ localhost:8080/api/v1/
         	"izvajalec":{
         		"id":6 // id uporabnika
         	},
-        	"datum":"2027-12-03T10:15:30" // tak format
+        	"datum":"2027-12-03", // tak format
+        	"cas":"10:00:00"
         }
         ```
 - podatki o izvajanju predmetov:

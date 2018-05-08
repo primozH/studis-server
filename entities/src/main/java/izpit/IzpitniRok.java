@@ -2,7 +2,6 @@ package izpit;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +16,6 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateAdapter;
-import helpers.adapters.LocalDateTimeAdapter;
 import vloge.Ucitelj;
 
 @Entity
@@ -27,12 +25,9 @@ import vloge.Ucitelj;
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
                 "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
+        /* TODO */
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRoke", query = "SELECT i " +
-                "FROM IzpitniRok i, PredmetStudent p " +
-                "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
-                "AND p.vpis.studijskoLeto.id = :studijskoLeto " +
-                "AND p.vpis.student.id = :student " +
-                "AND p.predmet = i.izvajanjePredmeta.predmet"),
+                "FROM IzpitniRok i, PredmetStudent p "),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
         query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
@@ -54,7 +49,7 @@ public class IzpitniRok {
     private LocalDate datum;
 
     @Column(name = "cas")
-    private Time time;
+    private Time cas;
 
     @ManyToOne
     @JoinColumn(name = "izvajalec")
@@ -79,12 +74,12 @@ public class IzpitniRok {
         this.datum = datum;
     }
 
-    public Time getTime() {
-        return time;
+    public Time getCas() {
+        return cas;
     }
 
-    public void setTime(Time time) {
-        this.time = time;
+    public void setCas(Time cas) {
+        this.cas = cas;
     }
 
     public Ucitelj getIzvajalec() {
