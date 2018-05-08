@@ -1,6 +1,7 @@
 package rest;
 
 //import com.kumuluz.ee.cors.annotations.CrossOrigin;
+import authentication.AuthFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import rest.viri.*;
 import sifranti.Predmet;
@@ -18,6 +19,7 @@ public class RESTVir extends Application {
     public Set<Class<?>> getClasses() {
         final Set<Class<?>> resources = new HashSet<>();
 
+        resources.add(AuthFilter.class);
         resources.add(KandidatVir.class);
         resources.add(StudentVir.class);
         resources.add(PrijavaVir.class);

@@ -1,20 +1,22 @@
 package rest.viri;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import org.json.JSONObject;
 
@@ -40,9 +42,7 @@ public class IzpitVir {
 
     private final static Logger log = Logger.getLogger(IzpitVir.class.getName());
 
-    @Inject
-    private IzpitZrno izpitZrno;
-
+    @Inject private IzpitZrno izpitZrno;
     @Inject private PrijavaNaIzpitZrno prijavaNaIzpitZrno;
 
     @POST
@@ -64,13 +64,15 @@ public class IzpitVir {
 
     @POST
     @Path("odjava")
-    public Response odjavaOdIzpita(PrijavniPodatki prijavniPodatki) {
+    @Auth(rolesAllowed = {Role.STUDENT})
+    public Response odjavaOdIzpita(PrijavniPodatki prijavniPodatki, @Context HttpServletRequest request) {
         try {
+            Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
             prijavaNaIzpitZrno.returnApplication(new PrijavniPodatkiIzpit(
                     prijavniPodatki.getStudent(),
                     prijavniPodatki.getPredmet(),
                     prijavniPodatki.getStudijskoLeto(),
-                    prijavniPodatki.getDatumIzvajanja()));
+                    prijavniPodatki.getDatumIzvajanja()), uporabnik);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }

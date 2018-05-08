@@ -6,6 +6,7 @@ import sifranti.Cenik;
 import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
 import vloge.Student;
+import vloge.Uporabnik;
 import vpis.Vpis;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -46,6 +47,33 @@ public class PrijavaNaIzpitZrno {
         checkIfApplicationExistsOrNotClosed(prijavniPodatki);
 
         return createApplication(izpitniRok, prijavniPodatki, applicationCount);
+    }
+
+    @Transactional
+    public void returnApplication(PrijavniPodatkiIzpit prijavniPodatki, Uporabnik odjavitelj) throws Exception {
+        logger.info("Odjava od izpita");
+        IzpitniRok izpitniRok = getIzpitniRok(prijavniPodatki);
+        LocalDateTime lastValidDate = getLastValidDay(izpitniRok.getDatum());
+        odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
+
+        if (lastValidDate.isBefore(LocalDateTime.now()) && odjavitelj.getTip().equalsIgnoreCase("student")) {
+            throw new Exception("Odjava ni več mogoča");
+        }
+
+        PrijavaRok prijavaRok = getPrijavaIzpit(prijavniPodatki);
+
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setCasOdjave(LocalDateTime.now());
+        odjavaIzpit.setPrijavaRok(prijavaRok);
+        odjavaIzpit.setOdjavitelj(odjavitelj);
+
+        em.persist(odjavaIzpit);
+
+        logger.info("Označujem prijavo kot brisano...");
+        prijavaRok.setBrisana(true);
+
+        em.persist(prijavaRok);
+        logger.info("Prijava uspešno vrnjena");
     }
 
     private Long checkApplicationCount(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
@@ -217,29 +245,6 @@ public class PrijavaNaIzpitZrno {
             e.printStackTrace();
         }
         return null;
-    }
-    @Transactional
-    public void returnApplication(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
-        logger.info("Odjava od izpita");
-        IzpitniRok izpitniRok = getIzpitniRok(prijavniPodatki);
-        LocalDateTime lastValidDate = getLastValidDay(izpitniRok.getDatum());
-
-        if (lastValidDate.isBefore(LocalDateTime.now())) {
-            throw new Exception("");
-        }
-        PrijavaRok prijavaRok = getPrijavaIzpit(prijavniPodatki);
-
-        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
-        odjavaIzpit.setCasOdjave(LocalDateTime.now());
-        odjavaIzpit.setPrijavaRok(prijavaRok);
-
-        em.persist(odjavaIzpit);
-
-        logger.info("Označujem prijavo kot brisano...");
-        prijavaRok.setBrisana(true);
-
-        em.persist(prijavaRok);
-        logger.info("Prijava uspešno vrnjena");
     }
 
     private IzpitniRok getIzpitniRok(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
