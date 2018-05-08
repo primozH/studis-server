@@ -3,9 +3,10 @@ package izpit;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class IzpitniRokId implements Serializable {
-    private LocalDateTime datumCasIzvajanja;
+    private LocalDate datum;
     private IzvajanjePredmetaId izvajanjePredmeta;
 
     public IzvajanjePredmetaId getIzvajanjePredmeta() {
@@ -16,11 +17,11 @@ public class IzpitniRokId implements Serializable {
         this.izvajanjePredmeta = izvajanjePredmeta;
     }
 
-    public LocalDateTime getDatumCasIzvajanja() {
-        return datumCasIzvajanja;
+    public LocalDate getDatum() {
+        return datum;
     }
 
-    public void setDatumCasIzvajanja(LocalDateTime datumCasIzvajanja) {
-        this.datumCasIzvajanja = datumCasIzvajanja;
+    public void setDatum(LocalDate datum) {
+        this.datum = datum;
     }
 }

@@ -1,5 +1,7 @@
 package izpit;
 
+import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -14,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import helpers.adapters.LocalDateAdapter;
 import helpers.adapters.LocalDateTimeAdapter;
 import vloge.Ucitelj;
 
@@ -33,7 +36,7 @@ import vloge.Ucitelj;
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
         query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
-                "AND i.datumCasIzvajanja = :datumCas")
+                "AND i.datum = :datum")
 })
 public class IzpitniRok {
 
@@ -46,9 +49,12 @@ public class IzpitniRok {
     private IzvajanjePredmeta izvajanjePredmeta;
 
     @Id
-    @Column(name = "datum_cas")
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
-    private LocalDateTime datumCasIzvajanja;
+    @Column(name = "datum")
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate datum;
+
+    @Column(name = "cas")
+    private Time time;
 
     @ManyToOne
     @JoinColumn(name = "izvajalec")
@@ -65,12 +71,20 @@ public class IzpitniRok {
         this.izvajanjePredmeta = izvajanjePredmeta;
     }
 
-    public LocalDateTime getDatumCasIzvajanja() {
-        return datumCasIzvajanja;
+    public LocalDate getDatum() {
+        return datum;
     }
 
-    public void setDatumCasIzvajanja(LocalDateTime datumCasIzvajanja) {
-        this.datumCasIzvajanja = datumCasIzvajanja;
+    public void setDatum(LocalDate datum) {
+        this.datum = datum;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
     }
 
     public Ucitelj getIzvajalec() {

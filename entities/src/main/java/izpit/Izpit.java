@@ -2,18 +2,7 @@ package izpit;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import sifranti.Predmet;
 import sifranti.StudijskoLeto;
@@ -23,36 +12,47 @@ import vloge.Student;
 @Table(name = "izpit")
 @NamedQueries(value = {
         @NamedQuery(name = "entities.izpit.Izpit.vrniSteviloVsehPolaganj",
-                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
-                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId "),
+                query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
+                        "AND i.student.id = :studentId "),
         @NamedQuery(name = "entities.izpit.Izpit.vrniIzpitZaLeto",
-                query = "SELECT i FROM Izpit i WHERE i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
-                        "AND i.prijavaIzpit.predmetStudent.vpis.student.id = :studentId " +
-                        "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto"),
+                query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
+                        "AND i.student.id = :studentId " +
+                        "AND i.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.izpit.Izpit.opravljeniIzpiti",
                 query = "SELECT i FROM Izpit i WHERE " +
                         "i.student.id = :student " +
                         "AND i.koncnaOcena > 5"),
+        @NamedQuery(name = "entitete.izpit.Izpit.opravljenIzpit", query = "SELECT i FROM Izpit i " +
+                "WHERE i.student.id = :student " +
+                "AND i.predmet.sifra = :predmet " +
+                "AND i.koncnaOcena > 5"),
         @NamedQuery(name = "entitete.izpit.Izpit.opravljeniPredmeti",
-                query = "SELECT i.predmet FROM Izpit i WHERE " +
-                        "i.student.id = :student " +
+                query = "SELECT i.predmet FROM Izpit i " +
+                        "WHERE i.student.id = :student " +
                         "AND i.koncnaOcena > 5"),
         @NamedQuery(name = "entities.izpit.Izpit.vrniIzpiteZZeVpisanoOceno",
-        query = "SELECT i FROM Izpit i WHERE i.ocenaPisno >= 0 AND i.prijavaIzpit.predmetStudent.predmet.sifra = :sifraPredmeta " +
-                "AND i.prijavaIzpit.predmetStudent.vpis.studijskoLeto.id = :studijskoLeto")
+        query = "SELECT i FROM Izpit i " +
+                "WHERE i.ocenaPisno >= 0 " +
+                "AND i.predmet.sifra = :sifraPredmeta " +
+                "AND i.studijskoLeto.id = :studijskoLeto")
 })
-@IdClass(IzpitId.class)
 public class Izpit {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "student")
     private Student student;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "predmet")
     private Predmet predmet;
+
+    @Column(name = "datum")
+    private LocalDate datum;
 
     @ManyToOne
     @JoinColumn(name = "studijsko_leto")
@@ -65,7 +65,10 @@ public class Izpit {
             @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto", insertable = false, updatable = false),
             @JoinColumn(name = "datum_izvajanja", referencedColumnName = "datum_izvajanja")
     })
-    private PrijavaIzpit prijavaIzpit;
+    private PrijavaRok prijavaRok;
+
+    @Column(name = "zap_st_polaganja")
+    private Integer zapStPolaganja;
 
     @Column(name = "ocena_ustno")
     private Integer ocenaUstno = -1;
@@ -74,21 +77,18 @@ public class Izpit {
     @Column(name = "koncna_ocena")
     private Integer koncnaOcena = -1;
 
-    @Column(name = "datum")
-    private LocalDate datum;
 
     @PrePersist
-    @PreUpdate
     void updateDatum() {
         datum = LocalDate.now();
     }
 
-    public PrijavaIzpit getPrijavaIzpit() {
-        return prijavaIzpit;
+    public PrijavaRok getPrijavaRok() {
+        return prijavaRok;
     }
 
-    public void setPrijavaIzpit(PrijavaIzpit prijavaIzpit) {
-        this.prijavaIzpit = prijavaIzpit;
+    public void setPrijavaRok(PrijavaRok prijavaRok) {
+        this.prijavaRok = prijavaRok;
     }
 
     public Integer getOcenaUstno() {
@@ -145,5 +145,21 @@ public class Izpit {
 
     public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
         this.studijskoLeto = studijskoLeto;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getZapStPolaganja() {
+        return zapStPolaganja;
+    }
+
+    public void setZapStPolaganja(Integer zapStPolaganja) {
+        this.zapStPolaganja = zapStPolaganja;
     }
 }

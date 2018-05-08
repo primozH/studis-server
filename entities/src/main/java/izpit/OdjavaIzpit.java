@@ -25,7 +25,7 @@ public class OdjavaIzpit {
             @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto"),
             @JoinColumn(name = "datum_izvajanja", referencedColumnName = "datum_izvajanja")
     })
-    private PrijavaIzpit prijavaIzpit;
+    private PrijavaRok prijavaRok;
 
     @PrePersist
     void setTime() {
@@ -48,11 +48,11 @@ public class OdjavaIzpit {
         this.casOdjave = casOdjave;
     }
 
-    public PrijavaIzpit getPrijavaIzpit() {
-        return prijavaIzpit;
+    public PrijavaRok getPrijavaRok() {
+        return prijavaRok;
     }
 
-    public void setPrijavaIzpit(PrijavaIzpit prijavaIzpit) {
-        this.prijavaIzpit = prijavaIzpit;
+    public void setPrijavaRok(PrijavaRok prijavaRok) {
+        this.prijavaRok = prijavaRok;
     }
 }

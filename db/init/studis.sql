@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
   `cena` decimal(7,2) DEFAULT NULL,
   `valuta` varchar(20) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `zakljucena` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`,`cas_prijave`),
+  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
   KEY `FK_prijava_rok_datum_izvajanja` (`datum_izvajanja`,`studijsko_leto`,`predmet`),
   KEY `FK_prijava_rok_predmet` (`predmet`,`studijsko_leto`,`student`),
   CONSTRAINT `FK_prijava_rok_datum_izvajanja` FOREIGN KEY (`datum_izvajanja`, `studijsko_leto`, `predmet`) REFERENCES `rok` (`datum`, `studijsko_leto`, `predmet`)

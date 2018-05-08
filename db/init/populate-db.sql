@@ -1715,7 +1715,7 @@ INSERT INTO prijava_rok (cas_prijave, studijsko_leto, student, predmet, datum_iz
   ('2018-06-02', 2017, 52, 63277, '2018-06-03', FALSE),
   ('2018-06-13', 2017, 52, 63277, '2018-06-22', FALSE),
   ('2018-08-25', 2017, 52, 63277, '2018-09-02', TRUE),
-  ('2019-06-10', 2018, 52, 63277, '2019-06-05', FALSE)
+  ('2019-06-02', 2018, 52, 63277, '2019-06-05', FALSE)
 ;
 
 INSERT INTO izpit (datum, koncna_ocena, ocena_pisno, ocena_ustno, studijsko_leto, student, predmet, datum_izvajanja, zap_st_polaganja) VALUES

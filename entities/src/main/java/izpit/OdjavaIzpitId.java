@@ -3,13 +3,13 @@ package izpit;
 import java.io.Serializable;
 
 public class OdjavaIzpitId implements Serializable {
-    private PrijavaIzpitId prijavaIzpit;
+    private PrijavaRokId prijavaRok;
 
-    public PrijavaIzpitId getPrijavaIzpit() {
-        return prijavaIzpit;
+    public PrijavaRokId getPrijavaRok() {
+        return prijavaRok;
     }
 
-    public void setPrijavaIzpit(PrijavaIzpitId prijavaIzpit) {
-        this.prijavaIzpit = prijavaIzpit;
+    public void setPrijavaRok(PrijavaRokId prijavaRok) {
+        this.prijavaRok = prijavaRok;
     }
 }
