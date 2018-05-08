@@ -1,14 +1,15 @@
 package helpers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class PrijavniPodatkiIzpit {
     private Integer student;
     private Integer predmet;
     private Integer studijskoLeto;
-    private LocalDateTime datumIzvajanja;
+    private LocalDate datumIzvajanja;
 
-    public PrijavniPodatkiIzpit(Integer student, Integer predmet, Integer studijskoLeto, LocalDateTime datumIzvajanja) {
+    public PrijavniPodatkiIzpit(Integer student, Integer predmet, Integer studijskoLeto, LocalDate datumIzvajanja) {
         this.student = student;
         this.predmet = predmet;
         this.studijskoLeto = studijskoLeto;
@@ -39,11 +40,11 @@ public class PrijavniPodatkiIzpit {
         this.studijskoLeto = studijskoLeto;
     }
 
-    public LocalDateTime getDatumIzvajanja() {
+    public LocalDate getDatumIzvajanja() {
         return datumIzvajanja;
     }
 
-    public void setDatumIzvajanja(LocalDateTime datumIzvajanja) {
+    public void setDatumIzvajanja(LocalDate datumIzvajanja) {
         this.datumIzvajanja = datumIzvajanja;
     }
 }

@@ -350,7 +350,7 @@ localhost:8080/api/v1/
         	"izvajalec":{
         		"id":6 // id uporabnika
         	},
-        	"datumCasIzvajanja":"2027-12-03T10:15:30" // tak format
+        	"datum":"2027-12-03T10:15:30" // tak format
         }
         ```
 - podatki o izvajanju predmetov:

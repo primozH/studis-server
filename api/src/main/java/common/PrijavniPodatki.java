@@ -3,6 +3,7 @@ package common;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class PrijavniPodatki {
@@ -10,9 +11,9 @@ public class PrijavniPodatki {
     private Integer student;
     private Integer predmet;
     private Integer studijskoLeto;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime datumIzvajanja;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate datumIzvajanja;
 
     public Integer getStudent() {
         return student;
@@ -38,11 +39,11 @@ public class PrijavniPodatki {
         this.studijskoLeto = studijskoLeto;
     }
 
-    public LocalDateTime getDatumIzvajanja() {
+    public LocalDate getDatumIzvajanja() {
         return datumIzvajanja;
     }
 
-    public void setDatumIzvajanja(LocalDateTime datumIzvajanja) {
+    public void setDatumIzvajanja(LocalDate datumIzvajanja) {
         this.datumIzvajanja = datumIzvajanja;
     }
 }

@@ -1036,7 +1036,6 @@ INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (4226, 'Žiri');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (4274, 'Žirovnica');
 INSERT INTO posta (postna_stevilka, naziv_poste) VALUES (8360, 'Žužemberk');
 
-
 /*
 Prazniki
  */
@@ -1063,6 +1062,9 @@ VALUES
   ('2021-04-05', 'velikonočni ponedeljek'),
   ('2022-04-18', 'velikonočni ponedeljek');
 
+
+INSERT INTO cenik (naziv, cena, valuta) VALUES
+  ('Cena izpita', 9, 'EUR');
 
 /**
 Sifrant PREDMET

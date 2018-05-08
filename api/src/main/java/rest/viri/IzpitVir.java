@@ -1,7 +1,9 @@
 package rest.viri;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,11 +25,12 @@ import common.PrijavniPodatki;
 import helpers.PrijavniPodatkiIzpit;
 import izpit.Izpit;
 import izpit.IzpitniRok;
-import izpit.PrijavaIzpit;
+import izpit.PrijavaRok;
 import izpit.StatusRazpisaRoka;
 import vloge.Student;
 import vloge.Uporabnik;
 import zrna.IzpitZrno;
+import zrna.PrijavaNaIzpitZrno;
 
 @Path("izpit")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -35,14 +38,19 @@ import zrna.IzpitZrno;
 @ApplicationScoped
 public class IzpitVir {
 
+    private final static Logger log = Logger.getLogger(IzpitVir.class.getName());
+
     @Inject
     private IzpitZrno izpitZrno;
+
+    @Inject private PrijavaNaIzpitZrno prijavaNaIzpitZrno;
 
     @POST
     @Path("prijava")
     public Response prijavaNaIzpit(PrijavniPodatki prijavniPodatki) {
+        PrijavaRok prijava;
         try {
-            izpitZrno.applyForExam(new PrijavniPodatkiIzpit(
+            prijava = prijavaNaIzpitZrno.applyForExam(new PrijavniPodatkiIzpit(
                     prijavniPodatki.getStudent(),
                     prijavniPodatki.getPredmet(),
                     prijavniPodatki.getStudijskoLeto(),
@@ -51,14 +59,14 @@ public class IzpitVir {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
 
-        return Response.status(Response.Status.CREATED).build();
+        return Response.status(Response.Status.CREATED).entity(prijava).build();
     }
 
     @POST
     @Path("odjava")
     public Response odjavaOdIzpita(PrijavniPodatki prijavniPodatki) {
         try {
-            izpitZrno.returnApplication(new PrijavniPodatkiIzpit(
+            prijavaNaIzpitZrno.returnApplication(new PrijavniPodatkiIzpit(
                     prijavniPodatki.getStudent(),
                     prijavniPodatki.getPredmet(),
                     prijavniPodatki.getStudijskoLeto(),
@@ -74,11 +82,11 @@ public class IzpitVir {
     @Path("prijavljeni")
     public Response vrniPrijavljeneStudente(@QueryParam("predmet") Integer predmet,
                                             @QueryParam("studijsko-leto") Integer studijskoLeto,
-                                            @QueryParam("datum-cas") String datum_cas) {
-        List<PrijavaIzpit> prijavaIzpit = izpitZrno.vrniPrijavljeneStudente(predmet,
+                                            @QueryParam("datum") String datum) {
+        List<PrijavaRok> prijavaRok = izpitZrno.vrniPrijavljeneStudente(predmet,
                 studijskoLeto,
-                LocalDateTime.parse(datum_cas));
-        return Response.ok(prijavaIzpit).build();
+                LocalDate.parse(datum));
+        return Response.ok(prijavaRok).header("X-Total-Count", prijavaRok.size()).build();
     }
 
     @GET
@@ -112,7 +120,7 @@ public class IzpitVir {
     @Auth(rolesAllowed = {Role.STUDENT})
     public Response vrniPrijaveNaIzpit(@QueryParam("studijsko-leto") Integer studijskoLeto,
                                        Uporabnik uporabnik) {
-        List<PrijavaIzpit> prijave = izpitZrno.vrniPrijaveNaIzpit(uporabnik, studijskoLeto);
+        List<PrijavaRok> prijave = izpitZrno.vrniPrijaveNaIzpit(uporabnik, studijskoLeto);
 
         return Response.ok(prijave).header("X-Total-Count", prijave != null ? prijave.size() : 0).build();
     }
@@ -157,24 +165,6 @@ public class IzpitVir {
         }
         return Response.ok().entity(izpitZrno.vrniZadnjoPrijavoZaPredmet(studentId, predmet)).build();
     }
-
-//    @POST
-//    @Path("brisi-prijavo")
-//    public Response brisiPrijavoNaIzpit(PrijavaIzpit prijavaIzpit) {
-//        int sifraPredmeta, studentId, studijskoLeto;
-//        try {
-//            sifraPredmeta = prijavaIzpit.getPredmetStudent().getPredmet().getSifra();
-//            studentId = prijavaIzpit.getPredmetStudent().getVpis().getStudent().getId();
-//            studijskoLeto = prijavaIzpit.getPredmetStudent().getVpis().getStudijskoLeto().getId();
-//        } catch (NullPointerException e) {
-//            return Response.status(Response.Status.BAD_REQUEST).build();
-//        }
-//        boolean potrjeno = izpitZrno.odjavaOdIzpita(studentId, sifraPredmeta, studijskoLeto);
-//        if (!potrjeno) {
-//            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-//        }
-//        return Response.ok().entity(prijavaIzpit).build();
-//    }
 
     @POST
     @Path("vnos-rezultatov")
