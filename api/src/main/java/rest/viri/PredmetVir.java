@@ -36,10 +36,10 @@ public class PredmetVir {
     @GET
     @Path("studenti")
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
-    public Response vrniPodatkeOPredmetu(Uporabnik uporabnik,
+    public Response vrniPodatkeOPredmetu(@Context HttpServletRequest httpServletRequest,
                                          @QueryParam("sifra-predmeta") Integer sifraPredmeta,
                                          @QueryParam("studijsko-leto") Integer studijskoLeto) {
-
+        Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
         List<Student> students;
         try {
             students = predmetZrno.vrniListoStudentovZaPredmet(uporabnik, sifraPredmeta, studijskoLeto);

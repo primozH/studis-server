@@ -3,17 +3,7 @@ package izpit;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateTimeAdapter;
@@ -21,7 +11,6 @@ import vloge.Student;
 
 @Entity
 @Table(name = "prijava_rok")
-@IdClass(PrijavaRokId.class)
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniZadnjoPrijavo",
                 query = "SELECT p FROM PrijavaRok p WHERE p.rok.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
@@ -65,6 +54,10 @@ import vloge.Student;
 public class PrijavaRok {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "predmet", referencedColumnName = "predmet"),
@@ -73,7 +66,6 @@ public class PrijavaRok {
     })
     private IzpitniRok rok;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "student")
     private Student student;

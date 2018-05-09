@@ -55,18 +55,20 @@ CREATE TABLE IF NOT EXISTS `drzava` (
 DROP TABLE IF EXISTS `izpit`;
 CREATE TABLE IF NOT EXISTS `izpit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `prijava_id` int(11) NOT NULL,
   `datum` date NOT NULL,
   `koncna_ocena` int(11) DEFAULT NULL,
   `ocena_pisno` int(11) DEFAULT NULL,
   `ocena_ustno` int(11) DEFAULT NULL,
-  `studijsko_leto` int(11) DEFAULT NULL,
-  `student` int(11) DEFAULT NULL,
-  `predmet` int(11) DEFAULT NULL,
-  `datum_izvajanja` date DEFAULT NULL,
   `zap_st_polaganja` int(11) NOT NULL,
+  `predmet` int(11) NOT NULL,
+  `student` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_izpit_studijsko_leto` (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
-  CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_rok` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
+  KEY `izpit_prijava_rok_prijava_id_fk` (`prijava_id`),
+  KEY `izpit_predmet_sifra_fk` (`predmet`),
+  CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`),
+  CONSTRAINT `izpit_predmet_sifra_fk` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
+  CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`id`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
@@ -150,16 +152,15 @@ CREATE TABLE IF NOT EXISTS `oblika_studija` (
 -- Dumping structure for tabela studis.odjava
 DROP TABLE IF EXISTS `odjava`;
 CREATE TABLE IF NOT EXISTS `odjava` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `prijava_id` int(11) NOT NULL,
   `cas_odjave` datetime DEFAULT NULL,
   `odjavitelj` int(11) DEFAULT NULL,
-  `studijsko_leto` int(11) NOT NULL,
-  `student` int(11) NOT NULL,
-  `predmet` int(11) NOT NULL,
-  `datum_izvajanja` date NOT NULL,
-  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
+  PRIMARY KEY (`id`),
   KEY `FK_odjava_odjavitelj` (`odjavitelj`),
+  KEY `FK_odjava_studijsko_leto` (`prijava_id`),
   CONSTRAINT `FK_odjava_odjavitelj` FOREIGN KEY (`odjavitelj`) REFERENCES `uporabnik` (`id_uporabnik`),
-  CONSTRAINT `FK_odjava_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_rok` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
+  CONSTRAINT `FK_odjava_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
@@ -252,6 +253,7 @@ CREATE TABLE IF NOT EXISTS `predmet_student` (
 -- Dumping structure for tabela studis.prijava_rok
 DROP TABLE IF EXISTS `prijava_rok`;
 CREATE TABLE IF NOT EXISTS `prijava_rok` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `brisana` tinyint(1) DEFAULT 0,
   `cas_prijave` datetime NOT NULL,
   `studijsko_leto` int(11) NOT NULL,
@@ -261,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
   `cena` decimal(7,2) DEFAULT NULL,
   `valuta` varchar(20) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `zakljucena` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
+  PRIMARY KEY (`id`),
   KEY `FK_prijava_rok_datum_izvajanja` (`datum_izvajanja`,`studijsko_leto`,`predmet`),
   KEY `FK_prijava_rok_predmet` (`predmet`,`studijsko_leto`,`student`),
   CONSTRAINT `FK_prijava_rok_datum_izvajanja` FOREIGN KEY (`datum_izvajanja`, `studijsko_leto`, `predmet`) REFERENCES `rok` (`datum`, `studijsko_leto`, `predmet`)

@@ -1,12 +1,11 @@
 package izpit;
 
+import sifranti.Predmet;
+import vloge.Student;
+
 import java.time.LocalDate;
 
 import javax.persistence.*;
-
-import sifranti.Predmet;
-import sifranti.StudijskoLeto;
-import vloge.Student;
 
 @Entity
 @Table(name = "izpit")
@@ -17,7 +16,7 @@ import vloge.Student;
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
-                        "AND i.studijskoLeto.id = :studijskoLeto"),
+                        "AND i.prijavaRok.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.izpit.Izpit.opravljeniIzpiti",
                 query = "SELECT i FROM Izpit i WHERE " +
                         "i.student.id = :student " +
@@ -34,7 +33,7 @@ import vloge.Student;
         query = "SELECT i FROM Izpit i " +
                 "WHERE i.ocenaPisno >= 0 " +
                 "AND i.predmet.sifra = :sifraPredmeta " +
-                "AND i.studijskoLeto.id = :studijskoLeto")
+                "AND i.prijavaRok.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto")
 })
 public class Izpit {
 
@@ -43,29 +42,20 @@ public class Izpit {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "datum")
+    private LocalDate datum;
+
     @ManyToOne
-    @JoinColumn(name = "student")
-    private Student student;
+    @JoinColumn(name = "prijava_id")
+    private PrijavaRok prijavaRok;
 
     @ManyToOne
     @JoinColumn(name = "predmet")
     private Predmet predmet;
 
-    @Column(name = "datum")
-    private LocalDate datum;
-
     @ManyToOne
-    @JoinColumn(name = "studijsko_leto")
-    private StudijskoLeto studijskoLeto;
-
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "student", referencedColumnName = "student", insertable = false, updatable = false),
-            @JoinColumn(name = "predmet", referencedColumnName = "predmet", insertable = false, updatable = false),
-            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto", insertable = false, updatable = false),
-            @JoinColumn(name = "datum_izvajanja", referencedColumnName = "datum_izvajanja")
-    })
-    private PrijavaRok prijavaRok;
+    @JoinColumn(name = "student")
+    private Student student;
 
     @Column(name = "zap_st_polaganja")
     private Integer zapStPolaganja;
@@ -123,30 +113,6 @@ public class Izpit {
         this.datum = datum;
     }
 
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public Predmet getPredmet() {
-        return predmet;
-    }
-
-    public void setPredmet(Predmet predmet) {
-        this.predmet = predmet;
-    }
-
-    public StudijskoLeto getStudijskoLeto() {
-        return studijskoLeto;
-    }
-
-    public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
-        this.studijskoLeto = studijskoLeto;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -161,5 +127,21 @@ public class Izpit {
 
     public void setZapStPolaganja(Integer zapStPolaganja) {
         this.zapStPolaganja = zapStPolaganja;
+    }
+
+    public Predmet getPredmet() {
+        return predmet;
+    }
+
+    public void setPredmet(Predmet predmet) {
+        this.predmet = predmet;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

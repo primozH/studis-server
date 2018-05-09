@@ -7,8 +7,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "odjava")
-@IdClass(OdjavaIzpitId.class)
 public class OdjavaIzpit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "odjavitelj")
@@ -17,19 +21,21 @@ public class OdjavaIzpit {
     @Column(name = "cas_odjave")
     private LocalDateTime casOdjave;
 
-    @Id
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "predmet", referencedColumnName = "predmet"),
-            @JoinColumn(name = "student", referencedColumnName = "student"),
-            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto"),
-            @JoinColumn(name = "datum_izvajanja", referencedColumnName = "datum_izvajanja")
-    })
+    @JoinColumn(name = "prijava_id")
     private PrijavaRok prijavaRok;
 
     @PrePersist
     void setTime() {
         casOdjave = LocalDateTime.now();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Uporabnik getOdjavitelj() {

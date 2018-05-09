@@ -60,7 +60,7 @@ public class PrijavaNaIzpitZrno {
             throw new Exception("Odjava ni več mogoča");
         }
 
-        PrijavaRok prijavaRok = getPrijavaIzpit(prijavniPodatki);
+        PrijavaRok prijavaRok = getPrijavaIzpit(izpitniRok, prijavniPodatki);
 
         OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
         odjavaIzpit.setCasOdjave(LocalDateTime.now());
@@ -266,13 +266,17 @@ public class PrijavaNaIzpitZrno {
         return em.find(IzpitniRok.class, getIzpitniRokId(prijavniPodatkiIzpit));
     }
 
-    private PrijavaRok getPrijavaIzpit(PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
-        PrijavaRokId id = new PrijavaRokId();
-
-        id.setStudent(prijavniPodatkiIzpit.getStudent());
-        id.setRok(getIzpitniRokId(prijavniPodatkiIzpit));
-
-        return em.find(PrijavaRok.class, id);
+    private PrijavaRok getPrijavaIzpit(IzpitniRok rok, PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+        try {
+            return em.createQuery("SELECT p FROM PrijavaRok p WHERE p.rok = :rok " +
+                    "AND p.student.id = :student " +
+                    "AND p.brisana = FALSE", PrijavaRok.class)
+                    .setParameter("rok", rok)
+                    .setParameter("student", prijavniPodatkiIzpit.getStudent())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw e;
+        }
     }
 
 
