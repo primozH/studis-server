@@ -32,8 +32,11 @@ public class PrijavaNaIzpitZrno {
     private EntityManager em;
     @Inject private UserTransaction ux;
 
-    public PrijavaRok applyForExam(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
+    public PrijavaRok applyForExam(PrijavniPodatkiIzpit prijavniPodatki, Uporabnik uporabnik) throws Exception {
 
+        if (!uporabnik.getId().equals(prijavniPodatki.getStudent())) {
+            throw new Exception("Ni pravic za prijavo");
+        }
         // preveri število polaganj
         Long applicationCount = checkApplicationCount(prijavniPodatki);
 
@@ -56,11 +59,20 @@ public class PrijavaNaIzpitZrno {
         LocalDateTime lastValidDate = getLastValidDay(izpitniRok.getDatum());
         odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
 
+        if (!prijavniPodatki.getStudent().equals(odjavitelj.getId()) && odjavitelj.getTip().equalsIgnoreCase("student")) {
+            throw new Exception("Ni pravic za odjavo");
+        }
+
         if (lastValidDate.isBefore(LocalDateTime.now()) && odjavitelj.getTip().equalsIgnoreCase("student")) {
             throw new Exception("Odjava ni več mogoča");
         }
 
-        PrijavaRok prijavaRok = getPrijavaIzpit(izpitniRok, prijavniPodatki);
+        PrijavaRok prijavaRok;
+        try {
+            prijavaRok = getPrijavaIzpit(izpitniRok, prijavniPodatki);
+        } catch (Exception e) {
+            throw e;
+        }
 
         OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
         odjavaIzpit.setCasOdjave(LocalDateTime.now());
@@ -266,7 +278,7 @@ public class PrijavaNaIzpitZrno {
         return em.find(IzpitniRok.class, getIzpitniRokId(prijavniPodatkiIzpit));
     }
 
-    private PrijavaRok getPrijavaIzpit(IzpitniRok rok, PrijavniPodatkiIzpit prijavniPodatkiIzpit) {
+    private PrijavaRok getPrijavaIzpit(IzpitniRok rok, PrijavniPodatkiIzpit prijavniPodatkiIzpit) throws Exception {
         try {
             return em.createQuery("SELECT p FROM PrijavaRok p WHERE p.rok = :rok " +
                     "AND p.student.id = :student " +
@@ -275,7 +287,7 @@ public class PrijavaNaIzpitZrno {
                     .setParameter("student", prijavniPodatkiIzpit.getStudent())
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw e;
+            throw new Exception("Izpitni rok ne obstaja");
         }
     }
 

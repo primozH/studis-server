@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.Column;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -51,14 +52,17 @@ public class IzpitVir {
 
     @POST
     @Path("prijava")
-    public Response prijavaNaIzpit(PrijavniPodatki prijavniPodatki) {
+    @Auth(rolesAllowed = {Role.STUDENT})
+    public Response prijavaNaIzpit(PrijavniPodatki prijavniPodatki,
+                                   @Context HttpServletRequest httpServletRequest) {
         PrijavaRok prijava;
         try {
+            Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
             prijava = prijavaNaIzpitZrno.applyForExam(new PrijavniPodatkiIzpit(
                     prijavniPodatki.getStudent(),
                     prijavniPodatki.getPredmet(),
                     prijavniPodatki.getStudijskoLeto(),
-                    prijavniPodatki.getDatumIzvajanja()));
+                    prijavniPodatki.getDatumIzvajanja()), uporabnik);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
