@@ -14,10 +14,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "praznik")
 @NamedQueries(value = {
-        @NamedQuery(name = "entities.sifranti.Praznik.vrniPraznikZaTaDatum",
+        @NamedQuery(name = "entitete.sifranti.Praznik.vrniPraznikZaTaDatum",
                 query = "SELECT p FROM Praznik p WHERE " +
                         "p.datum = :datum " +
-                        "OR SUBSTRING(p.datum, 1, 4) = 1900 " +
+                        "OR SUBSTRING(p.datum, 1, 4) = '1900' " +
                         "AND SUBSTRING(p.datum, 6, 7) = SUBSTRING(:datum, 6, 7) " +
                         "AND SUBSTRING(p.datum, 9, 10) = SUBSTRING(:datum, 9, 10)")
 })

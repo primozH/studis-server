@@ -5,7 +5,9 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -53,8 +55,9 @@ public class PredmetVir {
     @GET
     @Path("izvajanje")
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
-    public Response vrniPredmeteVIzvajanju(Uporabnik uporabnik,
+    public Response vrniPredmeteVIzvajanju(@Context HttpServletRequest httpServletRequest,
                                            @QueryParam("studijsko-leto") Integer studijskoLeto) {
+        Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
         List<IzvajanjePredmeta> predmeti;
 
         predmeti = predmetZrno.izvajaniPredmeti(uporabnik, studijskoLeto);

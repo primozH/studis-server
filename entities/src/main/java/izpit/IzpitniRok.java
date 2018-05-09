@@ -2,17 +2,10 @@ package izpit;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateAdapter;
@@ -24,10 +17,21 @@ import vloge.Ucitelj;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
-                "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
-        /* TODO */
+                "AND i.datum > :datum"),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRoke", query = "SELECT i " +
-                "FROM IzpitniRok i, PredmetStudent p "),
+                "FROM IzpitniRok i " +
+                "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
+                "ORDER BY i.datum ASC"),
+
+        @NamedQuery(name = "entitete.izpit.IzpitniRok.izpitniRokiZaStudenta",
+                query = "SELECT i FROM IzpitniRok i, PredmetStudent p " +
+                        "WHERE p.predmet NOT IN (" +
+                            "SELECT iz.predmet FROM Izpit iz " +
+                            "WHERE iz.koncnaOcena > 5 " +
+                            "AND iz.student.id = :student) " +
+                        "AND p.predmet = i.izvajanjePredmeta.predmet " +
+                        "AND p.vpis.student.id = :student " +
+                        "AND i.datum > :datum"),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
         query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +

@@ -1,8 +1,10 @@
 package rest.viri;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,9 +18,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
-import org.jboss.weld.context.http.Http;
+import common.IzpitniRokJson;
 import org.json.JSONObject;
 
 import authentication.Auth;
@@ -32,8 +33,9 @@ import izpit.PrijavaRok;
 import izpit.StatusRazpisaRoka;
 import vloge.Student;
 import vloge.Uporabnik;
-import zrna.IzpitZrno;
-import zrna.PrijavaNaIzpitZrno;
+import zrna.izpit.IzpitZrno;
+import zrna.izpit.IzpitniRokZrno;
+import zrna.izpit.PrijavaNaIzpitZrno;
 
 @Path("izpit")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -45,6 +47,7 @@ public class IzpitVir {
 
     @Inject private IzpitZrno izpitZrno;
     @Inject private PrijavaNaIzpitZrno prijavaNaIzpitZrno;
+    @Inject private IzpitniRokZrno izpitniRokZrno;
 
     @POST
     @Path("prijava")
@@ -86,7 +89,7 @@ public class IzpitVir {
     public Response vrniPrijavljeneStudente(@QueryParam("predmet") Integer predmet,
                                             @QueryParam("studijsko-leto") Integer studijskoLeto,
                                             @QueryParam("datum") String datum) {
-        List<PrijavaRok> prijavaRok = izpitZrno.vrniPrijavljeneStudente(predmet,
+        List<PrijavaRok> prijavaRok = prijavaNaIzpitZrno.vrniPrijavljeneStudente(predmet,
                 studijskoLeto,
                 LocalDate.parse(datum));
         return Response.ok(prijavaRok).header("X-Total-Count", prijavaRok.size()).build();
@@ -100,9 +103,36 @@ public class IzpitVir {
                                       @Context HttpServletRequest httpServletRequest) {
 
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-        List<IzpitniRok> izpitniRoki = izpitZrno.vrniIzpitneRoke(uporabnik.getId(), predmet, studijskoLeto);
-        if (izpitniRoki != null && !izpitniRoki.isEmpty())
-            return Response.ok().entity(izpitniRoki).header("X-Total-Count", izpitniRoki.size()).build();
+        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik.getId(), predmet);
+        List<PrijavaRok> prijave = prijavaNaIzpitZrno.vrniPrijaveNaIzpit(uporabnik);
+
+        List<IzpitniRok> prijavljeniRoki = prijave.stream().map(PrijavaRok::getRok).collect(Collectors.toList());
+
+        if (izpitniRoki != null && !izpitniRoki.isEmpty()) {
+
+            List<IzpitniRokJson> izpitniRokJson = new ArrayList<>();
+            for (IzpitniRok rok : izpitniRoki) {
+                boolean prijavljen = false;
+                for (IzpitniRok prijavljenRok : prijavljeniRoki) {
+                    if (prijavljenRok.getDatum().isEqual(rok.getDatum())
+                            && prijavljenRok.getIzvajanjePredmeta().getPredmet().getSifra().equals(rok.getIzvajanjePredmeta().getPredmet().getSifra())) {
+                        prijavljen = true;
+
+                        prijavljeniRoki.remove(prijavljenRok);
+                        break;
+                    }
+                }
+                izpitniRokJson.add(new IzpitniRokJson(rok.getIzvajanjePredmeta(),
+                        rok.getDatum(),
+                        rok.getCas(),
+                        rok.getIzvajalec(),
+                        rok.getProstor(),
+                        prijavljen));
+
+            }
+
+            return Response.ok().entity(izpitniRokJson).header("X-Total-Count", izpitniRokJson.size()).build();
+        }
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -112,7 +142,7 @@ public class IzpitVir {
                                       @QueryParam("studijsko-leto") Integer studijskoLeto,
                                       @QueryParam("vnasalec") Integer vnasalecId,
                                       IzpitniRok rok) {
-        StatusRazpisaRoka statusRazpisaRoka = izpitZrno.vnesiIzpitniRok(predmet, studijskoLeto, rok, vnasalecId);
+        StatusRazpisaRoka statusRazpisaRoka = izpitniRokZrno.vnesiIzpitniRok(predmet, studijskoLeto, rok, vnasalecId);
         if (statusRazpisaRoka != StatusRazpisaRoka.VELJAVEN_VNOS) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new JSONObject().put("error", statusRazpisaRoka.toString()).toString()).build();
         }
@@ -125,7 +155,7 @@ public class IzpitVir {
     public Response vrniPrijaveNaIzpit(@QueryParam("studijsko-leto") Integer studijskoLeto,
                                        @Context HttpServletRequest httpServletRequest) {
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-        List<PrijavaRok> prijave = izpitZrno.vrniPrijaveNaIzpit(uporabnik, studijskoLeto);
+        List<PrijavaRok> prijave = prijavaNaIzpitZrno.vrniPrijaveNaIzpit(uporabnik);
 
         return Response.ok(prijave).header("X-Total-Count", prijave != null ? prijave.size() : 0).build();
     }
@@ -168,7 +198,7 @@ public class IzpitVir {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.ok().entity(izpitZrno.vrniZadnjoPrijavoZaPredmet(studentId, predmet)).build();
+        return Response.ok().entity(prijavaNaIzpitZrno.vrniZadnjoPrijavoZaPredmet(studentId, predmet)).build();
     }
 
     @POST

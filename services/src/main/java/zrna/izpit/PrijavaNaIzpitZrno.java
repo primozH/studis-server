@@ -1,4 +1,4 @@
-package zrna;
+package zrna.izpit;
 
 import helpers.PrijavniPodatkiIzpit;
 import izpit.*;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class PrijavaNaIzpitZrno {
 
-    private Logger logger = Logger.getLogger(PrijavaNaIzpitZrno.class.getName());
+    private Logger log = Logger.getLogger(PrijavaNaIzpitZrno.class.getName());
 
     @PersistenceContext(name = "studis")
     private EntityManager em;
@@ -51,7 +51,7 @@ public class PrijavaNaIzpitZrno {
 
     @Transactional
     public void returnApplication(PrijavniPodatkiIzpit prijavniPodatki, Uporabnik odjavitelj) throws Exception {
-        logger.info("Odjava od izpita");
+        log.info("Odjava od izpita");
         IzpitniRok izpitniRok = getIzpitniRok(prijavniPodatki);
         LocalDateTime lastValidDate = getLastValidDay(izpitniRok.getDatum());
         odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
@@ -69,11 +69,34 @@ public class PrijavaNaIzpitZrno {
 
         em.persist(odjavaIzpit);
 
-        logger.info("Označujem prijavo kot brisano...");
+        log.info("Označujem prijavo kot brisano...");
         prijavaRok.setBrisana(true);
 
         em.persist(prijavaRok);
-        logger.info("Prijava uspešno vrnjena");
+        log.info("Prijava uspešno vrnjena");
+    }
+
+    public List<PrijavaRok> vrniPrijaveNaIzpit(Uporabnik uporabnik) {
+        return em.createNamedQuery("entitete.izpit.PrijavaRok.prijaveZaStudenta", PrijavaRok.class)
+                .setParameter("student", uporabnik.getId())
+                .getResultList();
+    }
+
+    public PrijavaRok vrniZadnjoPrijavoZaPredmet(int sifraPredmeta, int studentId) {
+        return em.createNamedQuery("entitete.izpit.PrijavaRok.vrniZadnjoPrijavo", PrijavaRok.class)
+                .setParameter("sifraPredmeta", sifraPredmeta)
+                .setParameter("studentId", studentId)
+                .getSingleResult();
+    }
+
+    public List<PrijavaRok> vrniPrijavljeneStudente(int sifraPredmeta, int studijskoLeto, LocalDate datum) {
+        log.info("Iskanje vseh prijavljenih studentov na izpit. Predmet: " + sifraPredmeta +
+                ", studijsko leto: " + studijskoLeto + ", datum: " + datum);
+        return   em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentje", PrijavaRok.class)
+                .setParameter("predmet", sifraPredmeta)
+                .setParameter("studijskoLeto", studijskoLeto)
+                .setParameter("datum", datum)
+                .getResultList();
     }
 
     private Long checkApplicationCount(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
@@ -87,10 +110,10 @@ public class PrijavaNaIzpitZrno {
             countStudyYear = 0L;
         }
 
-        logger.info("Stevilo prijav na izpit za tekoce studijsko leto: " + countStudyYear);
+        log.info("Stevilo prijav na izpit za tekoce studijsko leto: " + countStudyYear);
 
         if (countStudyYear >= 3) {
-            logger.warning("Presezeno stevilo prijav za tekoce studijsko leto");
+            log.warning("Presezeno stevilo prijav za tekoce studijsko leto");
             throw new Exception("Za to študijsko leto je preseženo največje dovoljeno število prijav na izpit pri posameznem " +
                     "predmetu");
         }
@@ -100,7 +123,7 @@ public class PrijavaNaIzpitZrno {
                 .setParameter("predmet", prijavniPodatki.getPredmet())
                 .getSingleResult();
 
-        logger.info("Stevilo vseh prijav na izpit: " + countAll);
+        log.info("Stevilo vseh prijav na izpit: " + countAll);
 
         List<Vpis> vpisi = em.createNamedQuery("entitete.vpis.Vpis.vpisiZaStudenta", Vpis.class)
                 .setParameter("student", prijavniPodatki.getStudent())
@@ -132,7 +155,7 @@ public class PrijavaNaIzpitZrno {
         }
 
         if (countAll >= 6) {
-            logger.warning("Presezeno stevilo prijav na izpit");
+            log.warning("Presezeno stevilo prijav na izpit");
             throw new Exception("Presegli ste največje dovoljeno število polaganj za izbrani izpit");
         }
 
@@ -157,12 +180,12 @@ public class PrijavaNaIzpitZrno {
         LocalDateTime lastValidDateTime = getLastValidDay(izpitniRok.getDatum());
 
 
-        logger.info("Preverjam veljaven cas prijave na izpit. Zadnji rok za prijavo: " +
+        log.info("Preverjam veljaven cas prijave na izpit. Zadnji rok za prijavo: " +
                 "" + lastValidDateTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         LocalDateTime now = LocalDateTime.now();
 
         if (lastValidDateTime.isBefore(now)) {
-            logger.info("Prepozna prijava na izpit");
+            log.info("Prepozna prijava na izpit");
             throw new Exception("Prepozna prijava na izpit! Rok za prijavo je potekel ob " +
                     lastValidDateTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         }
@@ -171,7 +194,7 @@ public class PrijavaNaIzpitZrno {
     }
 
     private void checkForPassedExam(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
-        logger.info("Preverjam, ce obstaja pozitivna ocena za izpit");
+        log.info("Preverjam, ce obstaja pozitivna ocena za izpit");
         Izpit izpit;
         try {
             izpit = em.createNamedQuery("entitete.izpit.Izpit.opravljenIzpit", Izpit.class)
@@ -183,14 +206,14 @@ public class PrijavaNaIzpitZrno {
         }
 
         if (izpit != null) {
-            logger.info("Ocena za predmet že obstaja");
+            log.info("Ocena za predmet že obstaja");
             throw new Exception("Pozitivna ocena za ta predmet že obstaja!");
         }
-        logger.info("Ocena za ta predmet še ne obstaja");
+        log.info("Ocena za ta predmet še ne obstaja");
     }
 
     private void checkIfApplicationExistsOrNotClosed(PrijavniPodatkiIzpit prijavniPodatki) throws Exception {
-        logger.info("Preverjam za obstoječe prijave...");
+        log.info("Preverjam za obstoječe prijave...");
         PrijavaRok stored;
         try {
             stored = em.createNamedQuery("entitete.izpit.PrijavaRok.aktivnePrijave", PrijavaRok.class)
@@ -204,7 +227,7 @@ public class PrijavaNaIzpitZrno {
         }
 
         if (stored != null) {
-            logger.info("Prijava obstaja!");
+            log.info("Prijava obstaja!");
             throw new Exception("Prijava že obstaja");
         }
 
@@ -233,15 +256,7 @@ public class PrijavaNaIzpitZrno {
             em.persist(prijavaRok);
             ux.commit();
             return prijavaRok;
-        } catch (NotSupportedException e) {
-            e.printStackTrace();
-        } catch (SystemException e) {
-            e.printStackTrace();
-        } catch (HeuristicMixedException e) {
-            e.printStackTrace();
-        } catch (HeuristicRollbackException e) {
-            e.printStackTrace();
-        } catch (RollbackException e) {
+        } catch (NotSupportedException | SystemException | HeuristicRollbackException | HeuristicMixedException | RollbackException e) {
             e.printStackTrace();
         }
         return null;
@@ -274,7 +289,7 @@ public class PrijavaNaIzpitZrno {
 
     private Long getNumberOfApplicationsForStudyYear(Integer studentId, Integer studijskoLetoId,
                                                      Integer predmetId) throws NoResultException {
-        logger.info("Preverjam stevilo polaganj");
+        log.info("Preverjam stevilo polaganj");
         return em.createNamedQuery("entitete.izpit.PrijavaRok.stejPrijaveStudijskoLeto", Long.class)
                 .setParameter("student", studentId)
                 .setParameter("studijskoLeto", studijskoLetoId)

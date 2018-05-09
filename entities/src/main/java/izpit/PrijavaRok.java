@@ -23,10 +23,10 @@ import vloge.Student;
 @Table(name = "prijava_rok")
 @IdClass(PrijavaRokId.class)
 @NamedQueries(value = {
-        @NamedQuery(name = "entities.izpit.PrijavaRok.vrniZadnjoPrijavo",
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniZadnjoPrijavo",
                 query = "SELECT p FROM PrijavaRok p WHERE p.rok.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
                         "AND p.student.id = :studentId ORDER BY p.casPrijave DESC"),
-        @NamedQuery(name = "entities.izpit.PrijavaRok.vrniPrijavo",
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniPrijavo",
                 query = "SELECT p FROM PrijavaRok p WHERE p.rok.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
                         "AND p.student.id = :studentId " +
                         "AND p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
@@ -53,8 +53,7 @@ import vloge.Student;
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijaveZaStudenta",
                 query = "SELECT p FROM PrijavaRok p WHERE " +
-                        "p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
-                        "AND p.student.id = :student " +
+                        "p.student.id = :student " +
                         "AND p.brisana = FALSE " +
                         "AND p.zakljucena = FALSE"),
         @NamedQuery(name = "test", query = "SELECT p FROM PrijavaRok p, Vpis v " +

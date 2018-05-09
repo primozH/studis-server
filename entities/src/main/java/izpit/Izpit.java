@@ -11,10 +11,10 @@ import vloge.Student;
 @Entity
 @Table(name = "izpit")
 @NamedQueries(value = {
-        @NamedQuery(name = "entities.izpit.Izpit.vrniSteviloVsehPolaganj",
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniSteviloVsehPolaganj",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId "),
-        @NamedQuery(name = "entities.izpit.Izpit.vrniIzpitZaLeto",
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
                         "AND i.studijskoLeto.id = :studijskoLeto"),
@@ -30,7 +30,7 @@ import vloge.Student;
                 query = "SELECT i.predmet FROM Izpit i " +
                         "WHERE i.student.id = :student " +
                         "AND i.koncnaOcena > 5"),
-        @NamedQuery(name = "entities.izpit.Izpit.vrniIzpiteZZeVpisanoOceno",
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpiteZZeVpisanoOceno",
         query = "SELECT i FROM Izpit i " +
                 "WHERE i.ocenaPisno >= 0 " +
                 "AND i.predmet.sifra = :sifraPredmeta " +
