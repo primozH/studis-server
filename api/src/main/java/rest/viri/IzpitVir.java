@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.jboss.weld.context.http.Http;
 import org.json.JSONObject;
 
 import authentication.Auth;
@@ -96,8 +97,9 @@ public class IzpitVir {
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ, Role.STUDENT})
     public Response vrniRokeZaPredmet(@QueryParam("predmet") Integer predmet,
                                       @QueryParam("studijsko-leto") Integer studijskoLeto,
-                                      Uporabnik uporabnik) {
+                                      @Context HttpServletRequest httpServletRequest) {
 
+        Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
         List<IzpitniRok> izpitniRoki = izpitZrno.vrniIzpitneRoke(uporabnik.getId(), predmet, studijskoLeto);
         if (izpitniRoki != null && !izpitniRoki.isEmpty())
             return Response.ok().entity(izpitniRoki).header("X-Total-Count", izpitniRoki.size()).build();
@@ -121,7 +123,8 @@ public class IzpitVir {
     @Path("prijave")
     @Auth(rolesAllowed = {Role.STUDENT})
     public Response vrniPrijaveNaIzpit(@QueryParam("studijsko-leto") Integer studijskoLeto,
-                                       Uporabnik uporabnik) {
+                                       @Context HttpServletRequest httpServletRequest) {
+        Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
         List<PrijavaRok> prijave = izpitZrno.vrniPrijaveNaIzpit(uporabnik, studijskoLeto);
 
         return Response.ok(prijave).header("X-Total-Count", prijave != null ? prijave.size() : 0).build();
