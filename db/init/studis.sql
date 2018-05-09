@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `cenik` (
   `cena` decimal(7,2) DEFAULT NULL,
   `valuta` varchar(10) COLLATE utf8_slovenian_ci DEFAULT 'EUR',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.del_predmetnika
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `izpit` (
   PRIMARY KEY (`id`),
   KEY `FK_izpit_studijsko_leto` (`studijsko_leto`,`student`,`predmet`,`datum_izvajanja`),
   CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`) REFERENCES `prijava_rok` (`studijsko_leto`, `student`, `predmet`, `datum_izvajanja`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.kandidat
@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `praznik` (
   `datum` date NOT NULL,
   `ime` varchar(100) COLLATE utf8_slovenian_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.predmet
