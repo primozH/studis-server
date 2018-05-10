@@ -5,7 +5,7 @@ public enum StatusRazpisaRoka {
     DATUM_VIKEND("vikend"),
     DATUM_PRAZNIK("praznik"),
     UPORABNIK_NEOBSTAJA ("uporabnik-neobstaja"),
-    IZPIT_ZA_URO_OBSTAJA("izpit-za-uro-obstaja"),
+    DATUM_RAZPISAN_ROK("izpitni rok na ta dan in za ta predmet že obstaja"),
     UCITELJ_NE_UCI_PREDMETA("ucitelj-neveljaven"),
     NAPACEN_TIP_UPORABNIKA("napacen-tip"),
     MANJKAJO_PODATKI("manjkajo-podatki"),

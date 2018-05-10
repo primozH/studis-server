@@ -142,11 +142,11 @@ public class IzpitVir {
 
     @POST
     @Path("vnos-roka")
-    public Response vnesiRokZaPredmet(@QueryParam("predmet") Integer predmet,
-                                      @QueryParam("studijsko-leto") Integer studijskoLeto,
-                                      @QueryParam("vnasalec") Integer vnasalecId,
-                                      IzpitniRok rok) {
-        StatusRazpisaRoka statusRazpisaRoka = izpitniRokZrno.vnesiIzpitniRok(predmet, studijskoLeto, rok, vnasalecId);
+    @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
+    public Response vnesiRokZaPredmet(IzpitniRok rok,
+                                      @Context HttpServletRequest request) {
+        Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
+        StatusRazpisaRoka statusRazpisaRoka = izpitniRokZrno.vnesiIzpitniRok(rok, uporabnik);
         if (statusRazpisaRoka != StatusRazpisaRoka.VELJAVEN_VNOS) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new JSONObject().put("error", statusRazpisaRoka.toString()).toString()).build();
         }

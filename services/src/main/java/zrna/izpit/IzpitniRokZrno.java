@@ -8,9 +8,11 @@ import sifranti.Praznik;
 import vloge.Uporabnik;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import javax.transaction.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +24,9 @@ public class IzpitniRokZrno {
     private final static Logger log = Logger.getLogger(IzpitniRokZrno.class.getName());
 
     @PersistenceContext private EntityManager em;
+
+    @Inject
+    private UserTransaction ux;
 
     public List<IzpitniRok> vrniIzpitneRoke(Integer uporabnikId, Integer sifraPredmeta) {
         Uporabnik u = em.find(Uporabnik.class, uporabnikId);
@@ -44,15 +49,12 @@ public class IzpitniRokZrno {
         return roki;
     }
 
-    @Transactional
-    public StatusRazpisaRoka vnesiIzpitniRok(int sifraPredmeta, int studijskoLeto, IzpitniRok rok, int vnasalecId) {
+    public StatusRazpisaRoka vnesiIzpitniRok(IzpitniRok rok, Uporabnik vnasalec) {
         if (rok == null
                 || rok.getDatum() == null
-                || sifraPredmeta <= 0
-                || studijskoLeto <= 0
-                || vnasalecId <= 0
-                || rok.getIzvajalec() == null
-                || rok.getProstor() == null) return StatusRazpisaRoka.MANJKAJO_PODATKI;
+                || rok.getIzvajanjePredmeta().getPredmet() == null
+                || rok.getIzvajanjePredmeta().getStudijskoLeto() == null
+                || rok.getIzvajalec() == null) return StatusRazpisaRoka.MANJKAJO_PODATKI;
         // Pogledamo, ce je datum vecji od trenutnega
         if (rok.getDatum().isBefore(LocalDate.now())) {
             return StatusRazpisaRoka.DATUM_ZE_PRETECEN;
@@ -76,50 +78,41 @@ public class IzpitniRokZrno {
             return StatusRazpisaRoka.DATUM_PRAZNIK;
         }
 
-        // Pogledamo, ce za to uro ze obstaja kaksen izpit
-        List<IzpitniRok> izpitniRoki = null;
-        try {
-            izpitniRoki = em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan", IzpitniRok.class)
-                    .setParameter("studijskoLeto", studijskoLeto)
-                    .setParameter("datum", rok.getDatum())
-                    .getResultList();
-        } catch (Exception e) {
-        }
-        if (izpitniRoki != null && !izpitniRoki.isEmpty()) {
-            return StatusRazpisaRoka.IZPIT_ZA_URO_OBSTAJA;
-        }
-        // Pogledamo, ce je vnasalec ucitelj ali referent
-        Uporabnik vnasalec = null;
-        try {
-            log.info("vnasalecId = " + vnasalecId);
-            vnasalec = em.createNamedQuery("entitete.vloge.Uporabnik.vrniUporabnika", Uporabnik.class)
-                    .setParameter("uporabnikId", vnasalecId)
-                    .getSingleResult();
-        } catch (Exception e) {
-        }
-        if (vnasalec == null) {
-            log.info("uporabnik neobstaja");
-            return StatusRazpisaRoka.UPORABNIK_NEOBSTAJA;
-        }
         // Pogledamo, ce ucitelj uci predmet za katerega razpisuje rok
         // ali, ce referent razpisuje rok za dolocen predmet za dolocenega ucitelja, ki uci predmet
-        IzvajanjePredmeta predmet = null;
-        if (vnasalec.getTip().equals("Ucitelj") || vnasalec.getTip().equals("Referent")) {
+        vnasalec = em.find(Uporabnik.class, vnasalec.getId());
+        IzvajanjePredmeta predmet;
+        if (vnasalec.getTip().equalsIgnoreCase("referent")) {
             try {
                 predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
-                        .setParameter("ucitelj", vnasalec.getTip().equals("Referent") ? rok.getIzvajalec().getId() : vnasalecId)
-                        .setParameter("studijskoLeto", studijskoLeto)
-                        .setParameter("predmet", sifraPredmeta)
+                        .setParameter("ucitelj", rok.getIzvajalec().getId())
+                        .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
+                        .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
                         .getSingleResult();
             } catch (Exception e) {
-
+                return StatusRazpisaRoka.UCITELJ_NE_UCI_PREDMETA;
             }
-            if (predmet == null) return StatusRazpisaRoka.UCITELJ_NE_UCI_PREDMETA;
         } else {
-            return StatusRazpisaRoka.NAPACEN_TIP_UPORABNIKA;
+            try {
+                predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
+                        .setParameter("ucitelj", vnasalec.getId())
+                        .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
+                        .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
+                        .getSingleResult();
+            } catch (NoResultException e) {
+                return StatusRazpisaRoka.UCITELJ_NE_UCI_PREDMETA;
+            }
         }
+
         rok.setIzvajanjePredmeta(predmet);
-        em.merge(rok);
+        try {
+            ux.begin();
+            em.persist(rok);
+            ux.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicRollbackException | HeuristicMixedException e) {
+            e.printStackTrace();
+            return StatusRazpisaRoka.DATUM_RAZPISAN_ROK;
+        }
         return StatusRazpisaRoka.VELJAVEN_VNOS;
     }
 

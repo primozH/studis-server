@@ -342,16 +342,27 @@ localhost:8080/api/v1/
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
     - GET /izpit/prijave?studijsko-leto={sifra}
         - seznam vseh prijav na izpite
-    - POST /izpit/vnos-roka?[predmet={sifra}&studijsko-leto={sifra}&vnasalec={uporabnik_id}]
+    - POST /izpit/vnos-roka
+        - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
+        za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
+        "izvajalec" je učitelj, ki bo izpit izvajal.
         - body: IzpitniRok
-        ```json{
+        ```json
         {
-        	"prostor":"P03", // nek string
-        	"izvajalec":{
-        		"id":6 // id uporabnika
+        	"cas": "18:27:00",
+        	"datum": "2019-06-04",
+        	"izvajalec": {
+        		"id": 22
         	},
-        	"datum":"2027-12-03", // tak format
-        	"cas":"10:00:00"
+        	"izvajanjePredmeta": {
+        		"predmet": {
+        			"sifra": 63205
+        		},
+        		"studijskoLeto": {
+        			"id": 2018
+        		}
+        	},
+        	"prostor": "P01"
         }
         ```
 - podatki o izvajanju predmetov:
