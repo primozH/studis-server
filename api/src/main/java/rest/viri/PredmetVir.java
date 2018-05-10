@@ -17,6 +17,7 @@ import izpit.IzvajanjePredmeta;
 import vloge.Student;
 import vloge.Ucitelj;
 import vloge.Uporabnik;
+import vpis.Vpis;
 import zrna.PredmetZrno;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class PredmetVir {
                                          @QueryParam("sifra-predmeta") Integer sifraPredmeta,
                                          @QueryParam("studijsko-leto") Integer studijskoLeto) {
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-        List<Student> students;
+        List<Vpis> students;
         try {
             students = predmetZrno.vrniListoStudentovZaPredmet(uporabnik, sifraPredmeta, studijskoLeto);
         } catch (Exception e) {

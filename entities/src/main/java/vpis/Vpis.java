@@ -38,7 +38,6 @@ public class Vpis {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student")
-    @XmlTransient
     private Student student;
 
     @Id

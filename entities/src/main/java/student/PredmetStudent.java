@@ -18,7 +18,7 @@ import vpis.Vpis;
 @IdClass(PredmetStudentId.class)
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.student.PredmetStudent.vrniSeznamStudentovZaPredmetInLeto",
-                query = "SELECT p.vpis.student FROM PredmetStudent p WHERE p.predmet.sifra = :sifraPredmeta AND p.vpis.studijskoLeto.id = :studijskoLeto")
+                query = "SELECT p.vpis FROM PredmetStudent p WHERE p.predmet.sifra = :sifraPredmeta AND p.vpis.studijskoLeto.id = :studijskoLeto")
 })
 public class PredmetStudent {
 

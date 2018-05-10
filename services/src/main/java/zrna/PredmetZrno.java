@@ -12,6 +12,7 @@ import izpit.IzvajanjePredmeta;
 import vloge.Student;
 import vloge.Ucitelj;
 import vloge.Uporabnik;
+import vpis.Vpis;
 
 @ApplicationScoped
 public class PredmetZrno {
@@ -35,13 +36,13 @@ public class PredmetZrno {
     }
 
     @Transactional
-    public List<Student> vrniListoStudentovZaPredmet(Uporabnik uporabnik, int sifraPredmeta, int studijskoLeto) throws Exception {
+    public List<Vpis> vrniListoStudentovZaPredmet(Uporabnik uporabnik, int sifraPredmeta, int studijskoLeto) throws Exception {
         /* pravice za vpogled */
         List<IzvajanjePredmeta> predmeti = izvajaniPredmeti(uporabnik, studijskoLeto);
         predmeti = predmeti.stream().filter(izvajanjePredmeta -> izvajanjePredmeta.getPredmet().getSifra().equals(sifraPredmeta)).collect(Collectors.toList());
 
         if (predmeti.size() != 0) {
-            return em.createNamedQuery("entitete.student.PredmetStudent.vrniSeznamStudentovZaPredmetInLeto", Student.class)
+            return em.createNamedQuery("entitete.student.PredmetStudent.vrniSeznamStudentovZaPredmetInLeto", Vpis.class)
                     .setParameter("sifraPredmeta", sifraPredmeta)
                     .setParameter("studijskoLeto", studijskoLeto)
                     .getResultList();
