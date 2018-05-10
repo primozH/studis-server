@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `drzava` (
 DROP TABLE IF EXISTS `izpit`;
 CREATE TABLE IF NOT EXISTS `izpit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `prijava_id` int(11) NOT NULL,
+  `prijava_id` int(11) NULL,
   `datum` date NOT NULL,
   `koncna_ocena` int(11) DEFAULT NULL,
   `ocena_pisno` int(11) DEFAULT NULL,

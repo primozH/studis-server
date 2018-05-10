@@ -31,8 +31,6 @@ import vloge.Student;
         @NamedQuery(name = "entitete.izpit.PrijavaRok.aktivnePrijave", query = "SELECT p FROM PrijavaRok p WHERE " +
                 "p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
                 "AND p.student.id = :student " +
-                "AND p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
-                "AND p.rok.datum = :datum " +
                 "AND p.zakljucena = FALSE " +
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijavljeniStudentje", query = "SELECT p FROM PrijavaRok p WHERE " +

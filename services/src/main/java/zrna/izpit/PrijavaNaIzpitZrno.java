@@ -230,9 +230,7 @@ public class PrijavaNaIzpitZrno {
         try {
             stored = em.createNamedQuery("entitete.izpit.PrijavaRok.aktivnePrijave", PrijavaRok.class)
                     .setParameter("predmet", prijavniPodatki.getPredmet())
-                    .setParameter("studijskoLeto", prijavniPodatki.getStudijskoLeto())
                     .setParameter("student", prijavniPodatki.getStudent())
-                    .setParameter("datum", prijavniPodatki.getDatumIzvajanja())
                     .getSingleResult();
         } catch (NoResultException e) {
             stored = null;

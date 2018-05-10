@@ -1823,33 +1823,34 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
   (63207, 2017, 52)
 ;
 
-INSERT INTO prijava_rok (cas_prijave, studijsko_leto, student, predmet, datum_izvajanja, brisana, id) VALUES
-  (CURRENT_DATE, 2018, 53, 63279, '2019-06-04', FALSE, 1),
+INSERT INTO prijava_rok (cas_prijave, studijsko_leto, student, predmet, datum_izvajanja, brisana, id, zakljucena) VALUES
+  (CURRENT_DATE, 2018, 53, 63279, '2019-06-04', FALSE, 1, FALSE),
 
   /* nevpisan student */
-  (CURRENT_DATE, 2016, 58, 63202, '2017-06-01', FALSE, 2),
-  (CURRENT_DATE, 2016, 58, 63202, '2017-06-23', FALSE, 3),
-  (CURRENT_DATE, 2016, 58, 63202, '2017-08-29', FALSE, 4),
-  (CURRENT_DATE, 2017, 58, 63202, '2018-06-04', FALSE, 5),
-  (CURRENT_DATE, 2017, 58, 63202, '2018-06-18', FALSE, 6),
-  (CURRENT_DATE, 2017, 58, 63202, '2018-09-01', FALSE, 7),
+  (CURRENT_DATE, 2016, 58, 63202, '2017-06-01', FALSE, 2, TRUE),
+  (CURRENT_DATE, 2016, 58, 63202, '2017-06-23', FALSE, 3, TRUE),
+  (CURRENT_DATE, 2016, 58, 63202, '2017-08-29', FALSE, 4, TRUE),
+  (CURRENT_DATE, 2017, 58, 63202, '2018-06-04', FALSE, 5, TRUE),
+  (CURRENT_DATE, 2017, 58, 63202, '2018-06-18', FALSE, 6, TRUE),
+  (CURRENT_DATE, 2017, 58, 63202, '2018-09-01', FALSE, 7, TRUE),
 
   /* ponavljalec 1. letnik */
-  ('2018-07-31', 2017, 52, 63203, '2018-06-02', FALSE, 8),
-  ('2018-06-01', 2017, 52, 63277, '2018-06-03', FALSE, 9),
-  ('2018-06-01', 2017, 52, 63202, '2018-06-04', FALSE, 10),
-  ('2018-06-01', 2017, 52, 63204, '2018-06-05', FALSE, 11),
-  ('2018-06-01', 2017, 52, 63205, '2018-06-08', FALSE, 12),
-  ('2018-06-01', 2017, 52, 63278, '2018-06-09', FALSE, 13),
-  ('2018-06-01', 2017, 52, 63212, '2018-06-10', FALSE, 14),
-  ('2018-06-01', 2017, 52, 63209, '2018-06-11', FALSE, 15),
-  ('2018-06-01', 2017, 52, 63215, '2018-06-12', FALSE, 16),
-  ('2018-06-01', 2017, 52, 63207, '2018-06-13', FALSE, 17),
+  ('2018-07-31', 2017, 52, 63203, '2018-06-02', FALSE, 8, TRUE),
+  ('2018-06-01', 2017, 52, 63277, '2018-06-03', FALSE, 9, TRUE),
+  ('2018-06-01', 2017, 52, 63202, '2018-06-04', FALSE, 10, TRUE),
+  ('2018-06-01', 2017, 52, 63204, '2018-06-05', FALSE, 11, TRUE),
+  ('2018-06-01', 2017, 52, 63205, '2018-06-08', FALSE, 12, TRUE),
+  ('2018-06-01', 2017, 52, 63278, '2018-06-09', FALSE, 13, TRUE),
+  ('2018-06-01', 2017, 52, 63212, '2018-06-10', FALSE, 14, TRUE),
+  ('2018-06-01', 2017, 52, 63209, '2018-06-11', FALSE, 15, TRUE),
+  ('2018-06-01', 2017, 52, 63215, '2018-06-12', FALSE, 16, TRUE),
+  ('2018-06-01', 2017, 52, 63207, '2018-06-13', FALSE, 17, TRUE),
 
-  ('2018-06-13', 2017, 52, 63277, '2018-06-22', FALSE, 18),
-  ('2018-08-25', 2017, 52, 63277, '2018-09-02', TRUE, 19),
+  ('2018-06-13', 2017, 52, 63277, '2018-06-22', FALSE, 18, TRUE),
+  ('2018-08-25', 2017, 52, 63277, '2018-09-02', TRUE, 19, FALSE),
 
-  ('2019-06-02', 2018, 52, 63277, '2019-06-05', FALSE, 20)
+  ('2019-06-02', 2018, 52, 63277, '2019-06-05', FALSE, 20, TRUE),
+  ('2019-08-31', 2018, 52, 63202, '2019-09-02', FALSE, 21, FALSE)
 ;
 
 INSERT INTO izpit (datum, koncna_ocena, ocena_pisno, ocena_ustno, student, predmet, zap_st_polaganja, prijava_id) VALUES
@@ -1874,6 +1875,5 @@ INSERT INTO izpit (datum, koncna_ocena, ocena_pisno, ocena_ustno, student, predm
   ('2018-06-18', 6, 0, 0, 52, 63207, 1, 17),
 
   ('2018-07-01', 5, 0, 0, 52, 63277, 2, 18),
-
   ('2019-06-12', 6, 0, 0, 52, 63277, 1, 20)
 ;
