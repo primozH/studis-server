@@ -36,10 +36,12 @@ public class PredmetZrno {
 
     @Transactional
     public List<Student> vrniListoStudentovZaPredmet(Uporabnik uporabnik, int sifraPredmeta, int studijskoLeto) throws Exception {
+        /* pravice za vpogled */
         List<IzvajanjePredmeta> predmeti = izvajaniPredmeti(uporabnik, studijskoLeto);
         predmeti = predmeti.stream().filter(izvajanjePredmeta -> izvajanjePredmeta.getPredmet().getSifra().equals(sifraPredmeta)).collect(Collectors.toList());
+
         if (predmeti.size() != 0) {
-            return em.createNamedQuery("entities.student.PredmetStudent.vrniSeznamStudentovZaPredmetInLeto", Student.class)
+            return em.createNamedQuery("entitete.student.PredmetStudent.vrniSeznamStudentovZaPredmetInLeto", Student.class)
                     .setParameter("sifraPredmeta", sifraPredmeta)
                     .setParameter("studijskoLeto", studijskoLeto)
                     .getResultList();

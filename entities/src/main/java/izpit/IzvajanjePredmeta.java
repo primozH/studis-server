@@ -22,9 +22,11 @@ import vloge.Ucitelj;
                 "WHERE (i.nosilec1.id = :ucitelj " +
                 "OR i.nosilec2.id = :ucitelj " +
                 "OR i.nosilec3.id = :ucitelj) " +
-                "AND i.studijskoLeto.id = :studijskoLeto"),
+                "AND i.studijskoLeto.id = :studijskoLeto " +
+                "ORDER BY i.predmet.naziv"),
         @NamedQuery(name = "entitete.izpit.IzvajanjePredmeta.vrniVsePredmete", query = "SELECT i FROM IzvajanjePredmeta i " +
-                "WHERE i.studijskoLeto.id = :studijskoLeto"),
+                "WHERE i.studijskoLeto.id = :studijskoLeto " +
+                "ORDER BY i.predmet.naziv"),
         @NamedQuery(name = "entitete.izpit.IzvajanjePredmeta.vrniPredmet", query = "SELECT i FROM IzvajanjePredmeta i " +
                 "WHERE (i.nosilec1.id = :ucitelj " +
                 "OR i.nosilec2.id = :ucitelj " +
