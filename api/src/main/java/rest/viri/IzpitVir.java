@@ -32,6 +32,7 @@ import izpit.Izpit;
 import izpit.IzpitniRok;
 import izpit.PrijavaRok;
 import izpit.StatusRazpisaRoka;
+import sifranti.Predmet;
 import vloge.Student;
 import vloge.Uporabnik;
 import zrna.izpit.IzpitZrno;
@@ -107,37 +108,50 @@ public class IzpitVir {
                                       @Context HttpServletRequest httpServletRequest) {
 
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik.getId(), predmet);
+
+        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik, predmet);
+
+        if (izpitniRoki.size() == 0) {
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+
+        Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
+
+        if (uporabnikTip == Role.REFERENT || uporabnikTip == Role.PREDAVATELJ) {
+            return Response.ok(izpitniRoki).header("X-Total-Count", izpitniRoki.size()).build();
+        }
+
         List<PrijavaRok> prijave = prijavaNaIzpitZrno.vrniPrijaveNaIzpit(uporabnik);
 
-        List<IzpitniRok> prijavljeniRoki = prijave.stream().map(PrijavaRok::getRok).collect(Collectors.toList());
+        List<IzpitniRokJson> rokiZaStudenta = izpitniRoki.stream()
+                .map(rok -> rok.getIzvajanjePredmeta().getPredmet())
+                .distinct()
+                .map(IzpitniRokJson::new)
+                .collect(Collectors.toList());
 
-        if (izpitniRoki != null && !izpitniRoki.isEmpty()) {
+        for (IzpitniRokJson prijava : rokiZaStudenta) {
+            List<IzpitniRok> tmp = izpitniRoki.stream()
+                    .filter(rok -> rok
+                            .getIzvajanjePredmeta()
+                            .getPredmet()
+                            .getSifra()
+                            .equals(prijava.getPredmet().getSifra()))
+                    .collect(Collectors.toList());
+            prijava.setRoki(tmp);
 
-            List<IzpitniRokJson> izpitniRokJson = new ArrayList<>();
-            for (IzpitniRok rok : izpitniRoki) {
-                boolean prijavljen = false;
-                for (IzpitniRok prijavljenRok : prijavljeniRoki) {
-                    if (prijavljenRok.getDatum().isEqual(rok.getDatum())
-                            && prijavljenRok.getIzvajanjePredmeta().getPredmet().getSifra().equals(rok.getIzvajanjePredmeta().getPredmet().getSifra())) {
-                        prijavljen = true;
+            boolean prijavljen = prijave.stream()
+                    .anyMatch(prijavaRok ->
+                            prijavaRok
+                                    .getRok()
+                                    .getIzvajanjePredmeta()
+                                    .getPredmet()
+                                    .getSifra()
+                                    .equals(prijava.getPredmet().getSifra()));
 
-                        prijavljeniRoki.remove(prijavljenRok);
-                        break;
-                    }
-                }
-                izpitniRokJson.add(new IzpitniRokJson(rok.getIzvajanjePredmeta(),
-                        rok.getDatum(),
-                        rok.getCas(),
-                        rok.getIzvajalec(),
-                        rok.getProstor(),
-                        prijavljen));
-
-            }
-
-            return Response.ok().entity(izpitniRokJson).header("X-Total-Count", izpitniRokJson.size()).build();
+            prijava.setPrijavljen(prijavljen);
         }
-        return Response.status(Response.Status.NO_CONTENT).build();
+
+        return Response.ok().entity(rokiZaStudenta).header("X-Total-Count", rokiZaStudenta.size()).build();
     }
 
     @POST

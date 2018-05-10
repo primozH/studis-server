@@ -28,8 +28,8 @@ public class IzpitniRokZrno {
     @Inject
     private UserTransaction ux;
 
-    public List<IzpitniRok> vrniIzpitneRoke(Integer uporabnikId, Integer sifraPredmeta) {
-        Uporabnik u = em.find(Uporabnik.class, uporabnikId);
+    public List<IzpitniRok> vrniIzpitneRoke(Uporabnik uporabnik, Integer sifraPredmeta) {
+        Uporabnik u = em.find(Uporabnik.class, uporabnik.getId());
         List<IzpitniRok> roki;
         if (!u.getTip().equalsIgnoreCase("student")) {
             log.info("Pridobivanje izpitnih rokov za predmet " + sifraPredmeta);
@@ -38,9 +38,9 @@ public class IzpitniRokZrno {
                     .setParameter("datum", LocalDate.now())
                     .getResultList();
         } else {
-            log.info("Pridobivanje izpitnih rokov za študenta " + uporabnikId);
+            log.info("Pridobivanje izpitnih rokov za študenta " + uporabnik.getId());
             roki = em.createNamedQuery("entitete.izpit.IzpitniRok.izpitniRokiZaStudenta", IzpitniRok.class)
-                    .setParameter("student", uporabnikId)
+                    .setParameter("student", uporabnik.getId())
                     .setParameter("datum", LocalDate.now())
                     .getResultList();
 
