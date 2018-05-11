@@ -2,17 +2,15 @@ package izpit;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateAdapter;
 import vloge.Ucitelj;
 
 @Entity
-@Table(name = "rok")
+@Table(name = "izpitni_rok")
 @IdClass(IzpitniRokId.class)
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +

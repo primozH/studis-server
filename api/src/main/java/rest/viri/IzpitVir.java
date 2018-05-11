@@ -1,9 +1,13 @@
 package rest.viri;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -139,15 +143,21 @@ public class IzpitVir {
                     .collect(Collectors.toList());
             prijava.setRoki(tmp);
 
-            boolean prijavljen = prijave.stream()
-                    .anyMatch(prijavaRok ->
+            boolean prijavljen = false;
+            List<LocalDate> datum = prijave.stream()
+                    .filter(prijavaRok ->
                             prijavaRok
                                     .getRok()
                                     .getIzvajanjePredmeta()
                                     .getPredmet()
                                     .getSifra()
-                                    .equals(prijava.getPredmet().getSifra()));
-
+                                    .equals(prijava.getPredmet().getSifra()))
+                    .map(prijavaRok -> prijavaRok.getRok().getDatum())
+                    .collect(Collectors.toList());
+            if (datum.size() != 0) {
+                prijavljen = true;
+                prijava.setDatum(datum.get(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            }
             prijava.setPrijavljen(prijavljen);
         }
 
@@ -160,11 +170,12 @@ public class IzpitVir {
     public Response vnesiRokZaPredmet(IzpitniRok rok,
                                       @Context HttpServletRequest request) {
         Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
-        StatusRazpisaRoka statusRazpisaRoka = izpitniRokZrno.vnesiIzpitniRok(rok, uporabnik);
-        if (statusRazpisaRoka != StatusRazpisaRoka.VELJAVEN_VNOS) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new JSONObject().put("error", statusRazpisaRoka.toString()).toString()).build();
+        try {
+            IzpitniRok izpitniRok = izpitniRokZrno.vnesiIzpitniRok(rok, uporabnik);
+            return Response.status(Response.Status.CREATED).entity(izpitniRok).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new CustomErrorMessage(e.getMessage())).build();
         }
-        return Response.ok().build();
     }
 
     @GET

@@ -4,12 +4,14 @@ import izpit.IzpitniRok;
 import sifranti.Predmet;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class IzpitniRokJson implements Serializable {
     private Predmet predmet;
     private List<IzpitniRok> roki;
     private boolean prijavljen;
+    private String datum;
 
     public IzpitniRokJson(Predmet predmet) {
         this(predmet, null, false);
@@ -43,5 +45,13 @@ public class IzpitniRokJson implements Serializable {
 
     public void setPrijavljen(boolean prijavljen) {
         this.prijavljen = prijavljen;
+    }
+
+    public String getDatum() {
+        return datum;
+    }
+
+    public void setDatum(String datum) {
+        this.datum = datum;
     }
 }

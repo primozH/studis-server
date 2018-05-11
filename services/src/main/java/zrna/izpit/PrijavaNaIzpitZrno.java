@@ -279,6 +279,7 @@ public class PrijavaNaIzpitZrno {
     private PrijavaRok getPrijavaIzpit(IzpitniRok rok, PrijavniPodatkiIzpit prijavniPodatkiIzpit) throws Exception {
         try {
             return em.createQuery("SELECT p FROM PrijavaRok p WHERE p.rok = :rok " +
+                    "AND p.zakljucena = FALSE " +
                     "AND p.student.id = :student " +
                     "AND p.brisana = FALSE", PrijavaRok.class)
                     .setParameter("rok", rok)

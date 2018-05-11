@@ -1,10 +1,6 @@
 package zrna.izpit;
 
-import izpit.IzpitniRok;
-import izpit.IzvajanjePredmeta;
-import izpit.PrijavaRok;
-import izpit.StatusRazpisaRoka;
-import sifranti.Praznik;
+import izpit.*;
 import vloge.Uporabnik;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,33 +47,44 @@ public class IzpitniRokZrno {
         return roki;
     }
 
-    public StatusRazpisaRoka vnesiIzpitniRok(IzpitniRok rok, Uporabnik vnasalec) {
+    public IzpitniRok vnesiIzpitniRok(IzpitniRok rok, Uporabnik vnasalec) throws Exception {
+        log.info("Razpisujem izpitni rok");
         if (rok == null
                 || rok.getDatum() == null
                 || rok.getIzvajanjePredmeta().getPredmet() == null
                 || rok.getIzvajanjePredmeta().getStudijskoLeto() == null
-                || rok.getIzvajalec() == null) return StatusRazpisaRoka.MANJKAJO_PODATKI;
+                || rok.getIzvajalec() == null) {
+            log.info("Manjkajoci podatki za razpis roka.");
+            throw new Exception("Manjkajo podatki, potrebni za razpis roka");
+        }
         // Pogledamo, ce je datum vecji od trenutnega
         if (rok.getDatum().isBefore(LocalDate.now())) {
-            return StatusRazpisaRoka.DATUM_ZE_PRETECEN;
+            log.info("Neveljaven datum za razpis.");
+            throw new Exception("Neveljaven datum");
         }
         // Pogledamo, ce je datum sobota ali nedelja
         if (rok.getDatum().getDayOfWeek() == DayOfWeek.SUNDAY
                 || rok.getDatum().getDayOfWeek() == DayOfWeek.SATURDAY) {
-            return StatusRazpisaRoka.DATUM_VIKEND;
+            log.info("Neveljaven dan (vikend).");
+            throw new Exception("Neveljaven datum (vikend)");
         }
         // Pogledamo, ce na ta datum ni praznika
-        boolean jePraznikNaTaDan;
-        Praznik praznik = null;
+        List praznik = null;
         try {
-            praznik = em.createNamedQuery("entitete.sifranti.Praznik.vrniPraznikZaTaDatum", Praznik.class)
-                    .setParameter("datum", rok.getDatum())
-                    .getSingleResult();
+            praznik = em.createNativeQuery("SELECT datum FROM praznik " +
+                    "WHERE datum = ? OR " +
+                    "(? = MONTH(datum) AND ? = DAY(datum))")
+                    .setParameter(1, rok.getDatum().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    .setParameter(2, rok.getDatum().getMonthValue())
+                    .setParameter(3, rok.getDatum().getDayOfMonth())
+                    .getResultList();
         } catch (Exception e) {
+            log.warning("Napaka pri iskanju praznika " + e.getMessage());
+            praznik = new ArrayList();
         }
-        jePraznikNaTaDan = praznik != null;
-        if (jePraznikNaTaDan) {
-            return StatusRazpisaRoka.DATUM_PRAZNIK;
+        if (praznik.size() != 0) {
+            log.info("Neveljaven datum (praznik).");
+            throw new Exception("Neveljaven datum (praznik)");
         }
 
         // Pogledamo, ce ucitelj uci predmet za katerega razpisuje rok
@@ -90,7 +99,8 @@ public class IzpitniRokZrno {
                         .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
                         .getSingleResult();
             } catch (Exception e) {
-                return StatusRazpisaRoka.UCITELJ_NE_UCI_PREDMETA;
+                log.info("Neveljaven izvajalec");
+                throw new Exception("Neveljaven izvajalec");
             }
         } else {
             try {
@@ -100,7 +110,8 @@ public class IzpitniRokZrno {
                         .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
                         .getSingleResult();
             } catch (NoResultException e) {
-                return StatusRazpisaRoka.UCITELJ_NE_UCI_PREDMETA;
+                log.info("Neveljaven izvajalec");
+                throw new Exception("Neveljaven izvajalec");
             }
         }
 
@@ -110,10 +121,12 @@ public class IzpitniRokZrno {
             em.persist(rok);
             ux.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicRollbackException | HeuristicMixedException e) {
-            e.printStackTrace();
-            return StatusRazpisaRoka.DATUM_RAZPISAN_ROK;
+            log.info("Na ta dan je ze razpisan rok za predmet");
+            throw new Exception("Na ta dan je že razpisan izpitni rok pri predmetu");
         }
-        return StatusRazpisaRoka.VELJAVEN_VNOS;
+
+        log.info("Uspesno vnesen izpitni rok");
+        return rok;
     }
 
 

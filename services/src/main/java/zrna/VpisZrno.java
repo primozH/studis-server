@@ -139,19 +139,9 @@ public class VpisZrno {
     }
 
     public List<Vpis> getVpisi(Integer studentId) {
-        return em.createNamedQuery("entitete.vpis.Vpis.vrniVpiseZaStudenta", Vpis.class)
-                .setParameter("studentId", studentId)
+        return em.createNamedQuery("entitete.vpis.Vpis.vpisiZaStudenta", Vpis.class)
+                .setParameter("student", studentId)
                 .getResultList();
-    }
-
-    public List<Vpis> getZadnjiVpis(Integer studentId) {
-        try {
-            return em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta", Vpis.class)
-                     .setParameter("studentId", studentId)
-                     .getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 
     public List<Student> getVpisaniStudenti() {
