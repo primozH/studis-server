@@ -4,7 +4,6 @@ import izpit.IzpitniRok;
 import sifranti.Predmet;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class IzpitniRokJson implements Serializable {
