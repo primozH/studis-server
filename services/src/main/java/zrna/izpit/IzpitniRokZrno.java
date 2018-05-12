@@ -1,6 +1,7 @@
 package zrna.izpit;
 
 import izpit.*;
+import vloge.Ucitelj;
 import vloge.Uporabnik;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -90,6 +91,7 @@ public class IzpitniRokZrno {
         // Pogledamo, ce ucitelj uci predmet za katerega razpisuje rok
         // ali, ce referent razpisuje rok za dolocen predmet za dolocenega ucitelja, ki uci predmet
         vnasalec = em.find(Uporabnik.class, vnasalec.getId());
+        Ucitelj ucitelj;
         IzvajanjePredmeta predmet;
         if (vnasalec.getTip().equalsIgnoreCase("referent")) {
             try {
@@ -98,6 +100,7 @@ public class IzpitniRokZrno {
                         .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
                         .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
                         .getSingleResult();
+                ucitelj = em.find(Ucitelj.class, rok.getIzvajalec().getId());
             } catch (Exception e) {
                 log.info("Neveljaven izvajalec");
                 throw new Exception("Neveljaven izvajalec");
@@ -109,12 +112,13 @@ public class IzpitniRokZrno {
                         .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
                         .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
                         .getSingleResult();
+                ucitelj = (Ucitelj) vnasalec;
             } catch (NoResultException e) {
                 log.info("Neveljaven izvajalec");
                 throw new Exception("Neveljaven izvajalec");
             }
         }
-
+        rok.setIzvajalec(ucitelj);
         rok.setIzvajanjePredmeta(predmet);
         try {
             ux.begin();

@@ -78,8 +78,8 @@ public class ZetonZrno {
 
     @Transactional
     public Zeton createTokenForStudent(Integer studentId) {
-        Vpis zadnjiVpis = (Vpis) em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta")
-                .setParameter("studentId", studentId)
+        Vpis zadnjiVpis = (Vpis) em.createNamedQuery("entitete.vpis.Vpis.vpisiZaStudenta")
+                .setParameter("student", studentId)
                 .getResultList().get(0);
 
         if (zadnjiVpis == null) {
