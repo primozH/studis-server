@@ -16,9 +16,10 @@ import vloge.Student;
                 query = "SELECT p FROM PrijavaRok p WHERE p.rok.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
                         "AND p.student.id = :studentId ORDER BY p.casPrijave DESC"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniPrijavo",
-                query = "SELECT p FROM PrijavaRok p WHERE p.rok.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
+                query = "SELECT p FROM PrijavaRok p WHERE p.rok.id = :rok " +
                         "AND p.student.id = :studentId " +
-                        "AND p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
+                        "AND p.brisana = FALSE " +
+                        "AND p.zakljucena = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.stejPrijave", query = "SELECT COUNT(p) FROM PrijavaRok p WHERE " +
                 "p.student.id = :student " +
                 "AND p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
@@ -57,11 +58,7 @@ public class PrijavaRok {
     private Integer id;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "predmet", referencedColumnName = "predmet"),
-            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto"),
-            @JoinColumn(name = "datum_izvajanja", referencedColumnName = "datum")
-    })
+    @JoinColumn(name = "izpitni_rok")
     private IzpitniRok rok;
 
     @ManyToOne
@@ -87,6 +84,14 @@ public class PrijavaRok {
     @PrePersist
     void setTime() {
         casPrijave = LocalDateTime.now();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public IzpitniRok getRok() {

@@ -14,12 +14,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +31,7 @@ import izpit.Izpit;
 import izpit.IzpitniRok;
 import izpit.PrijavaRok;
 import izpit.StatusRazpisaRoka;
+import prijava.Prijava;
 import sifranti.Predmet;
 import vloge.Student;
 import vloge.Uporabnik;
@@ -58,16 +54,12 @@ public class IzpitVir {
     @POST
     @Path("prijava")
     @Auth(rolesAllowed = {Role.STUDENT})
-    public Response prijavaNaIzpit(PrijavniPodatki prijavniPodatki,
+    public Response prijavaNaIzpit(PrijavaRok prijavaRok,
                                    @Context HttpServletRequest httpServletRequest) {
         PrijavaRok prijava;
         try {
             Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-            prijava = prijavaNaIzpitZrno.applyForExam(new PrijavniPodatkiIzpit(
-                    prijavniPodatki.getStudent(),
-                    prijavniPodatki.getPredmet(),
-                    prijavniPodatki.getStudijskoLeto(),
-                    prijavniPodatki.getDatumIzvajanja()), uporabnik);
+            prijava = prijavaNaIzpitZrno.applyForExam(prijavaRok, uporabnik);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
@@ -78,14 +70,10 @@ public class IzpitVir {
     @POST
     @Path("odjava")
     @Auth(rolesAllowed = {Role.STUDENT})
-    public Response odjavaOdIzpita(PrijavniPodatki prijavniPodatki, @Context HttpServletRequest request) {
+    public Response odjavaOdIzpita(PrijavaRok prijavaRok, @Context HttpServletRequest request) {
         try {
             Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
-            prijavaNaIzpitZrno.returnApplication(new PrijavniPodatkiIzpit(
-                    prijavniPodatki.getStudent(),
-                    prijavniPodatki.getPredmet(),
-                    prijavniPodatki.getStudijskoLeto(),
-                    prijavniPodatki.getDatumIzvajanja()), uporabnik);
+            prijavaNaIzpitZrno.returnApplication(prijavaRok, uporabnik);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
@@ -143,8 +131,7 @@ public class IzpitVir {
                     .collect(Collectors.toList());
             prijava.setRoki(tmp);
 
-            boolean prijavljen = false;
-            List<LocalDate> datum = prijave.stream()
+            List<IzpitniRok> prijavljen = prijave.stream()
                     .filter(prijavaRok ->
                             prijavaRok
                                     .getRok()
@@ -152,20 +139,18 @@ public class IzpitVir {
                                     .getPredmet()
                                     .getSifra()
                                     .equals(prijava.getPredmet().getSifra()))
-                    .map(prijavaRok -> prijavaRok.getRok().getDatum())
+                    .map(PrijavaRok::getRok)
                     .collect(Collectors.toList());
-            if (datum.size() != 0) {
-                prijavljen = true;
-                prijava.setDatum(datum.get(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            if (prijavljen.size() != 0) {
+                prijava.setPrijavljenId(prijavljen.get(0).getId());
             }
-            prijava.setPrijavljen(prijavljen);
         }
 
         return Response.ok().entity(rokiZaStudenta).header("X-Total-Count", rokiZaStudenta.size()).build();
     }
 
     @POST
-    @Path("vnos-roka")
+    @Path("rok")
     @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
     public Response vnesiRokZaPredmet(IzpitniRok rok,
                                       @Context HttpServletRequest request) {
@@ -175,6 +160,34 @@ public class IzpitVir {
             return Response.status(Response.Status.CREATED).entity(izpitniRok).build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+    }
+
+    @PUT
+    @Path("rok")
+    @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
+    public Response posodobiIzpitniRok(IzpitniRok rok,
+                                       @Context HttpServletRequest request) {
+        Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
+        try {
+            IzpitniRok izpitniRok = izpitniRokZrno.spremeniIzpitniRok(rok, uporabnik);
+            return Response.ok(izpitniRok).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+    }
+
+    @DELETE
+    @Path("rok")
+    @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
+    public Response brisiIzpitniRok(IzpitniRok rok,
+                                    @Context HttpServletRequest request) {
+        Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
+        try {
+            izpitniRokZrno.izbrisiRok(rok, uporabnik);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
     }
 

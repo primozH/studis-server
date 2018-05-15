@@ -325,13 +325,15 @@ localhost:8080/api/v1/
 
 - izpitni roki:
     - POST /izpit/[prijava|odjava]
-        - prijava/odjava študenta na izpit:
+        - prijava/odjava študenta na izpit, nastavljen authorization header
         ```json
         {
-        	"student": 57,
-        	"predmet": 63208,
-        	"studijskoLeto": 2018,
-        	"datumIzvajanja": "2019-06-05"
+            "rok": {
+            	"id": 4
+            },
+            "student": {
+                "id": 52
+            }
         }
         ```
     - GET /izpit/prijavljeni?[predmet={sifra}&studijsko-leto={sifra}&datum-cas={sifra}]

@@ -11,7 +11,6 @@ import vloge.Ucitelj;
 
 @Entity
 @Table(name = "izpitni_rok")
-@IdClass(IzpitniRokId.class)
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
@@ -22,7 +21,7 @@ import vloge.Ucitelj;
                 "ORDER BY i.datum ASC"),
 
         @NamedQuery(name = "entitete.izpit.IzpitniRok.izpitniRokiZaStudenta",
-                query = "SELECT i FROM IzpitniRok i, PredmetStudent p " +
+                query = "SELECT DISTINCT i FROM IzpitniRok i, PredmetStudent p " +
                         "WHERE p.predmet NOT IN (" +
                             "SELECT iz.predmet FROM Izpit iz " +
                             "WHERE iz.koncnaOcena > 5 " +
@@ -33,11 +32,20 @@ import vloge.Ucitelj;
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
         query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
+                "AND i.datum = :datum"),
+        @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitniRok",
+        query = "SELECT i FROM IzpitniRok i " +
+                "WHERE i.izvajanjePredmeta.predmet.sifra = :predmet " +
+                "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
                 "AND i.datum = :datum")
 })
 public class IzpitniRok {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "predmet", referencedColumnName = "predmet"),
@@ -45,7 +53,6 @@ public class IzpitniRok {
     })
     private IzvajanjePredmeta izvajanjePredmeta;
 
-    @Id
     @Column(name = "datum")
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate datum;
@@ -59,6 +66,14 @@ public class IzpitniRok {
 
     @Column(name = "prostor")
     private String prostor;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public IzvajanjePredmeta getIzvajanjePredmeta() {
         return izvajanjePredmeta;

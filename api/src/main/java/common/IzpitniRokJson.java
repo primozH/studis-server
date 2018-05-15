@@ -9,17 +9,15 @@ import java.util.List;
 public class IzpitniRokJson implements Serializable {
     private Predmet predmet;
     private List<IzpitniRok> roki;
-    private boolean prijavljen;
-    private String datum;
+    private Integer prijavljenId;
 
     public IzpitniRokJson(Predmet predmet) {
-        this(predmet, null, false);
+        this(predmet, null);
     }
 
-    public IzpitniRokJson(Predmet predmet, List<IzpitniRok> roki, boolean prijavljen) {
+    public IzpitniRokJson(Predmet predmet, List<IzpitniRok> roki) {
         this.predmet = predmet;
         this.roki = roki;
-        this.prijavljen = prijavljen;
     }
 
     public Predmet getPredmet() {
@@ -38,19 +36,11 @@ public class IzpitniRokJson implements Serializable {
         this.roki = roki;
     }
 
-    public boolean isPrijavljen() {
-        return prijavljen;
+    public Integer getPrijavljenId() {
+        return prijavljenId;
     }
 
-    public void setPrijavljen(boolean prijavljen) {
-        this.prijavljen = prijavljen;
-    }
-
-    public String getDatum() {
-        return datum;
-    }
-
-    public void setDatum(String datum) {
-        this.datum = datum;
+    public void setPrijavljenId(Integer prijavljenId) {
+        this.prijavljenId = prijavljenId;
     }
 }
