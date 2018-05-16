@@ -89,6 +89,7 @@ public class FileExporter {
         TableRow[] tableRow = document.getTableRows();
 
         try (FileWriter fileWriter = new FileWriter(fileName)) {
+            writeMetadataCsv(document.getMetadata(), fileWriter);
             addHeaders(header, fileWriter);
             addRowsCsv(tableRow, fileWriter);
 
@@ -170,6 +171,34 @@ public class FileExporter {
             for (String celica : tableRow) {
                 table.addCell(new Phrase(celica, notoRegular));
             }
+        }
+    }
+
+    private void writeMetadataCsv(Metadata metadata, FileWriter fileWriter) throws IOException {
+        if (metadata != null) {
+            StringBuilder sb = new StringBuilder();
+
+            if (metadata.getStudyYear() != null) {
+                sb.append(metadata.getStudyYear().getStudijskoLeto());
+                sb.append("\n");
+            }
+            if (metadata.getStudyProgramme() != null) {
+                sb.append(metadata.getStudyProgramme().getNaziv());
+                sb.append(separator);
+                sb.append(metadata.getStudyProgramme().getSifraEVS().toString());
+                sb.append("\n");
+            }
+            if (metadata.getSubject() != null) {
+                sb.append(metadata.getSubject().getNaziv());
+                sb.append(separator);
+                sb.append(metadata.getSubject().getSifra().toString());
+                sb.append("\n");
+            }
+            if (metadata.getYearOfStudy() != null) {
+                sb.append(metadata.getYearOfStudy().getLetnik().toString());
+                sb.append("\n");
+            }
+            fileWriter.append(sb.toString());
         }
     }
 

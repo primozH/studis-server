@@ -77,7 +77,6 @@ public class PrijavaNaIzpitZrno {
         LocalDateTime lastValidDate = getLastValidDay(stored.getDatum());
         odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
 
-
         if (lastValidDate.isBefore(LocalDateTime.now()) && odjavitelj.getTip().equalsIgnoreCase("student")) {
             throw new Exception("Odjava ni več mogoča");
         }
