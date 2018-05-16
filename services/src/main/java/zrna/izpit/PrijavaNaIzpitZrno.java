@@ -4,6 +4,7 @@ import helpers.PrijavniPodatkiIzpit;
 import izpit.*;
 import prijava.Prijava;
 import sifranti.Cenik;
+import sifranti.Predmet;
 import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
 import vloge.Student;
@@ -59,9 +60,8 @@ public class PrijavaNaIzpitZrno {
     @Transactional
     public void returnApplication(PrijavaRok prijavaRok, Uporabnik odjavitelj) throws Exception {
         log.info("Odjava od izpita");
-        if (!prijavaRok.getStudent().getId().equals(odjavitelj.getId()) && odjavitelj.getTip().equalsIgnoreCase("student")) {
-            throw new Exception("Ni pravic za odjavo");
-        }
+        odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
+
 
         try {
             prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniPrijavo", PrijavaRok.class)
@@ -73,9 +73,9 @@ public class PrijavaNaIzpitZrno {
             throw new Exception("Ni razpisanega roka");
         }
 
+        preveriOdjavitelja(prijavaRok, odjavitelj);
         IzpitniRok stored = prijavaRok.getRok();
         LocalDateTime lastValidDate = getLastValidDay(stored.getDatum());
-        odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
 
         if (lastValidDate.isBefore(LocalDateTime.now()) && odjavitelj.getTip().equalsIgnoreCase("student")) {
             throw new Exception("Odjava ni več mogoča");
@@ -115,6 +115,7 @@ public class PrijavaNaIzpitZrno {
                 .getSingleResult();
     }
 
+    /* HELPERS */
     private Long checkApplicationCount(PrijavaRok prijavaRok) throws Exception {
         Long countStudyYear;
         try {
@@ -272,20 +273,6 @@ public class PrijavaNaIzpitZrno {
         return null;
     }
 
-    private PrijavaRok getPrijavaIzpit(IzpitniRok rok, PrijavniPodatkiIzpit prijavniPodatkiIzpit) throws Exception {
-        try {
-            return em.createQuery("SELECT p FROM PrijavaRok p WHERE p.rok = :rok " +
-                    "AND p.zakljucena = FALSE " +
-                    "AND p.student.id = :student " +
-                    "AND p.brisana = FALSE", PrijavaRok.class)
-                    .setParameter("rok", rok)
-                    .setParameter("student", prijavniPodatkiIzpit.getStudent())
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            throw new Exception("Izpitni rok ne obstaja");
-        }
-    }
-
     private Long getNumberOfApplicationsForStudyYear(Integer studentId, Integer studijskoLetoId,
                                                      Integer predmetId) throws NoResultException {
         log.info("Preverjam stevilo polaganj");
@@ -300,5 +287,24 @@ public class PrijavaNaIzpitZrno {
         date = date.minusDays(2);
         LocalTime time = LocalTime.of(23, 59);
         return LocalDateTime.of(date, time);
+    }
+
+    private void preveriOdjavitelja(PrijavaRok prijavaRok, Uporabnik odjavitelj) throws Exception {
+        if (!prijavaRok.getStudent().getId().equals(odjavitelj.getId())
+                && odjavitelj.getTip().equalsIgnoreCase("student")) {
+            throw new Exception("Ni pravic za odjavo");
+        }
+
+        if (odjavitelj.getTip().equalsIgnoreCase("ucitelj")) {
+            try {
+                IzvajanjePredmeta predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
+                        .setParameter("ucitelj", odjavitelj.getId())
+                        .setParameter("studijskoLeto", prijavaRok.getRok().getIzvajanjePredmeta().getStudijskoLeto().getId())
+                        .setParameter("predmet", prijavaRok.getRok().getIzvajanjePredmeta().getPredmet().getSifra())
+                        .getSingleResult();
+            } catch (NoResultException e) {
+                throw new Exception("Ucitelj nima pravice odjave");
+            }
+        }
     }
 }

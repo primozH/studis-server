@@ -408,30 +408,11 @@ localhost:8080/api/v1/
          
          
 - podatki o izpitu:
-    - POST /izpit/stevilo-polaganj?studijsko-leto={sifra}&sifra-predmeta={sifra}
-            - vrne stevilo polaganj
-      ```json
-      {    "id":[id_uporabnika] }
-      ```
-    - POST /izpit/izpit-za-leto?studijsko-leto={sifra}&sifra-predmeta={sifra}
-         - vrne izpit za doloceno studijsko leto
-      ```json
-      {    "id":[id_uporabnika] }
-      ```
-    - POST /izpit/zadnja-prijava?sifra-predmeta={sifra}
-                  - vrne zadnjo prijavo
-      ```json
-      {    "id":[id_uporabnika] }
-      ```
-    - POST /izpit/vnos-rezultatov?studijsko-leto={sifra}&sifra-predmeta={sifra}
-         - vnese rezultat za pisni del
-    ```json
-    {    "ocenaPisno":[ocenaPisno] }
-    ```
-    - POST /izpit/razveljavi-oceno?studijsko-leto={sifra}&sifra-predmeta={sifra}
-           - razveljavi oceno pisnega dela in nastavi defaultno vrednost v bazi (-1)
-     ```json
-     {    "id":[id_uporabnika] }
-     ```
-     - GET /izpit/vrni-vpisane-ocene?studijsko-leto={sifra}&sifra-predmeta={sifra}
-           - vrne izpite, ki ze imajo vpisano oceno za ta predmet
+    - GET /izpit/rok/{id}/rezultati
+            - vrne vnesene izpitne rezultate za rok [id]
+    - POST /izpit/rok/{id}/rezultati
+            - shrani rezultate izpita
+            - body:
+            ```json
+            
+            ```

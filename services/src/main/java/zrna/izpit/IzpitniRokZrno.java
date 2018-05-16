@@ -116,7 +116,7 @@ public class IzpitniRokZrno {
 
     private List<Izpit> exams(IzpitniRok izpitniRok) {
         return em.createNamedQuery("entitete.izpit.Izpit.vneseneOceneZaRok", Izpit.class)
-                .setParameter("id", izpitniRok.getId())
+                .setParameter("rok", izpitniRok.getId())
                 .getResultList();
     }
 

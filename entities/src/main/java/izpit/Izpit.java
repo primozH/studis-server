@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "izpit")
 @NamedQueries(value = {
-        @NamedQuery(name = "entitete.izpit.Izpit.vrniSteviloVsehPolaganj",
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniPolaganja",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId "),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
@@ -29,14 +29,13 @@ import javax.persistence.*;
                 query = "SELECT i.predmet FROM Izpit i " +
                         "WHERE i.student.id = :student " +
                         "AND i.koncnaOcena > 5"),
-        @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpiteZZeVpisanoOceno",
-        query = "SELECT i FROM Izpit i " +
-                "WHERE i.ocenaPisno >= 0 " +
-                "AND i.predmet.sifra = :sifraPredmeta " +
-                "AND i.prijavaRok.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.izpit.Izpit.vneseneOceneZaRok",
                 query = "SELECT i FROM Izpit i " +
-                        "WHERE i.prijavaRok.rok.id = :id")
+                        "WHERE i.prijavaRok.rok.id = :rok"),
+        @NamedQuery(name = "entitete.izpit.Izpit.izpitZaStudenta",
+                query = "SELECT i FROM Izpit i " +
+                        "WHERE i.student.id = :student " +
+                        "AND i.prijavaRok.rok.id = :rok")
 })
 public class Izpit {
 
@@ -64,11 +63,11 @@ public class Izpit {
     private Integer zapStPolaganja;
 
     @Column(name = "ocena_ustno")
-    private Integer ocenaUstno = -1;
+    private Integer ocenaUstno = null;
     @Column(name = "ocena_pisno")
-    private Integer ocenaPisno = -1;
+    private Integer ocenaPisno = null;
     @Column(name = "koncna_ocena")
-    private Integer koncnaOcena = -1;
+    private Integer koncnaOcena = null;
 
 
     @PrePersist

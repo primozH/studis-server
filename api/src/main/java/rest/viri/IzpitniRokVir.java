@@ -50,7 +50,7 @@ public class IzpitniRokVir {
 
     @POST
     @Path("odjava")
-    @Auth(rolesAllowed = {Role.STUDENT})
+    @Auth(rolesAllowed = {Role.STUDENT, Role.PREDAVATELJ, Role.REFERENT})
     public Response odjavaOdIzpita(PrijavaRok prijavaRok, @Context HttpServletRequest request) {
         try {
             Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");

@@ -12,9 +12,6 @@ import vloge.Student;
 @Entity
 @Table(name = "prijava_rok")
 @NamedQueries(value = {
-        @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniZadnjoPrijavo",
-                query = "SELECT p FROM PrijavaRok p WHERE p.rok.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
-                        "AND p.student.id = :studentId ORDER BY p.casPrijave DESC"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniPrijavo",
                 query = "SELECT p FROM PrijavaRok p WHERE p.rok.id = :rok " +
                         "AND p.student.id = :studentId " +
