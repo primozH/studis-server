@@ -83,7 +83,8 @@ public class IzpitZrno {
     private void vnesiRezultate(Izpit stored, Izpit izpit, PrijavaRok prijavaRok) {
         if (stored == null) {
             stored = new Izpit();
-            Integer zapStPolaganja = stejPolaganja(izpit) + 1;
+            Integer zapStPolaganja = stejPolaganja(izpit);
+
             stored.setOcenaPisno(izpit.getOcenaPisno());
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
             stored.setDatum(LocalDate.now());
@@ -103,13 +104,15 @@ public class IzpitZrno {
     }
 
     private Integer stejPolaganja(Izpit izpit) {
-        Integer count = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganja", Izpit.class)
+        List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganja", Izpit.class)
                 .setParameter("studentId", izpit.getStudent())
                 .setParameter("sifraPredmeta", izpit.getPredmet())
-                .getResultList().size();
+                .getResultList();
+        if (izpiti.size() == 0) {
+            return 1;
+        }
 
-        /* TODO preveri za ponavljalca */
-        return count;
+        return izpiti.get(0).getZapStPolaganja() + 1;
     }
 
 }

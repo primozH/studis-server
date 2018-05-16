@@ -12,7 +12,8 @@ import javax.persistence.*;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.Izpit.vrniPolaganja",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
-                        "AND i.student.id = :studentId "),
+                        "AND i.student.id = :studentId " +
+                        "ORDER BY i.datum DESC"),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
