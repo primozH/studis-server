@@ -62,38 +62,7 @@ public class IzpitniRokZrno {
         checkDate(rok);
         checkIfAlreadyCreated(rok);
 
-        // Pogledamo, ce ucitelj uci predmet za katerega razpisuje rok
-        // ali, ce referent razpisuje rok za dolocen predmet za dolocenega ucitelja, ki uci predmet
-        vnasalec = em.find(Uporabnik.class, vnasalec.getId());
-        Ucitelj ucitelj;
-        IzvajanjePredmeta predmet;
-        if (vnasalec.getTip().equalsIgnoreCase("referent")) {
-            try {
-                predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
-                        .setParameter("ucitelj", rok.getIzvajalec().getId())
-                        .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
-                        .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
-                        .getSingleResult();
-                ucitelj = em.find(Ucitelj.class, rok.getIzvajalec().getId());
-            } catch (Exception e) {
-                log.info("Neveljaven izvajalec");
-                throw new Exception("Neveljaven izvajalec");
-            }
-        } else {
-            try {
-                predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
-                        .setParameter("ucitelj", vnasalec.getId())
-                        .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
-                        .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
-                        .getSingleResult();
-                ucitelj = (Ucitelj) vnasalec;
-            } catch (NoResultException e) {
-                log.info("Neveljaven izvajalec");
-                throw new Exception("Neveljaven izvajalec");
-            }
-        }
-        rok.setIzvajalec(ucitelj);
-        rok.setIzvajanjePredmeta(predmet);
+        preveriIzvajalca(rok, vnasalec);
         try {
             ux.begin();
             em.persist(rok);
@@ -107,30 +76,28 @@ public class IzpitniRokZrno {
         return rok;
     }
 
-
     @Transactional
     public IzpitniRok spremeniIzpitniRok(IzpitniRok izpitniRok, Uporabnik uporabnik) throws Exception {
         IzpitniRok stored;
         log.info("Posodabljam izpitni rok...");
         try {
-            stored = em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitniRok", IzpitniRok.class)
-                    .setParameter("datum", izpitniRok.getDatum())
-                    .setParameter("predmet", izpitniRok.getIzvajanjePredmeta().getPredmet().getSifra())
-                    .setParameter("studijskoLeto", izpitniRok.getIzvajanjePredmeta().getStudijskoLeto().getId())
-                    .getSingleResult();
+            stored = em.find(IzpitniRok.class, izpitniRok.getId());
         } catch (NoResultException e) {
             log.warning("Izpitni rok ne obstaja!");
             throw new Exception("Izpitni rok ne obstaja!");
         }
-
-        List<PrijavaRok> prijave = applications(stored);
-        if (prijave.size() > 0) {
-            for (PrijavaRok prijavaRok : prijave) {
-                prijavaRok.setRok(stored);
-            }
+        checkDate(izpitniRok);
+        preveriIzvajalca(izpitniRok, uporabnik);
+        List<Izpit> vneseneOcene  = exams(stored);
+        if (vneseneOcene.size() != 0) {
+            throw new Exception("Za ta rok so ze vnesene ocene!");
         }
 
-        return izpitniRok;
+        Integer id = stored.getId();
+        stored = izpitniRok;
+        stored.setId(id);
+        em.merge(stored);
+        return em.find(IzpitniRok.class, stored.getId());
     }
 
     @Transactional
@@ -138,11 +105,7 @@ public class IzpitniRokZrno {
         log.info("Brisanje izpitnega roka");
 
         try {
-            em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitniRok", IzpitniRok.class)
-                    .setParameter("datum", izpitniRok.getDatum())
-                    .setParameter("predmet", izpitniRok.getIzvajanjePredmeta().getPredmet().getSifra())
-                    .setParameter("studijskoLeto", izpitniRok.getIzvajanjePredmeta().getStudijskoLeto().getId())
-                    .getSingleResult();
+            izpitniRok = em.getReference(IzpitniRok.class, izpitniRok.getId());
         } catch (NoResultException e) {
             log.warning("Izpitni rok ne obstaja");
             throw new Exception("Izpitni rok ne obstaja");
@@ -151,11 +114,9 @@ public class IzpitniRokZrno {
         em.remove(izpitniRok);
     }
 
-    private List<PrijavaRok> applications(IzpitniRok izpitniRok) {
-        return em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentje", PrijavaRok.class)
-                .setParameter("studijskoLeto", izpitniRok.getIzvajanjePredmeta().getStudijskoLeto().getId())
-                .setParameter("datum", izpitniRok.getDatum())
-                .setParameter("predmet", izpitniRok.getIzvajanjePredmeta().getPredmet().getSifra())
+    private List<Izpit> exams(IzpitniRok izpitniRok) {
+        return em.createNamedQuery("entitete.izpit.Izpit.vneseneOceneZaRok", Izpit.class)
+                .setParameter("id", izpitniRok.getId())
                 .getResultList();
     }
 
@@ -191,7 +152,7 @@ public class IzpitniRokZrno {
         }
     }
 
-    public void checkIfAlreadyCreated(IzpitniRok rok) throws Exception {
+    private void checkIfAlreadyCreated(IzpitniRok rok) throws Exception {
         try {
             em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitniRok", IzpitniRok.class)
                     .setParameter("datum", rok.getDatum())
@@ -202,5 +163,40 @@ public class IzpitniRokZrno {
         } catch (NoResultException e) {
             log.info("Izpitni rok za ta predmet in datum ne obstaja.");
         }
+    }
+
+    private void preveriIzvajalca(IzpitniRok rok, Uporabnik vnasalec) throws Exception {
+        // Pogledamo, ce ucitelj uci predmet za katerega razpisuje rok
+        // ali, ce referent razpisuje rok za dolocen predmet za dolocenega ucitelja, ki uci predmet
+        vnasalec = em.find(Uporabnik.class, vnasalec.getId());
+        Ucitelj ucitelj;
+        IzvajanjePredmeta predmet;
+        if (vnasalec.getTip().equalsIgnoreCase("referent")) {
+            try {
+                predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
+                        .setParameter("ucitelj", rok.getIzvajalec().getId())
+                        .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
+                        .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
+                        .getSingleResult();
+                ucitelj = em.find(Ucitelj.class, rok.getIzvajalec().getId());
+            } catch (Exception e) {
+                log.info("Neveljaven izvajalec");
+                throw new Exception("Neveljaven izvajalec");
+            }
+        } else {
+            try {
+                predmet = em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
+                        .setParameter("ucitelj", vnasalec.getId())
+                        .setParameter("studijskoLeto", rok.getIzvajanjePredmeta().getStudijskoLeto().getId())
+                        .setParameter("predmet", rok.getIzvajanjePredmeta().getPredmet().getSifra())
+                        .getSingleResult();
+                ucitelj = (Ucitelj) vnasalec;
+            } catch (NoResultException e) {
+                log.info("Neveljaven izvajalec");
+                throw new Exception("Neveljaven izvajalec");
+            }
+        }
+        rok.setIzvajalec(ucitelj);
+        rok.setIzvajanjePredmeta(predmet);
     }
 }

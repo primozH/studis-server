@@ -101,20 +101,10 @@ public class PrijavaNaIzpitZrno {
                 .getResultList();
     }
 
-    public PrijavaRok vrniZadnjoPrijavoZaPredmet(int sifraPredmeta, int studentId) {
-        return em.createNamedQuery("entitete.izpit.PrijavaRok.vrniZadnjoPrijavo", PrijavaRok.class)
-                .setParameter("sifraPredmeta", sifraPredmeta)
-                .setParameter("studentId", studentId)
-                .getSingleResult();
-    }
-
-    public List<PrijavaRok> vrniPrijavljeneStudente(int sifraPredmeta, int studijskoLeto, LocalDate datum) {
-        log.info("Iskanje vseh prijavljenih studentov na izpit. Predmet: " + sifraPredmeta +
-                ", studijsko leto: " + studijskoLeto + ", datum: " + datum);
+    public List<PrijavaRok> vrniPrijavljeneStudente(Integer izpitniRok) {
+        log.info("Iskanje vseh prijavljenih studentov na izpit.");
         return   em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentje", PrijavaRok.class)
-                .setParameter("predmet", sifraPredmeta)
-                .setParameter("studijskoLeto", studijskoLeto)
-                .setParameter("datum", datum)
+                .setParameter("id", izpitniRok)
                 .getResultList();
     }
 

@@ -35,20 +35,13 @@ import vloge.Student;
                 "AND p.zakljucena = FALSE " +
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijavljeniStudentje", query = "SELECT p FROM PrijavaRok p WHERE " +
-                "p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
-                "AND p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
-                "AND p.rok.datum = :datum " +
+                "p.rok.id = :id " +
                 "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijaveZaStudenta",
                 query = "SELECT p FROM PrijavaRok p WHERE " +
                         "p.student.id = :student " +
                         "AND p.brisana = FALSE " +
-                        "AND p.zakljucena = FALSE"),
-        @NamedQuery(name = "test", query = "SELECT p FROM PrijavaRok p, Vpis v " +
-                "WHERE p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
-                "AND v.studijskoLeto = p.rok.izvajanjePredmeta.studijskoLeto " +
-                "AND v.vrstaVpisa.sifraVpisa = 1 " +
-                "AND p.student.id = :student ")
+                        "AND p.zakljucena = FALSE")
 })
 public class PrijavaRok {
 

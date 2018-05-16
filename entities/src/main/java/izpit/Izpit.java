@@ -33,7 +33,10 @@ import javax.persistence.*;
         query = "SELECT i FROM Izpit i " +
                 "WHERE i.ocenaPisno >= 0 " +
                 "AND i.predmet.sifra = :sifraPredmeta " +
-                "AND i.prijavaRok.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto")
+                "AND i.prijavaRok.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.izpit.Izpit.vneseneOceneZaRok",
+                query = "SELECT i FROM Izpit i " +
+                        "WHERE i.prijavaRok.rok.id = :id")
 })
 public class Izpit {
 

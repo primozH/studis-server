@@ -324,7 +324,7 @@ localhost:8080/api/v1/
         mora zadostiti zgornjemu zgledu.
 
 - izpitni roki:
-    - POST /izpit/[prijava|odjava]
+    - POST /rok/[prijava|odjava]
         - prijava/odjava študenta na izpit, nastavljen authorization header
         ```json
         {
@@ -336,13 +336,12 @@ localhost:8080/api/v1/
             }
         }
         ```
-    - GET /izpit/prijavljeni?[predmet={sifra}&studijsko-leto={sifra}&datum-cas={sifra}]
-        - seznam vseh prijav na izpitni rok pri predmetu za studijsko leto in na izbrani rok
-        [localhost:8080/api/v1/izpit/prijavljeni?predmet=63208&studijsko-leto=2018&datum-cas=2019-06-05T10:00]()
-    - GET /izpit/rok?studijsko-leto={sifra}&[predmet={sifra}]
+    - GET /rok/{id}/prijavljeni
+        - seznam vseh prijav na izbrani rok [id]
+    - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
         - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
-    - POST /izpit/vnos-roka
+    - POST /rok
             - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
             za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
             "izvajalec" je učitelj, ki bo izpit izvajal.
@@ -365,9 +364,38 @@ localhost:8080/api/v1/
             	"prostor": "P01"
             }
             ```
-            
-    - GET /izpit/prijave?studijsko-leto={sifra}
-        - seznam vseh prijav na izpite
+    - PUT /rok
+       - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
+           za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
+           "izvajalec" je učitelj, ki bo izpit izvajal.
+       - body: IzpitniRok
+       ```json
+       {
+       	"id": 18,
+       	"cas": "10:00:00",
+       	"datum": "2019-06-07",
+       	"izvajalec": {
+       		"id": 22
+       	},
+       	"izvajanjePredmeta": {
+       		"predmet": {
+       			"sifra": 63205
+       		},
+       		"studijskoLeto": {
+       			"id": 2018
+       		}
+       	},
+       	"prostor": "PA"
+       }
+        ```
+    - DELETE /rok
+        - izbriše izpitni rok
+        -body: 
+        ```json
+        {
+        	"id": 18
+        }
+        ```
     
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 

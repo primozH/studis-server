@@ -2,6 +2,7 @@ package rest;
 
 //import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import authentication.AuthFilter;
+import izpit.IzpitniRok;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import rest.viri.*;
 import sifranti.Predmet;
@@ -29,6 +30,7 @@ public class RESTVir extends Application {
         resources.add(IzvozVir.class);
         resources.add(IzpitVir.class);
         resources.add(PredmetVir.class);
+        resources.add(IzpitniRokVir.class);
 
         resources.add(MultiPartFeature.class);
 

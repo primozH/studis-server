@@ -38,13 +38,12 @@ public class IzpitZrno {
                  .getSingleResult();
     }
 
-    public boolean vnesiRezultatIzpita(Izpit izpit, int sifraPredmeta, int studentId, int studijskoLeto) {
+    public boolean vnesiRezultatIzpita(Izpit izpit, Integer rokId) {
         PrijavaRok prijavaRok =  null;
         try{
             prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniPrijavo", PrijavaRok.class)
-              .setParameter("sifraPredmeta", sifraPredmeta)
-              .setParameter("studentId", studentId)
-              .setParameter("studijskoLeto", studijskoLeto)
+              .setParameter("rok", rokId)
+              .setParameter("studentId", izpit.getStudent().getId())
               .getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
