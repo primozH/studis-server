@@ -63,15 +63,8 @@ public class IzpitniRokVir {
     }
 
     @GET
-    @Path("{id}/prijavljeni")
-    public Response vrniPrijavljeneStudente(@PathParam("id") Integer rokId) {
-        List<PrijavaRok> prijavaRok = prijavaNaIzpitZrno.vrniPrijavljeneStudente(rokId);
-        return Response.ok(prijavaRok).header("X-Total-Count", prijavaRok.size()).build();
-    }
-
-    @GET
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ, Role.STUDENT})
-    public Response vrniRokeZaPredmet(@QueryParam("predmet") Integer predmet,
+    public Response vrniRoke(@QueryParam("predmet") Integer predmet,
                                       @QueryParam("studijsko-leto") Integer studijskoLeto,
                                       @Context HttpServletRequest httpServletRequest) {
 
@@ -160,4 +153,17 @@ public class IzpitniRokVir {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
     }
+
+    @GET
+    @Path("{id}/prijavljeni")
+    public Response vrniPrijavljeneStudente(@PathParam("id") Integer rokId,
+                                            @QueryParam("count") Boolean count) {
+        if (count) {
+            return Response.ok()
+                    .header("X-Total-Count", prijavaNaIzpitZrno.vrniPrijavljeneStudenteCount(rokId)).build();
+        }
+        List<PrijavaRok> prijavaRok = prijavaNaIzpitZrno.vrniPrijavljeneStudente(rokId);
+        return Response.ok(prijavaRok).header("X-Total-Count", prijavaRok.size()).build();
+    }
+
 }

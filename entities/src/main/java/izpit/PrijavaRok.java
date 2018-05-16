@@ -37,6 +37,9 @@ import vloge.Student;
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijavljeniStudentje", query = "SELECT p FROM PrijavaRok p WHERE " +
                 "p.rok.id = :id " +
                 "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.prijavljeniStudentjeCount", query = "SELECT COUNT(p) FROM PrijavaRok p WHERE " +
+                "p.rok.id = :id " +
+                "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijaveZaStudenta",
                 query = "SELECT p FROM PrijavaRok p WHERE " +
                         "p.student.id = :student " +

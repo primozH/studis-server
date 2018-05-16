@@ -103,9 +103,16 @@ public class PrijavaNaIzpitZrno {
 
     public List<PrijavaRok> vrniPrijavljeneStudente(Integer izpitniRok) {
         log.info("Iskanje vseh prijavljenih studentov na izpit.");
-        return   em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentje", PrijavaRok.class)
+        return em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentje", PrijavaRok.class)
                 .setParameter("id", izpitniRok)
                 .getResultList();
+    }
+
+    public Long vrniPrijavljeneStudenteCount(Integer izpitniRok) {
+        log.info("Stejem prijave na izpitni rok");
+        return em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentjeCount", Long.class)
+                .setParameter("id", izpitniRok)
+                .getSingleResult();
     }
 
     private Long checkApplicationCount(PrijavaRok prijavaRok) throws Exception {

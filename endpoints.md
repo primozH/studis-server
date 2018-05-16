@@ -139,8 +139,8 @@ localhost:8080/api/v1/
         ```
         
         **Example 3 (vpis v 3. letnik):**
-        ```json
         POST localhost:8080/api/v1/student/34/vpis
+        ```json
         
         {
         	"zeton": {
@@ -336,8 +336,10 @@ localhost:8080/api/v1/
             }
         }
         ```
-    - GET /rok/{id}/prijavljeni
-        - seznam vseh prijav na izbrani rok [id]
+    - GET /rok/{id}/prijavljeni[?count=true]
+        - seznam vseh prijav na izbrani rok [id]. če je query parameter nastavljen na "true", se
+        vrne prazen objekt, v header "X-Total-Count" pa je nastavljeno število prijavljenih na rok
+        (za potrebe potrditve spremembe izpitnega roka)
     - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
         - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
