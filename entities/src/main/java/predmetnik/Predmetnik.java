@@ -37,7 +37,11 @@ import sifranti.StudijskoLeto;
                 "p.delPredmetnika.tip LIKE 'strokovni%'"),
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.obvezniPredmetnik", query = "SELECT p FROM Predmetnik p " +
                 "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
-                "p.delPredmetnika.tip LIKE 'obvezni%'")
+                "p.delPredmetnika.tip LIKE 'obvezni%'"),
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.vrniStudenteZaProgramVLetu",
+                query = "SELECT p, ps.vpis.student FROM Predmetnik p INNER JOIN PredmetStudent ps ON " +
+                        "(p.predmet.sifra = ps.predmet.sifra AND p.studijskoLeto.id = ps.vpis.studijskoLeto.id) " +
+                        "WHERE p.studijskoLeto.id = :studijskoLeto AND p.studijskiProgram.sifraEVS = :studijskiProgram AND p.letnik.letnik = :letnik")
 })
 @IdClass(PredmetnikId.class)
 public class Predmetnik {
