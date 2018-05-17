@@ -1,5 +1,5 @@
 # Studis
-
+[![Build Status](https://travis-ci.org/primozH/studis-server.svg?branch=master)](https://travis-ci.org/primozH/studis-server)
 > Simplified student information system.
 
 Database: MariaDB

@@ -25,10 +25,11 @@ import vloge.Student;
 @Entity
 @Table(name = "vpis")
 @NamedQueries(value = {
-        @NamedQuery(name = "entitete.vpis.Vpis.zadnjiVpisZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId" +
-                " ORDER BY v.studijskoLeto.id DESC"),
-        @NamedQuery(name = "entitete.vpis.Vpis.vrniVpiseZaStudenta", query = "SELECT v FROM Vpis v WHERE v.student.id = :studentId"),
-        @NamedQuery(name = "entitete.vpis.Vpis.vrniVseVpisaneStudente", query = "SELECT v.student FROM Vpis v WHERE v.studijskoLeto.id = :studijskoLeto")
+        @NamedQuery(name = "entitete.vpis.Vpis.vpisiZaStudenta", query = "SELECT v FROM Vpis v " +
+                "WHERE v.student.id = :student " +
+                "ORDER BY v.studijskoLeto.id DESC"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniVseVpisaneStudente", query = "SELECT v.student FROM Vpis v " +
+                "WHERE v.studijskoLeto.id = :studijskoLeto")
 })
 @IdClass(VpisId.class)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,7 +38,6 @@ public class Vpis {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student")
-    @XmlTransient
     private Student student;
 
     @Id

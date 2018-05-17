@@ -8,7 +8,7 @@ import java.util.List;
 public class VpisniList {
 
     private Zeton zeton;
-    private Predmet strokovniPredmet;
+    private List<Predmet> strokovniPredmeti;
     private List<Predmet> splosniPredmeti;
     private List<Predmet> modulskiPredmeti;
 
@@ -20,12 +20,12 @@ public class VpisniList {
         this.zeton = zeton;
     }
 
-    public Predmet getStrokovniPredmet() {
-        return strokovniPredmet;
+    public List<Predmet> getStrokovniPredmeti() {
+        return strokovniPredmeti;
     }
 
-    public void setStrokovniPredmet(Predmet strokovniPredmet) {
-        this.strokovniPredmet = strokovniPredmet;
+    public void setStrokovniPredmeti(List<Predmet> strokovniPredmeti) {
+        this.strokovniPredmeti = strokovniPredmeti;
     }
 
     public List<Predmet> getSplosniPredmeti() {

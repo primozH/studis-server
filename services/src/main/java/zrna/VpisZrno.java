@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -46,6 +47,8 @@ public class VpisZrno {
     private final List<String> coursesTypeSearchStrings =
             new ArrayList<>(Arrays.asList("obvezni%", "strokovni%", "splošni%", "modul%"));
 
+    private static final Logger logger = Logger.getLogger(VpisZrno.class.getName());
+
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
@@ -71,18 +74,20 @@ public class VpisZrno {
     }
 
     public Vpis enrollmentProcedure(VpisniList vpisniList) throws Exception {
+        logger.info("Začenjam postopek vpisa. Pridobivanje podatkov...");
         Integer studentId = vpisniList.getZeton().getStudent().getId();
         Integer enrollmentType = vpisniList.getZeton().getVrstaVpisa().getSifraVpisa();
         ZetonId zetonId = new ZetonId(studentId, enrollmentType);
 
         Zeton token = em.find(Zeton.class, zetonId);
-        Predmet profCourse = vpisniList.getStrokovniPredmet();
+        List<Predmet> profCourses = vpisniList.getStrokovniPredmeti();
         List<Predmet> optionalCourses = vpisniList.getSplosniPredmeti();
         List<Predmet> moduleCourses = vpisniList.getModulskiPredmeti();
 
         // confirm enrollment
         Vpis enrollment;
         try {
+            logger.info("Kreiranje vpisa za študenta");
             enrollment = vpisiStudenta(token);
         } catch (Exception e) {
             throw e;
@@ -90,18 +95,20 @@ public class VpisZrno {
 
         // retrieve mandatory curriculum
 
+        logger.info("Pridobivanje obveznega dela predmetnika...");
         List<Predmet> courses = new ArrayList<>(psz.getCourses(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(0))));
 
         // confirm optional curriculum
+        logger.info("Preverjanje veljavnosti izbire za izbirne predmete...");
         List<Predmet> optional;
         switch (enrollment.getLetnik().getLetnik()) {
             case 1:
                 break;
             case 2:
-                Predmet prof = hasProfCourse(enrollment, profCourse);
+                List<Predmet> prof = hasProfCourse(enrollment, profCourses);
                 optional = hasOptionalCourse(enrollment, optionalCourses);
-                if (prof != null) {
-                    courses.add(prof);
+                if (!prof.isEmpty()) {
+                    courses.addAll(prof);
                 }
                 if (optional != null && optional.size() != 0) {
                     courses.addAll(optional);
@@ -121,7 +128,8 @@ public class VpisZrno {
 
         Integer ECTSSum = courses.stream().mapToInt(Predmet::getECTS).sum();
         if (ECTSSum < 60) {
-            throw new Exception("Izbrani predmetnik ne vsebuje dovolj ECTS točk");
+            throw new Exception("Izbrani predmetnik mora obsegati točno 60 ECTS točk! Število zbranih točk: "
+                    + ECTSSum.toString());
         }
 
         // end
@@ -129,24 +137,15 @@ public class VpisZrno {
         if (studentCourses == null) {
             return null;
         }
+        logger.info("Uspešno zaključen vpis");
 
         return enrollment;
     }
 
     public List<Vpis> getVpisi(Integer studentId) {
-        return em.createNamedQuery("entitete.vpis.Vpis.vrniVpiseZaStudenta", Vpis.class)
-                .setParameter("studentId", studentId)
+        return em.createNamedQuery("entitete.vpis.Vpis.vpisiZaStudenta", Vpis.class)
+                .setParameter("student", studentId)
                 .getResultList();
-    }
-
-    public List<Vpis> getZadnjiVpis(Integer studentId) {
-        try {
-            return em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta", Vpis.class)
-                     .setParameter("studentId", studentId)
-                     .getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 
     public List<Student> getVpisaniStudenti() {
@@ -160,9 +159,7 @@ public class VpisZrno {
         }
     }
 
-    private Vpis vpisiStudenta(Zeton vpis) throws Exception{
-        ZetonId zetonId = new ZetonId(vpis.getStudent().getId(), vpis.getVrstaVpisa().getSifraVpisa());
-        Zeton zeton = em.find(Zeton.class, zetonId);
+    private Vpis vpisiStudenta(Zeton zeton) throws Exception{
 
         if (zeton == null || zeton.isIzkoriscen()) {
             throw new Exception("Student nima pravice vpisa");
@@ -181,6 +178,7 @@ public class VpisZrno {
 
     public List<PredmetStudent> endEnrollmentProcedure(Vpis enrollment, List<Predmet> courses) {
 
+        logger.info("Priprava na končno potrditev vpisa...");
         Student student = enrollment.getStudent();
         StudijskoLeto yearOfStudy = enrollment.getStudijskoLeto();
 
@@ -193,7 +191,7 @@ public class VpisZrno {
                     .setParameter("izkoriscen", true)
                     .executeUpdate();
 
-            List<PredmetStudent> studentCourses = new ArrayList<>(persistStudentsCourses(student, yearOfStudy, courses));
+            List<PredmetStudent> studentCourses = new ArrayList<>(persistStudentsCourses(enrollment, courses));
             ux.commit();
             return studentCourses;
         } catch (NotSupportedException e) {
@@ -210,17 +208,14 @@ public class VpisZrno {
         return null;
     }
 
-    private Predmet hasProfCourse(Vpis enrollment, Predmet course) {
-        if (course == null) {
+    private List<Predmet> hasProfCourse(Vpis enrollment, List<Predmet> courses) {
+        if (courses == null || courses.size() == 0) {
             return null;
         }
+        logger.info("Strokovno izbirni predmet...");
         List<Predmet> availableCourses = psz.getCourses(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(1)));
 
-        for (Predmet c : availableCourses) {
-            if (course.getSifra().equals(c.getSifra()))
-                return c;
-        }
-        return null;
+        return availableCourses.stream().filter(courses::contains).collect(Collectors.toList());
     }
 
     private List<Predmet> hasOptionalCourse(Vpis enrollment, List<Predmet> courses) {
@@ -228,6 +223,7 @@ public class VpisZrno {
             return null;
         }
 
+        logger.info("Splošno izbirni predmeti...");
         List<Predmet> availableCourses = psz.getCourses(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(2)));
         return availableCourses.stream().filter(courses::contains).collect(Collectors.toList());
     }
@@ -237,19 +233,23 @@ public class VpisZrno {
             return null;
         }
 
+        logger.info("Moduli...");
         if (openChoice) {
+            logger.info("Prosta izbira modulov...");
             List<Predmet> availableCourses = psz.getCourses(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(3)));
             // filter selected courses
             List<Predmet> moduleCourses = availableCourses.stream().filter(courses::contains).collect(Collectors.toList());
 
-            if (moduleCourses.size() != 6) {
+            if (moduleCourses.size() < 6) {
                 return null;
             }
             return moduleCourses;
         }
 
+        logger.info("Preverjanje veljavnosti izbire modulov");
         List<Predmet> module1 = new ArrayList<>();
         List<Predmet> module2 = new ArrayList<>();
+        Predmet optionalModuleCourse = null;
         int module1Code = -1;
         int module2Code = -1;
 
@@ -270,27 +270,30 @@ public class VpisZrno {
                 module1.add(p.getPredmet());
             } else if (module2Code == p.getModul().ordinal()){
                 module2.add(p.getPredmet());
+            } else if (optionalModuleCourse == null){
+                optionalModuleCourse = p.getPredmet();
             } else {
                 return null;
             }
         }
 
         module1.addAll(module2);
+        module1.add(optionalModuleCourse);
 
-        if (module1.size() != 6) {
+        if (module1.size() < 6) {
             return null;
         }
 
         return module1;
     }
 
-    private List<PredmetStudent> persistStudentsCourses(Student student, StudijskoLeto yearOfStudy, List<Predmet> courses) {
+    private List<PredmetStudent> persistStudentsCourses(Vpis enrollment, List<Predmet> courses) {
+        logger.info("Shranjevanje izbranega predmetnika");
         List<PredmetStudent> studentCourses = new ArrayList<>();
         courses.forEach(course -> {
             PredmetStudent studentCourse = new PredmetStudent();
             studentCourse.setPredmet(course);
-            studentCourse.setStudent(student);
-            studentCourse.setStudijskoLeto(yearOfStudy);
+            studentCourse.setVpis(enrollment);
 
             em.persist(studentCourse);
 

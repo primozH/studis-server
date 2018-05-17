@@ -107,7 +107,7 @@ public class StudentVir {
     @GET
     @Path("{id}/zadnji-vpis")
     public Response vrniZadnjiVpisZaStudenta(@PathParam("id") Integer studentId) {
-        Vpis zadnjiVpis = vpisZrno.getZadnjiVpis(studentId).get(0);
+        Vpis zadnjiVpis = vpisZrno.getVpisi(studentId).get(0);
         if (zadnjiVpis != null) {
             if (zadnjiVpis.isPotrjen()) {
                 if (zadnjiVpis.getNacinStudija().getSifra() == 2) {

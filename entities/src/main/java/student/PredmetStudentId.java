@@ -1,20 +1,14 @@
 package student;
 
+import vpis.Vpis;
+import vpis.VpisId;
+
 import java.io.Serializable;
 
 public class PredmetStudentId implements Serializable {
 
-    private Integer student;
     private Integer predmet;
-    private Integer studijskoLeto;
-
-    public Integer getStudent() {
-        return student;
-    }
-
-    public void setStudent(Integer student) {
-        this.student = student;
-    }
+    private VpisId vpis;
 
     public Integer getPredmet() {
         return predmet;
@@ -24,11 +18,11 @@ public class PredmetStudentId implements Serializable {
         this.predmet = predmet;
     }
 
-    public Integer getStudijskoLeto() {
-        return studijskoLeto;
+    public VpisId getVpis() {
+        return vpis;
     }
 
-    public void setStudijskoLeto(Integer studijskoLeto) {
-        this.studijskoLeto = studijskoLeto;
+    public void setVpis(VpisId vpis) {
+        this.vpis = vpis;
     }
 }

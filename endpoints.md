@@ -14,34 +14,49 @@ localhost:8080/api/v1/
         - vsi podatki o študentih (glede na filter)
     - GET student/{id}
     - PUT: /student/{id}
-        - posodobi podatke o studentu. Obvezen je ujemanje idja v JSON in v poti. Podatki, ki jih lahko spreminjamo:
+        - posodobi podatke o študentu. Obvezen je ujemanje idja v JSON in v poti. 
+        Ob uspešni posodobitvi je odgovor posodobljen objekt.
+        
+        Primer JSONa:
+        `PUT /student/32`
         ```json 
         {
-            "id": 31,
-            "email": "ph1234@student.fri.si",
-            "ime": "Primož",
-            "priimek": "Hrovat",
+            "id": 32,
+            "email": "pavel.krpan@student.fri.si",
+            "ime": "Pavel",
+            "priimek": "Krpan",
             "emso": "2301996500052",
-            "davcnaStevilka": "12345678", 
+            "davcnaStevilka": "12345678",
             "datumRojstva": "1996-01-23",
-            "spol": "MOSKI",
+            "spol": 1,
+            "vpisnaStevilka": 63150002,
             "telefonskaStevilka": "070123123",
             "drzavaRojstva": "Slovenija",
-            "krajRojstva": "Novo mesto",
             "obcinaRojstva": "Novo mesto",
-            "drzavaStalno": 705,
-            "postaStalno": 8000,
-            "obcinaStalno": 85,
-            "naslovStalno": "Krajčeva ulica 15",
-            "drzavaZacasno": 705,
-            "postaZacasno": 1000,
-            "obcinaZacasno": 61,
-            "naslovZacasno": "Gosposvetska 12",
-            "naslovZaPosiljanjePoste": "Krajčeva ulica 15"
-        } 
-        ```
-        spol: [MOSKI|ZENSKI]
-        
+            "krajRojstva": "Novo mesto",
+            "drzavaStalno": {
+            	"numericnaOznaka": 705
+            },
+            "obcinaStalno": {
+            	"sifra": 85
+            },
+            "postaStalno": {
+            	"postnaStevilka": 8000
+            },
+            "naslovStalno": "Šmihelska cesta 12",
+            "drzavaZacasno": {
+            	"numericnaOznaka": 705
+            },
+            "obcinaZacasno": {
+            	"sifra": 61
+            },
+            "postaZacasno": {
+            	"postnaStevilka": 1000
+            },
+            "naslovZacasno": "Mariborska 14",
+            "naslovZaPosiljanjePoste": "Mariborska 15"
+        }
+        ```        
     - GET: student/{id}/vpis:
         - vrne tabelo vpisov za danega študenta
     - POST: student/{id}/vpis:
@@ -56,9 +71,8 @@ localhost:8080/api/v1/
         }
         ```
         **Example 1 (vpis v 2. letnik)**:
-        ```http request
-        POST localhost:8080/api/v1/student/31/vpis
-        
+        `POST localhost:8080/api/v1/student/31/vpis`
+        ```json
         {
         	"zeton": {
         		"vrstaVpisa": {
@@ -68,9 +82,11 @@ localhost:8080/api/v1/
         			"id": 31
         		}
         	},
-        	"strokovniPredmet" : { 
-        		"sifra": 63219	
-        	},
+        	"strokovniPredmeti" : [
+  	           { 
+        		    "sifra": 63219	
+        	   }
+            ],
         	"splosniPredmeti" : [
         		{
         			"sifra": 63222
@@ -83,8 +99,8 @@ localhost:8080/api/v1/
         ```
         
         **Example 2 (vpis v 3. letnik, prosta izbira)**:
+        `POST localhost:8080/api/v1/student/33/vpis`
         ```json
-        POST localhost:8080/api/v1/student/33/vpis
         {
         	"zeton": {
         		"vrstaVpisa": {
@@ -123,8 +139,8 @@ localhost:8080/api/v1/
         ```
         
         **Example 3 (vpis v 3. letnik):**
-        ```json
         POST localhost:8080/api/v1/student/34/vpis
+        ```json
         
         {
         	"zeton": {
@@ -173,10 +189,6 @@ localhost:8080/api/v1/
         na število uspešno uvoženih
     - GET: kandidat/neuspesni
         - vrne .txt datoteko z neuspešnimo uvoženimi kandidati
-    - GET: kandidat/{id}/ustvariStudenta
-        - se kliče, ko se kandidat prijavi v sistem; spremeni tip iz kandidata v študenta,
-        ustvari potrebni žeton za vpis in ga vrne (naj se kliče takoj ob prijavi kandidata, ki se ga 
-        potem preusmeri na stran za vpis študenta (vpisni list))
 
 - žeton:
     - GET: zeton
@@ -279,3 +291,135 @@ localhost:8080/api/v1/
 -šifranti:
     - GET /sifranti/[drzava|obcina|posta]
         - vrne vse pošte/občine/države
+        
+- izvoz seznamov (pdf/csv):
+    - POST /izvoz
+        ```json
+        {
+        	"name": "Test",
+        	"documentType": "CSV",
+        	"metadata": {
+        		"subject": {
+        			"sifra": 63214,
+                    "naziv": "Osnove umetne inteligence"
+        		},
+        		"yearOfStudy": {
+        			"letnik": 3
+        		},
+        		"studyYear": {
+        			"id": 2018,
+        			"studijskoLeto": "2018/2019"
+        		},
+  		        "studyProgramme": {
+                    "sifraEVS": 1000468,
+                    "naziv": "Računalništvo in informatika UNI-1.st"
+                }
+        	},
+        	"tableHeader": {
+        		"row": ["Ime", "Priimek", "Ocena"]
+        	},
+        	"tableRows": [
+        		{
+        			"row": ["Aljaž", "Črni", "20"]
+        		}
+  		      // ...
+        	]
+        }
+        ```
+        
+        Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
+        mora zadostiti zgornjemu zgledu.
+
+- izpitni roki:
+    - POST /rok/[prijava|odjava]
+        - prijava/odjava študenta na izpit, nastavljen authorization header
+        ```json
+        {
+            "rok": {
+            	"id": 4
+            },
+            "student": {
+                "id": 52
+            }
+        }
+        ```
+    - GET /rok/{id}/prijavljeni[?count=true]
+        - seznam vseh prijav na izbrani rok [id]. če je query parameter nastavljen na "true", se
+        vrne prazen objekt, v header "X-Total-Count" pa je nastavljeno število prijavljenih na rok
+        (za potrebe potrditve spremembe izpitnega roka)
+    - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
+        - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
+        študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
+    - POST /rok
+            - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
+            za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
+            "izvajalec" je učitelj, ki bo izpit izvajal.
+            - body: IzpitniRok
+            ```json
+            {
+            	"cas": "18:27:00",
+            	"datum": "2019-06-04",
+            	"izvajalec": {
+            		"id": 22
+            	},
+            	"izvajanjePredmeta": {
+            		"predmet": {
+            			"sifra": 63205
+            		},
+            		"studijskoLeto": {
+            			"id": 2018
+            		}
+            	},
+            	"prostor": "P01"
+            }
+            ```
+    - PUT /rok
+       - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
+           za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
+           "izvajalec" je učitelj, ki bo izpit izvajal.
+       - body: IzpitniRok
+       ```json
+       {
+       	"id": 18,
+       	"cas": "10:00:00",
+       	"datum": "2019-06-07",
+       	"izvajalec": {
+       		"id": 22
+       	},
+       	"izvajanjePredmeta": {
+       		"predmet": {
+       			"sifra": 63205
+       		},
+       		"studijskoLeto": {
+       			"id": 2018
+       		}
+       	},
+       	"prostor": "PA"
+       }
+        ```
+    - DELETE /rok
+        - izbriše izpitni rok
+        -body: 
+        ```json
+        {
+        	"id": 18
+        }
+        ```
+    
+- podatki o izvajanju predmetov:
+    - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
+        - seznam vseh študentov, vpisanih v predmet za študijsko leto
+    - GET /predmet/izvajanje?studijsko-leto={leto}
+        - seznam vseh predmetov, ki se izvajajo v {leto}. Referent dobi seznam vseh predmetov,
+        učitelj pa samo predmete, ki jih izvaja
+         
+         
+- podatki o izpitu:
+    - GET /izpit/rok/{id}/rezultati
+            - vrne vnesene izpitne rezultate za rok [id]
+    - POST /izpit/rok/{id}/rezultati
+            - shrani rezultate izpita
+            - body:
+            ```json
+            
+            ```

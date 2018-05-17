@@ -26,9 +26,15 @@ import sifranti.StudijskoLeto;
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.predmetnikZaProgram", query = "SELECT p FROM Predmetnik p " +
                 " WHERE p.studijskoLeto = :studijskoLeto AND p.letnik = :letnik AND p.studijskiProgram = :studijskiProgram AND " +
                 "p.delPredmetnika = :delPredmetnika"),
-        @NamedQuery(name = "entitete.predmetnik.Predmetnik.opcijskiPredmetnik", query = "SELECT p FROM Predmetnik p " +
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.moduli", query = "SELECT p FROM Predmetnik p " +
                 "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
-                "p.delPredmetnika.tip NOT LIKE 'obvezni%'"),
+                "p.delPredmetnika.tip LIKE 'modul%' ORDER BY p.modul"),
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.splosni", query = "SELECT p FROM Predmetnik p " +
+                "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
+                "p.delPredmetnika.tip LIKE 'splošni%'"),
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.strokovni", query = "SELECT p FROM Predmetnik p " +
+                "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
+                "p.delPredmetnika.tip LIKE 'strokovni%'"),
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.obvezniPredmetnik", query = "SELECT p FROM Predmetnik p " +
                 "WHERE p.studijskiProgram = :studijskiProgram AND p.letnik = :letnik AND p.studijskoLeto = :studijskoLeto AND " +
                 "p.delPredmetnika.tip LIKE 'obvezni%'")
