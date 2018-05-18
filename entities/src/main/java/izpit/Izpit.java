@@ -1,11 +1,13 @@
 package izpit;
 
+import helpers.adapters.LocalDateAdapter;
 import sifranti.Predmet;
 import vloge.Student;
 
 import java.time.LocalDate;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @Entity
 @Table(name = "izpit")
@@ -46,6 +48,7 @@ public class Izpit {
     private Integer id;
 
     @Column(name = "datum")
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate datum;
 
     @ManyToOne
@@ -71,7 +74,7 @@ public class Izpit {
     private Integer koncnaOcena = null;
 
 
-    @PrePersist
+    @PrePersist @PreUpdate
     void updateDatum() {
         datum = LocalDate.now();
     }

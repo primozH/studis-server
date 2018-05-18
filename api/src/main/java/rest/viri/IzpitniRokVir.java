@@ -158,7 +158,7 @@ public class IzpitniRokVir {
     @Path("{id}/prijavljeni")
     public Response vrniPrijavljeneStudente(@PathParam("id") Integer rokId,
                                             @QueryParam("count") Boolean count) {
-        if (count) {
+        if (count != null && count) {
             return Response.ok()
                     .header("X-Total-Count", prijavaNaIzpitZrno.vrniPrijavljeneStudenteCount(rokId)).build();
         }
