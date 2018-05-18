@@ -412,7 +412,18 @@ localhost:8080/api/v1/
             - vrne vnesene izpitne rezultate za rok [id]
     - POST /izpit/rok/{id}/rezultati
             - shrani rezultate izpita
-            - body:
+            - body (array izpitnih rezultatov za studenta):
             ```json
-            
+            [
+            	{
+            		"student": {
+            			"id": 57
+            		},
+            		"predmet": {
+            			"sifra": 63280
+            		},
+            		"ocenaPisno": 45,
+            		"koncnaOcena": 5
+            	}
+            ]
             ```
