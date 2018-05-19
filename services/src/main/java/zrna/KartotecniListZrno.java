@@ -26,11 +26,16 @@ public class KartotecniListZrno {
     private VpisZrno vpisZrno;
 
     public KartotecniList pripraviKartotecniList(Integer studentId) {
+        log.info("Ustvarjam kartotecni list za studenta");
+
+        log.info("Pridobivanje vseh vpisov");
         List<Vpis> vpisi = vpisZrno.getVpisi(studentId);
 
         List<Vrstica> vrstice = new ArrayList<>();
         /* pridobi predmete za posamezne vpise*/
         for (Vpis vpis: vpisi) {
+            log.info("Predmeti za vpis " + vpis.getStudijskoLeto().getStudijskoLeto() + ", " +
+            vpis.getLetnik().getLetnik() + ". letnik, student " + studentId);
             List<PredmetStudent> predmeti = em.createNamedQuery("entitete.student.PredmetStudent.predmetiZaVpis", PredmetStudent.class)
                 .setParameter("vpis", vpis)
                 .getResultList();
@@ -47,6 +52,8 @@ public class KartotecniListZrno {
             int countGrade = 0;
 
             for (PredmetStudent predmet : predmeti) {
+                log.info("Ocene in izvajalci predmeta za " + predmet.getPredmet().getSifra() +
+                "; student " + studentId);
                 IzvajanjePredmeta izvajanjePredmeta =
                         em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniIzvajanje", IzvajanjePredmeta.class)
                         .setParameter("predmet", predmet.getPredmet())
@@ -92,6 +99,7 @@ public class KartotecniListZrno {
         KartotecniList kartotecniList = new KartotecniList();
         kartotecniList.setVrstica(vrstice);
 
+        log.info("Kartotecni list za studenta " + studentId + " ustvarjen");
         return kartotecniList;
     }
 }
