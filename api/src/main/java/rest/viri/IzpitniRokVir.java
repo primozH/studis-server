@@ -17,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -70,7 +71,10 @@ public class IzpitniRokVir {
 
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
 
-        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik, predmet);
+        if (studijskoLeto == null) {
+            studijskoLeto = LocalDate.now().getYear();
+        }
+        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik, predmet, studijskoLeto);
 
         if (izpitniRoki.size() == 0) {
             return Response.status(Response.Status.NO_CONTENT).build();
