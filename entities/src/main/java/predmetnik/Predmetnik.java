@@ -41,7 +41,10 @@ import sifranti.StudijskoLeto;
         @NamedQuery(name = "entitete.predmetnik.Predmetnik.vrniStudenteZaProgramVLetu",
                 query = "SELECT p, ps.vpis.student FROM Predmetnik p INNER JOIN PredmetStudent ps ON " +
                         "(p.predmet.sifra = ps.predmet.sifra AND p.studijskoLeto.id = ps.vpis.studijskoLeto.id) " +
-                        "WHERE p.studijskoLeto.id = :studijskoLeto AND p.studijskiProgram.sifraEVS = :studijskiProgram AND p.letnik.letnik = :letnik")
+                        "WHERE p.studijskoLeto.id = :studijskoLeto AND p.studijskiProgram.sifraEVS = :studijskiProgram AND p.letnik.letnik = :letnik"),
+        @NamedQuery(name = "entitete.predmetnik.Predmetnik.predmetiZaProgramInLeto", query = "SELECT p.predmet FROM Predmetnik p" +
+                 " WHERE p.studijskoLeto.id = :studijskoLeto AND p.letnik.letnik = :letnik AND p.studijskiProgram.sifraEVS = :studijskiProgram"),
+
 })
 @IdClass(PredmetnikId.class)
 public class Predmetnik {
