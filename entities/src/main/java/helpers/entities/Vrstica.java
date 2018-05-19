@@ -2,11 +2,8 @@ package helpers.entities;
 
 import izpit.Izpit;
 import izpit.IzvajanjePredmeta;
-import sifranti.Predmet;
-import student.PredmetStudent;
 import vpis.Vpis;
 
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +12,8 @@ public class Vrstica {
     private Vpis vpis;
     private List<IzvajanjePredmeta> predmeti;
     private HashMap<Integer, List<Izpit>> oceneZaPredmete;
+    private Double povprecnaOcena;
+    private Integer kreditneTocke;
 
     public Vpis getVpis() {
         return vpis;
@@ -38,5 +37,21 @@ public class Vrstica {
 
     public void setOceneZaPredmete(HashMap<Integer, List<Izpit>> oceneZaPredmete) {
         this.oceneZaPredmete = oceneZaPredmete;
+    }
+
+    public Double getPovprecnaOcena() {
+        return povprecnaOcena;
+    }
+
+    public void setPovprecnaOcena(Double povprecnaOcena) {
+        this.povprecnaOcena = povprecnaOcena;
+    }
+
+    public Integer getKreditneTocke() {
+        return kreditneTocke;
+    }
+
+    public void setKreditneTocke(Integer kreditneTocke) {
+        this.kreditneTocke = kreditneTocke;
     }
 }

@@ -42,6 +42,10 @@ public class KartotecniListZrno {
             List<IzvajanjePredmeta> predmetiIzvajanje = new ArrayList<>();
             HashMap<Integer, List<Izpit>> ocene = new HashMap<>();
             /* pridobi vse ocene za predmete */
+            int sumECTS = 0;
+            int sumGrade = 0;
+            int countGrade = 0;
+
             for (PredmetStudent predmet : predmeti) {
                 IzvajanjePredmeta izvajanjePredmeta =
                         em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniIzvajanje", IzvajanjePredmeta.class)
@@ -56,11 +60,28 @@ public class KartotecniListZrno {
                         .setParameter("studentId", studentId)
                         .getResultList();
 
+                sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() > 5)
+                        .mapToInt(Izpit::getKoncnaOcena)
+                        .sum();
+                countGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() > 5)
+                        .count();
+
+                sumECTS += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() > 5)
+                        .mapToInt(izpit -> izpit.getPredmet().getECTS())
+                        .sum();
+
                 predmet.setVpis(null);
 
                 predmetiIzvajanje.add(izvajanjePredmeta);
                 ocene.put(predmet.getPredmet().getSifra(), izpiti);
             }
+
+            if (countGrade == 0) {
+                vrstica.setPovprecnaOcena(0d);
+            } else {
+                vrstica.setPovprecnaOcena((double) (sumGrade / countGrade));
+            }
+            vrstica.setKreditneTocke(sumECTS);
 
             vrstica.setPredmeti(predmetiIzvajanje);
             vrstica.setOceneZaPredmete(ocene);
