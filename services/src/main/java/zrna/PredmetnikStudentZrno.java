@@ -84,4 +84,14 @@ public class PredmetnikStudentZrno {
                 .getResultList();
     }
 
+    public List<Predmetnik> getStudentJoinedInCourses(Integer studijskiProgram,
+                                          Integer studijskoLeto,
+                                          Integer letnik) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.vrniStudenteZaProgramVLetu", Predmetnik.class)
+                 .setParameter("letnik", letnik)
+                 .setParameter("studijskoLeto", studijskoLeto)
+                 .setParameter("studijskiProgram", studijskiProgram)
+                .getResultList();
+    }
+
 }
