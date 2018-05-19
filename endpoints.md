@@ -178,6 +178,10 @@ localhost:8080/api/v1/
         	]
         }
         ```
+        
+    - GET localhost:8080/api/v1/student/{id}/kartoteka
+        - obvezen Authorization header. Študent ima vpogled samo v svoj kartotečni list, učitelj in referent lahko
+        ima vpogled za vse študente
                         
 - kandidati:
     - GET: kandidat

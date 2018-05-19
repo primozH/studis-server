@@ -1,6 +1,5 @@
 package zrna.izpit;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,7 +13,6 @@ import javax.transaction.UserTransaction;
 
 import izpit.*;
 import izpit.PrijavaRok;
-import prijava.Prijava;
 import vloge.Student;
 
 @ApplicationScoped

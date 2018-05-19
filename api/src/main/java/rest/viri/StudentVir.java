@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,12 +19,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import authentication.Auth;
+import authentication.Role;
+import helpers.entities.KartotecniList;
 import org.json.JSONObject;
 
 import common.CustomErrorMessage;
 import vloge.Student;
+import vloge.Uporabnik;
 import vpis.Vpis;
 import vpis.VpisniList;
+import zrna.KartotecniListZrno;
 import zrna.StudentZrno;
 import zrna.VpisZrno;
 
@@ -39,6 +45,8 @@ public class StudentVir {
     private StudentZrno studentZrno;
     @Inject
     private VpisZrno vpisZrno;
+
+    @Inject private KartotecniListZrno kartotecniListZrno;
 
     @Context
     private UriInfo uriInfo;
@@ -121,4 +129,33 @@ public class StudentVir {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @GET
+    @Path("{id}/kartoteka")
+    @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT, Role.STUDENT})
+    public Response kartotecniList(@PathParam("id") Integer studentId, @Context HttpServletRequest request) {
+        KartotecniList kartotecniList;
+        boolean allowed = false;
+        switch ((Role)request.getAttribute("role")) {
+            case PREDAVATELJ:
+            case REFERENT:
+                allowed = true;
+                break;
+            case STUDENT:
+                Uporabnik student = (Uporabnik) request.getAttribute("user");
+                if (studentId.equals(student.getId())) {
+                    allowed = true;
+                }
+        }
+
+        if (allowed) {
+            try {
+                kartotecniList = kartotecniListZrno.pripraviKartotecniList(studentId);
+                return Response.ok(kartotecniList).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return  Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
 }
