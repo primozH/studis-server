@@ -69,7 +69,7 @@ public class PrijavaNaIzpitZrno {
                     .setParameter("studentId", prijavaRok.getStudent().getId())
                     .getSingleResult();
         } catch (NoResultException e) {
-            log.info("Ni razpisanega roka");
+            log.info("Prijava ne obstaja");
             throw new Exception("Ni razpisanega roka");
         }
 
