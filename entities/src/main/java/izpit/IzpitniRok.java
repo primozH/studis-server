@@ -14,7 +14,7 @@ import vloge.Ucitelj;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
-                "AND i.datum > :datum"),
+                "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto "),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRoke", query = "SELECT i " +
                 "FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
