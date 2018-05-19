@@ -71,6 +71,14 @@ public class PredmetnikStudentZrno {
                 .getResultList();
     }
 
+    public List<Predmet> getAllCourses(int studijskoLeto, int studijskiProgram, int letnik) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.predmetiZaProgramInLeto", Predmet.class)
+                 .setParameter("letnik", letnik)
+                 .setParameter("studijskoLeto", studijskoLeto)
+                 .setParameter("studijskiProgram", studijskiProgram)
+                 .getResultList();
+    }
+
     public List<Predmetnik> getCurriculum(Vpis vpis, DelPredmetnika delPredmetnika) {
         Letnik letnik = vpis.getLetnik();
         StudijskoLeto studijskoLeto = vpis.getStudijskoLeto();
@@ -81,6 +89,16 @@ public class PredmetnikStudentZrno {
                 .setParameter("studijskoLeto", studijskoLeto)
                 .setParameter("studijskiProgram", studijskiProgram)
                 .setParameter("delPredmetnika", delPredmetnika)
+                .getResultList();
+    }
+
+    public List<Predmetnik> getStudentJoinedInCourses(Integer studijskiProgram,
+                                          Integer studijskoLeto,
+                                          Integer letnik) {
+        return em.createNamedQuery("entitete.predmetnik.Predmetnik.vrniStudenteZaProgramVLetu", Predmetnik.class)
+                 .setParameter("letnik", letnik)
+                 .setParameter("studijskoLeto", studijskoLeto)
+                 .setParameter("studijskiProgram", studijskiProgram)
                 .getResultList();
     }
 
