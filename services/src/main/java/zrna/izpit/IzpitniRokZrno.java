@@ -36,14 +36,14 @@ public class IzpitniRokZrno {
     @Inject
     private UserTransaction ux;
 
-    public List<IzpitniRok> vrniIzpitneRoke(Uporabnik uporabnik, Integer sifraPredmeta) {
+    public List<IzpitniRok> vrniIzpitneRoke(Uporabnik uporabnik, Integer sifraPredmeta, Integer studijskoLeto) {
         Uporabnik u = em.find(Uporabnik.class, uporabnik.getId());
         List<IzpitniRok> roki;
         if (!u.getTip().equalsIgnoreCase("student")) {
             log.info("Pridobivanje izpitnih rokov za predmet " + sifraPredmeta);
             roki = em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", IzpitniRok.class)
                     .setParameter("sifraPredmeta", sifraPredmeta)
-                    .setParameter("datum", LocalDate.now())
+                    .setParameter("studijskoLeto", studijskoLeto)
                     .getResultList();
         } else {
             log.info("Pridobivanje izpitnih rokov za študenta " + uporabnik.getId());

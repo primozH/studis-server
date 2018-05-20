@@ -1,25 +1,5 @@
 package rest.viri;
 
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import authentication.Auth;
 import authentication.Role;
 import common.CustomErrorMessage;
@@ -29,6 +9,18 @@ import izpit.PrijavaRok;
 import vloge.Uporabnik;
 import zrna.izpit.IzpitniRokZrno;
 import zrna.izpit.PrijavaNaIzpitZrno;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Path("rok")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -90,7 +82,10 @@ public class IzpitniRokVir {
 
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
 
-        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik, predmet);
+        if (studijskoLeto == null) {
+            studijskoLeto = LocalDate.now().getYear();
+        }
+        List<IzpitniRok> izpitniRoki = izpitniRokZrno.vrniIzpitneRoke(uporabnik, predmet, studijskoLeto);
 
         if (izpitniRoki.size() == 0) {
             return Response.status(Response.Status.NO_CONTENT).build();
