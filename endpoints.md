@@ -398,6 +398,8 @@ localhost:8080/api/v1/
         	"id": 18
         }
         ```
+    - GET /rok/vsi-roki?studijsko-leto={leto}
+        - vrne vse izpitne roke za to studijsko leto
     
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
@@ -427,3 +429,6 @@ localhost:8080/api/v1/
             	}
             ]
             ```
+    - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
+        - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
+        - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat

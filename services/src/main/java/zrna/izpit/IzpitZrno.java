@@ -1,6 +1,8 @@
 package zrna.izpit;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,9 +14,8 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
-import izpit.*;
+import izpit.Izpit;
 import izpit.PrijavaRok;
-import prijava.Prijava;
 import vloge.Student;
 
 @ApplicationScoped
@@ -131,6 +132,50 @@ public class IzpitZrno {
         prijavaRok.setZakljucena(true);
 
         em.merge(prijavaRok);
+    }
+
+    @Transactional
+    public List<Izpit> vrniPrijavljeneKandidateZOcenami(int sifraRoka) throws Exception{
+        List<Izpit> izpiti;
+        try {
+           izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPodatkeOIzpituZaRok", Izpit.class)
+                                   .setParameter("rok", sifraRoka)
+                                   .getResultList();
+        } catch (Exception e) {
+            izpiti = new ArrayList<>();
+        }
+        List<PrijavaRok> prijave = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniVsePrijaveZaRok", PrijavaRok.class)
+              .setParameter("rok", sifraRoka)
+              .getResultList();
+        Iterator<PrijavaRok> prijaveIterator = prijave.iterator();
+        Iterator<Izpit> izpitiIterator = izpiti.iterator();
+        List<Izpit> noviIzpiti = new ArrayList<>();
+         log.info("prijavaRok " + Arrays.toString(prijave.toArray()));
+
+        boolean najden;
+        while (prijaveIterator.hasNext()) {
+            najden = false;
+            PrijavaRok prijavaRok = prijaveIterator.next();
+             log.info("prijavaRok " + prijavaRok.getStudent().getId() + "  " + prijavaRok.getCasPrijave() + "  " + prijavaRok.isBrisana());
+            while (izpitiIterator.hasNext()) {
+                Izpit izpit = izpitiIterator.next();
+                // Vrne izpit, ce je enak kot casPrijave pri zadnjem prijavnemRoku
+                if (prijavaRok.getStudent().getId() == izpit.getStudent().getId()
+                    && (prijavaRok.getCasPrijave().isBefore(izpit.getPrijavaRok().getCasPrijave()) || prijavaRok.getCasPrijave().isEqual(izpit.getPrijavaRok().getCasPrijave()))) {
+                    najden = true;
+                    noviIzpiti.add(izpit);
+                    break;
+                }
+            }
+            // Vzame zadnjo prijavo in izpit z oceno null, kljub temu, da ima vpisano oceno prejsnjega izpita
+            if (!najden) {
+                Izpit novIzpit = new Izpit();
+                novIzpit.setPrijavaRok(prijavaRok);
+                noviIzpiti.add(novIzpit);
+                log.info("dodan " + prijavaRok.getStudent().getId() + "  " + prijavaRok.getCasPrijave() + "  " + prijavaRok.isBrisana());
+            }
+        }
+        return noviIzpiti;
     }
 
 }
