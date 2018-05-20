@@ -333,6 +333,12 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 
 -- Dumping data for table studis.izpit: ~0 rows (približno)
 /*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
+INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `zap_st_polaganja`, `predmet`, `student`) VALUES
+    (1, 28, '2019-07-07', NULL, 5, NULL, 1, 63216, 52),
+    (2, 30, '2019-06-25', 8, 8, NULL, 2, 63216, 52),
+    (3, 31, '2019-06-25', NULL, 7, NULL, 1, 63216, 57),
+    (4, 32, '2019-06-25', NULL, 8, NULL, 1, 63216, 51);
+
 /*!40000 ALTER TABLE `izpit` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpitni_rok
@@ -366,7 +372,10 @@ INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studij
 	(9, '2019-08-30', '10:00:00', 'P04', 30, 2018, 63281),
 	(10, '2019-01-22', '11:00:00', 'P01', 27, 2018, 63279),
 	(11, '2019-01-24', '10:00:00', NULL, 15, 2018, 63203),
-	(12, '2019-02-07', '10:00:00', NULL, 15, 2018, 63203);
+	(12, '2019-02-07', '10:00:00', NULL, 15, 2018, 63203),
+    (13, '2019-06-07', '11:00:00', 'P01', 29, 2018, 63216),
+    (14, '2019-06-21', '11:00:00', 'P01', 29, 2018, 63216),
+    (15, '2019-08-29', '11:00:00', 'P01', 29, 2018, 63216);
 /*!40000 ALTER TABLE `izpitni_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.kandidat
@@ -762,7 +771,8 @@ INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(25, 26, '2018-05-15 22:02:05', 57),
 	(26, 25, '2018-05-15 22:02:06', 57),
 	(27, 24, '2018-05-15 22:02:07', 57),
-	(28, 27, '2018-05-15 22:04:34', 57);
+	(28, 27, '2018-05-15 22:04:34', 57),
+	(30, 29, '2018-06-15 16:21:35', 52);
 /*!40000 ALTER TABLE `odjava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.posta
@@ -2185,7 +2195,12 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(24, 8, '2018-05-15 22:01:38', 57, 0.00, NULL, 0, 1),
 	(25, 4, '2018-05-15 22:01:40', 57, 0.00, NULL, 0, 1),
 	(26, 3, '2018-05-15 22:01:46', 57, 0.00, NULL, 0, 1),
-	(27, 11, '2018-05-15 22:04:30', 57, 0.00, NULL, 0, 1);
+	(27, 11, '2018-05-15 22:04:30', 57, 0.00, NULL, 0, 1),
+	(28, 13, '2018-05-14 12:31:26', 52, 0.00, NULL, 1, 0),
+    (29, 14, '2018-06-15 16:19:35', 52, 0.00, NULL, 0, 1),
+    (30, 14, '2018-06-15 16:28:01', 52, 0.00, NULL, 1, 0),
+    (31, 14, '2018-06-15 16:28:01', 57, 0.00, NULL, 1, 0),
+    (32, 14, '2018-06-15 20:45:36', 51, 0.00, NULL, 1, 0);
 /*!40000 ALTER TABLE `prijava_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.referent
