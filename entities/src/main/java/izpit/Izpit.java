@@ -1,11 +1,24 @@
 package izpit;
 
-import sifranti.Predmet;
-import vloge.Student;
-
 import java.time.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import helpers.adapters.LocalDateAdapter;
+import sifranti.Predmet;
+import vloge.Student;
 
 @Entity
 @Table(name = "izpit")
@@ -36,7 +49,10 @@ import javax.persistence.*;
         @NamedQuery(name = "entitete.izpit.Izpit.izpitZaStudenta",
                 query = "SELECT i FROM Izpit i " +
                         "WHERE i.student.id = :student " +
-                        "AND i.prijavaRok.rok.id = :rok")
+                        "AND i.prijavaRok.rok.id = :rok"),
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniPodatkeOIzpituZaRok",
+                query = "SELECT i FROM Izpit i " +
+                        "WHERE i.prijavaRok.rok.id = :rok")
 })
 public class Izpit {
 
@@ -46,6 +62,7 @@ public class Izpit {
     private Integer id;
 
     @Column(name = "datum")
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate datum;
 
     @ManyToOne
@@ -71,7 +88,7 @@ public class Izpit {
     private Integer koncnaOcena = null;
 
 
-    @PrePersist
+    @PrePersist @PreUpdate
     void updateDatum() {
         datum = LocalDate.now();
     }

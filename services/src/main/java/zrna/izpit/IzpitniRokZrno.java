@@ -1,21 +1,30 @@
 package zrna.izpit;
 
-import izpit.*;
-import vloge.Ucitelj;
-import vloge.Uporabnik;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.transaction.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
+
+import izpit.Izpit;
+import izpit.IzpitniRok;
+import izpit.IzvajanjePredmeta;
+import vloge.Ucitelj;
+import vloge.Uporabnik;
 
 @ApplicationScoped
 public class IzpitniRokZrno {
@@ -27,14 +36,14 @@ public class IzpitniRokZrno {
     @Inject
     private UserTransaction ux;
 
-    public List<IzpitniRok> vrniIzpitneRoke(Uporabnik uporabnik, Integer sifraPredmeta) {
+    public List<IzpitniRok> vrniIzpitneRoke(Uporabnik uporabnik, Integer sifraPredmeta, Integer studijskoLeto) {
         Uporabnik u = em.find(Uporabnik.class, uporabnik.getId());
         List<IzpitniRok> roki;
         if (!u.getTip().equalsIgnoreCase("student")) {
             log.info("Pridobivanje izpitnih rokov za predmet " + sifraPredmeta);
             roki = em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", IzpitniRok.class)
                     .setParameter("sifraPredmeta", sifraPredmeta)
-                    .setParameter("datum", LocalDate.now())
+                    .setParameter("studijskoLeto", studijskoLeto)
                     .getResultList();
         } else {
             log.info("Pridobivanje izpitnih rokov za študenta " + uporabnik.getId());
@@ -46,6 +55,12 @@ public class IzpitniRokZrno {
         }
 
         return roki;
+    }
+
+    public List<IzpitniRok> vrniVseRoke(int studijskoLeto) throws Exception {
+        return em.createNamedQuery("entitete.izpit.IzpitniRok.vrniIzpitneRoke", IzpitniRok.class)
+                 .setParameter("studijskoLeto", studijskoLeto)
+                 .getResultList();
     }
 
     public IzpitniRok vnesiIzpitniRok(IzpitniRok rok, Uporabnik vnasalec) throws Exception {

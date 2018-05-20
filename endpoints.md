@@ -270,13 +270,6 @@ localhost:8080/api/v1/
 		"err": 20,
 		"msg": "nepotrjen"
 	}
-	- POST potrdi-vpis?potrjevalec=[id_referenta]
-	    -body: vpis
-	   ```json
-	   {
-	    podatkiOVpisu
-	   }
-	   ```
 
 - vrni vse vpisane studente za zadnje studijsko leto
 	- GET student/seznam-vpisanih
@@ -405,6 +398,8 @@ localhost:8080/api/v1/
         	"id": 18
         }
         ```
+    - GET /rok/vsi-roki?studijsko-leto={leto}
+        - vrne vse izpitne roke za to studijsko leto
     
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
@@ -419,7 +414,21 @@ localhost:8080/api/v1/
             - vrne vnesene izpitne rezultate za rok [id]
     - POST /izpit/rok/{id}/rezultati
             - shrani rezultate izpita
-            - body:
+            - body (array izpitnih rezultatov za studenta):
             ```json
-            
+            [
+            	{
+            		"student": {
+            			"id": 57
+            		},
+            		"predmet": {
+            			"sifra": 63280
+            		},
+            		"ocenaPisno": 45,
+            		"koncnaOcena": 5
+            	}
+            ]
             ```
+    - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
+        - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
+        - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat

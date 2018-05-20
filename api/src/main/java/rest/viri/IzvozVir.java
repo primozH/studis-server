@@ -1,7 +1,7 @@
 package rest.viri;
 
-import java.io.File;
-import java.util.logging.Logger;
+import orodja.export.Document;
+import orodja.FileExporter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -10,9 +10,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import orodja.FileExporter;
-import orodja.export.Document;
+import java.io.File;
+import java.util.logging.Logger;
 
 @Path("izvoz")
 @Consumes(MediaType.APPLICATION_JSON)
