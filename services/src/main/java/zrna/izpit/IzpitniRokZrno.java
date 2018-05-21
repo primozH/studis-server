@@ -101,11 +101,11 @@ public class IzpitniRokZrno {
     }
 
     @Transactional
-    public void izbrisiRok(IzpitniRok izpitniRok, Uporabnik uporabnik) throws Exception {
+    public void izbrisiRok(Integer rokId, Uporabnik uporabnik) throws Exception {
         log.info("Brisanje izpitnega roka");
-
+        IzpitniRok izpitniRok;
         try {
-            izpitniRok = em.getReference(IzpitniRok.class, izpitniRok.getId());
+            izpitniRok = em.getReference(IzpitniRok.class, rokId);
         } catch (NoResultException e) {
             log.warning("Izpitni rok ne obstaja");
             throw new Exception("Izpitni rok ne obstaja");
