@@ -44,7 +44,12 @@ import vloge.Student;
                 query = "SELECT p FROM PrijavaRok p WHERE " +
                         "p.student.id = :student " +
                         "AND p.brisana = FALSE " +
-                        "AND p.zakljucena = FALSE")
+                        "AND p.zakljucena = FALSE"),
+
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.prijavljeniStudentiZOcenami",
+                query = "SELECT p, i FROM PrijavaRok p LEFT OUTER JOIN Izpit i ON p = i.prijavaRok " +
+                        "WHERE p.rok.id = :rokId " +
+                        "AND p.brisana = FALSE")
 })
 public class PrijavaRok {
 

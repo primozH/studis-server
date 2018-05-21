@@ -1,6 +1,7 @@
 package zrna.izpit;
 
 import helpers.PrijavniPodatkiIzpit;
+import helpers.entities.PrijavaNaIzpit;
 import izpit.*;
 import prijava.Prijava;
 import sifranti.Cenik;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -113,6 +115,32 @@ public class PrijavaNaIzpitZrno {
         return em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentjeCount", Long.class)
                 .setParameter("id", izpitniRok)
                 .getSingleResult();
+    }
+
+    public List<PrijavaNaIzpit> vrniPrijavljeneStudenteZOcenami(Integer izpitniRok) {
+        log.info("Seznam vseh prijavljenih studentov z ocenami");
+
+        List<PrijavaNaIzpit> prijaveZRezultati = new ArrayList<>();
+
+        List<Object[]> list = em.createNamedQuery("entitete.izpit.PrijavaRok.prijavljeniStudentiZOcenami", Object[].class)
+                .setParameter("rokId", izpitniRok)
+                .getResultList();
+
+        for (Object[] prijava : list) {
+            PrijavaNaIzpit prijavaNaIzpit = new PrijavaNaIzpit();
+            prijavaNaIzpit.setPrijavaRok((PrijavaRok) prijava[0]);
+
+            if (prijava[1] != null) {
+                Izpit izpit = (Izpit) prijava[1];
+                prijavaNaIzpit.setOcenaPisno(izpit.getOcenaPisno());
+                prijavaNaIzpit.setKoncnaOcena(izpit.getKoncnaOcena());
+            }
+
+            prijaveZRezultati.add(prijavaNaIzpit);
+        }
+
+        log.info("Vracam prijavljene studente na rok " + izpitniRok + " z ocenami (" + prijaveZRezultati.size() + ")");
+        return prijaveZRezultati;
     }
 
     /* HELPERS */

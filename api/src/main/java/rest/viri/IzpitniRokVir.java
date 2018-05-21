@@ -159,16 +159,4 @@ public class IzpitniRokVir {
         }
     }
 
-    @GET
-    @Path("{id}/prijavljeni")
-    public Response vrniPrijavljeneStudente(@PathParam("id") Integer rokId,
-                                            @QueryParam("count") Boolean count) {
-        if (count != null && count) {
-            return Response.ok()
-                    .header("X-Total-Count", prijavaNaIzpitZrno.vrniPrijavljeneStudenteCount(rokId)).build();
-        }
-        List<PrijavaRok> prijavaRok = prijavaNaIzpitZrno.vrniPrijavljeneStudente(rokId);
-        return Response.ok(prijavaRok).header("X-Total-Count", prijavaRok.size()).build();
-    }
-
 }

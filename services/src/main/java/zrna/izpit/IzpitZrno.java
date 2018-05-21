@@ -57,18 +57,6 @@ public class IzpitZrno {
         }
     }
 
-    public List<Izpit> vrniVneseneRezultate(Integer rokId) {
-        List<Izpit> izpiti = null;
-        try {
-            izpiti = em.createNamedQuery("entitete.izpit.Izpit.vneseneOceneZaRok", Izpit.class)
-                    .setParameter("rok", rokId)
-                    .getResultList();
-        } catch (Exception e) {
-            log.warning("Napaka pri pridobivanju izpitnih podatkov. " + e.getMessage());
-        }
-        return izpiti;
-    }
-
     private PrijavaRok preveriPrijavo(Izpit izpit, Integer rokId) throws NoResultException {
         return em.createNamedQuery("entitete.izpit.PrijavaRok.vrniNebrisanoPrijavo", PrijavaRok.class)
                 .setParameter("rok", rokId)

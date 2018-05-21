@@ -319,7 +319,6 @@ localhost:8080/api/v1/
         		{
         			"row": ["Aljaž", "Črni", "20"]
         		}
-  		      // ...
         	]
         }
         ```
@@ -340,10 +339,6 @@ localhost:8080/api/v1/
             }
         }
         ```
-    - GET /rok/{id}/prijavljeni[?count=true]
-        - seznam vseh prijav na izbrani rok [id]. če je query parameter nastavljen na "true", se
-        vrne prazen objekt, v header "X-Total-Count" pa je nastavljeno število prijavljenih na rok
-        (za potrebe potrditve spremembe izpitnega roka)
     - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
         - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
@@ -394,14 +389,8 @@ localhost:8080/api/v1/
        	"prostor": "PA"
        }
         ```
-    - DELETE /rok
+    - DELETE /rok/{id}
         - izbriše izpitni rok
-        -body: 
-        ```json
-        {
-        	"id": 18
-        }
-        ```
     
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
@@ -409,11 +398,11 @@ localhost:8080/api/v1/
     - GET /predmet/izvajanje?studijsko-leto={leto}
         - seznam vseh predmetov, ki se izvajajo v {leto}. Referent dobi seznam vseh predmetov,
         učitelj pa samo predmete, ki jih izvaja
-         
-         
+            
 - podatki o izpitu:
-    - GET /izpit/rok/{id}/rezultati
-            - vrne vnesene izpitne rezultate za rok [id]
+    - GET /izpit/rok/{id}/rezultati[?count=true]
+            - vrne študente, prijavljene na rok [id] in njihove izpitne rezultat. Če je nastavljen [count], 
+            v Header "X-Total-Count" vrne število prijavljenih (za potrebe potrditve spremembe izpitnega roka)
     - POST /izpit/rok/{id}/rezultati
             - shrani rezultate izpita
             - body (array izpitnih rezultatov za studenta):
