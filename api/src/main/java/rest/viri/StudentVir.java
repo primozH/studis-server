@@ -1,8 +1,11 @@
 package rest.viri;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.Charset;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,11 +26,18 @@ import javax.ws.rs.core.UriInfo;
 
 import org.json.JSONObject;
 
+import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorker;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.itextpdf.tool.xml.html.Tags;
+import com.itextpdf.tool.xml.parser.XMLParser;
+import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
+import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
+import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 
 import common.CustomErrorMessage;
 import orodja.PotrdiloVpisaHTML;
@@ -139,25 +149,33 @@ public class StudentVir {
             String html = PotrdiloVpisaHTML.html;
             html = vpisZrno.zamenjajPodatkeZaPotrdiloVpisa(html, vpis);
 
+            String imeDatoteke = "potrdilo" + LocalDateTime.now().format(
+                    DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")) + ".pdf";
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(html.getBytes().length);
-            baos.write(html.getBytes(), 0, html.getBytes().length);
-            PdfDocument pdfDocument = new PdfDocument();
-            PdfWriter writer = PdfWriter.getInstance(pdfDocument, baos);
-            pdfDocument.addWriter(writer);
+            Document pdfDocument = new Document();
+            PdfWriter writer = PdfWriter.getInstance(pdfDocument, new FileOutputStream(imeDatoteke));
             pdfDocument.setPageSize(PageSize.A4);
-            if (!pdfDocument.isOpen()) pdfDocument.open();
-            pdfDocument.add(new Paragraph(html));
-            XMLWorkerHelper workerHelper = XMLWorkerHelper.getInstance();
-            ByteArrayInputStream pdfStream = new ByteArrayInputStream(baos.toByteArray());
-            workerHelper.parseXHtml(writer, pdfDocument, pdfStream, Charset.forName("UTF-8"));
-            pdfDocument.close();
-            writer.close();
+            pdfDocument.open();
+            CSSResolver cssResolver =
+                    XMLWorkerHelper.getInstance().getDefaultCssResolver(false);
+            HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
+            htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
+            htmlContext.autoBookmark(false);
 
-            javax.ws.rs.core.Response.ResponseBuilder responseBuilder = javax.ws.rs.core.Response.ok(html);
-            responseBuilder.type("application/pdf");
-            responseBuilder.header("Content-Disposition", "attachment;filename=test.pdf");
-            return responseBuilder.build();
+            PdfWriterPipeline pdf = new PdfWriterPipeline(pdfDocument, writer);
+            HtmlPipeline htmlP = new HtmlPipeline(htmlContext, pdf);
+            CssResolverPipeline css = new CssResolverPipeline(cssResolver, htmlP);
+            ByteArrayInputStream pdfStream = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
+
+            XMLWorker worker = new XMLWorker(css, true);
+            XMLParser p = new XMLParser(worker);
+            p.parse(pdfStream);
+
+            pdfDocument.close();
+            return Response.ok(new File(imeDatoteke))
+                           .header("Content-Disposition", "attachment; filename=" + imeDatoteke)
+                           .header("Content-Type", "application/pdf")
+                           .build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().build();

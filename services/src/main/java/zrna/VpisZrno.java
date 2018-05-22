@@ -308,48 +308,45 @@ public class VpisZrno {
     }
 
     public String zamenjajPodatkeZaPotrdiloVpisa (String html, Vpis vpis) {
-//        Date now = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-//        String strDate = sdf.format(now);
-//        Date datumRojstvaDate = Date.from(vpis.getStudent().getDatumRojstva().atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        sdf = new SimpleDateFormat("dd-MM-yyyy");
-//        String datumRojstva = sdf.format(datumRojstvaDate);
-//        return html.replace("PRIIMEK", vpis.getStudent().getPriimek())
-//                .replace("IME", " " + vpis.getStudent().getIme())
-//                .replace("ULICA", vpis.getStudent().getNaslovZacasno())
-//                .replace("MESTO", vpis.getStudent().getNaslovZacasno())
-//                .replace("DRZAVA", vpis.getStudent().getDrzavaZacasno().getSlovenskiNaziv())
-//                .replace("STEVILKA", " " + 11111 + "")
-//                .replace("DATUMURA", " " + strDate)
-//                .replace("EMSO", vpis.getStudent().getEMSO()")
-//                .replace("VPISNA", " " + vpis.getStudent().getVpisnaStevilka() + "")
-//                .replace("VPISNAPODATKI", vpis.getStudent().getVpisnaStevilka() + "")
-//                .replace("DATUMROJSTVA", datumRojstva)
-//                .replace("KRAJROJSTVA", vpis.getStudent().getKrajRojstva())
-//                .replace("LETNIK", vpis.getLetnik().getLetnik())
-//                .replace("SOLSKOLETO", vpis.getStudijskoLeto().getStudijskoLeto())
-//                .replace("NACINSTUDIJA", vpis.getNacinStudija().getOpis())
-//                .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv());
-        // TODO: 20/04/2018 odstrani to in odkomentiraj zgornjo
         Date now = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String strDate = sdf.format(now);
-        return html.replace("PRIIMEK",  "lalasafeaa")
-                   .replace("IME", " " + "lalaa")
-                   .replace("LETNIK", "2.letnik")
-                   .replace("ULICA", "alalalla")
-                   .replace("MESTO", "aefaefaa")
-                   .replace("DRZAVA", "drzava")
-                   .replace("STEVILKA", " " + 11111)
-                   .replace("EMSO", " " + "12424")
-                   .replace("DATUMURA", " " + strDate)
-                   .replace("VPISNA", " " + "1234567")
-                   .replace("VPISNAPODATKI", "123456")
-                   .replace("DATUMROJSTVA", "datum")
-                   .replace("KRAJROJSTVA", "kraj")
-                   .replace("SOLSKOLETO", "afeaa")
-                   .replace("NACINSTUDIJA", "aaeaef")
-                   .replace("STUDIJSKIPROGRAM", "studijskiProgram");
+        Date datumRojstvaDate = java.sql.Date.valueOf(vpis.getStudent().getDatumRojstva());
+        sdf = new SimpleDateFormat("dd.MM.yyyy");
+        String datumRojstva = sdf.format(datumRojstvaDate);
+        return html.replace("PRIIMEK", vpis.getStudent().getPriimek())
+                .replace("IME", " " + vpis.getStudent().getIme())
+                .replace("ULICA", vpis.getStudent().getNaslovZacasno() != null ? vpis.getStudent().getNaslovZacasno() : vpis.getStudent().getNaslovStalno())
+                .replace("MESTO", vpis.getStudent().getObcinaZacasno() != null ? vpis.getStudent().getObcinaZacasno().getIme() : vpis.getStudent().getObcinaStalno().getIme())
+                .replace("DRZAVA", vpis.getStudent().getDrzavaZacasno().getSlovenskiNaziv())
+                .replace("DATUMURA", " " + strDate)
+                .replace("EMSO", vpis.getStudent().getEmso())
+                .replace("VPISNA", " " + vpis.getStudent().getVpisnaStevilka() + "")
+                .replace("DATUMROJSTVA", datumRojstva)
+                .replace("KRAJROJSTVA", vpis.getStudent().getKrajRojstva())
+                .replace("LETNIK", vpis.getLetnik().getLetnik().toString())
+                .replace("SOLSKOLETO", vpis.getStudijskoLeto().getStudijskoLeto())
+                .replace("NACINSTUDIJA", vpis.getNacinStudija().getOpis())
+                .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv())
+                .replace("Č", "C")
+                .replace("č", "c");
+//        Date now = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+//        String strDate = sdf.format(now);
+//        return html.replace("PRIIMEK",  "lalasafeaa")
+//                   .replace("IME", " " + "lalaa")
+//                   .replace("LETNIK", "2.letnik")
+//                   .replace("ULICA", "alalalla")
+//                   .replace("MESTO", "aefaefaa")
+//                   .replace("DRZAVA", "drzava")
+//                   .replace("EMSO", " " + "12424")
+//                   .replace("DATUMURA", " " + strDate)
+//                   .replace("VPISNA", " " + "1234567")
+//                   .replace("DATUMROJSTVA", "datum")
+//                   .replace("KRAJROJSTVA", "kraj")
+//                   .replace("SOLSKOLETO", "afeaa")
+//                   .replace("NACINSTUDIJA", "aaeaef")
+//                   .replace("STUDIJSKIPROGRAM", "studijskiProgram");
     }
 
     @Transactional
