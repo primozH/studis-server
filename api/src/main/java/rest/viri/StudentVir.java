@@ -39,6 +39,8 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 
+import authentication.Auth;
+import authentication.Role;
 import common.CustomErrorMessage;
 import orodja.PotrdiloVpisaHTML;
 import vloge.Student;
@@ -141,12 +143,15 @@ public class StudentVir {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @POST
-    @Path("potrdilo")
+    @GET
+    @Path("{id}/potrdilo")
+    @Auth(rolesAllowed = { Role.REFERENT})
     @Produces("application/pdf")
-    public Response vrniPotrdiloOVpisuZaVpis(Vpis vpis) {
+    public Response vrniPotrdiloOVpisuZaVpis(@PathParam("id") Integer studentId,
+                                             @QueryParam("studijsko-leto") Integer studijskoLeto) {
         try {
             String html = PotrdiloVpisaHTML.html;
+            Vpis vpis = vpisZrno.vrniVpis(studentId, studijskoLeto);
             html = vpisZrno.zamenjajPodatkeZaPotrdiloVpisa(html, vpis);
 
             String imeDatoteke = "potrdilo" + LocalDateTime.now().format(
@@ -182,11 +187,12 @@ public class StudentVir {
         }
     }
 
-    @POST
-    @Path("potrdi-vpis")
-    public Response potrdiVpisZaStudenta(@QueryParam("potrjevalec") Integer potrjevalec,
-            Vpis vpis){
-        if (!vpisZrno.potrdiVpis(vpis, potrjevalec)) return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    @GET
+    @Path("{id}/potrdi-vpis")
+    @Auth(rolesAllowed = { Role.REFERENT})
+    public Response potrdiVpisZaStudenta(@PathParam("id") Integer studentId,
+                                         @QueryParam("studijsko-leto") Integer studijskoLeto){
+        if (!vpisZrno.potrdiVpis(studentId, studijskoLeto)) return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         return Response.ok().build();
     }
 

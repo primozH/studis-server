@@ -37,7 +37,6 @@ import student.PredmetStudent;
 import student.Zeton;
 import student.ZetonId;
 import vloge.Student;
-import vloge.Uporabnik;
 import vpis.Vpis;
 import vpis.VpisniList;
 
@@ -318,13 +317,13 @@ public class VpisZrno {
                 .replace("IME", " " + vpis.getStudent().getIme())
                 .replace("ULICA", vpis.getStudent().getNaslovZacasno() != null ? vpis.getStudent().getNaslovZacasno() : vpis.getStudent().getNaslovStalno())
                 .replace("MESTO", vpis.getStudent().getObcinaZacasno() != null ? vpis.getStudent().getObcinaZacasno().getIme() : vpis.getStudent().getObcinaStalno().getIme())
-                .replace("DRZAVA", vpis.getStudent().getDrzavaZacasno().getSlovenskiNaziv())
+                .replace("DRZAVA", vpis.getStudent().getDrzavaStalno().getSlovenskiNaziv())
                 .replace("DATUMURA", " " + strDate)
                 .replace("EMSO", vpis.getStudent().getEmso())
                 .replace("VPISNA", " " + vpis.getStudent().getVpisnaStevilka() + "")
                 .replace("DATUMROJSTVA", datumRojstva)
                 .replace("KRAJROJSTVA", vpis.getStudent().getKrajRojstva())
-                .replace("LETNIK", vpis.getLetnik().getLetnik().toString())
+                .replace("LETNIK", vpis.getLetnik().getLetnik().toString() + ". letnik")
                 .replace("SOLSKOLETO", vpis.getStudijskoLeto().getStudijskoLeto())
                 .replace("NACINSTUDIJA", vpis.getNacinStudija().getOpis())
                 .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv())
@@ -335,7 +334,7 @@ public class VpisZrno {
 //        String strDate = sdf.format(now);
 //        return html.replace("PRIIMEK",  "lalasafeaa")
 //                   .replace("IME", " " + "lalaa")
-//                   .replace("LETNIK", "2.letnik")
+//                   .replace("LETNIK", "2. letnik")
 //                   .replace("ULICA", "alalalla")
 //                   .replace("MESTO", "aefaefaa")
 //                   .replace("DRZAVA", "drzava")
@@ -349,18 +348,22 @@ public class VpisZrno {
 //                   .replace("STUDIJSKIPROGRAM", "studijskiProgram");
     }
 
-    @Transactional
-    public boolean potrdiVpis(Vpis vpis, int potrjevalecId) {
-        Uporabnik uporabnik = null;
+    public Vpis vrniVpis(int studentId, int studijskoLeto) {
         try {
-            uporabnik = em.createNamedQuery("entitete.vloge.Uporabnik.vrniUporabnika", Uporabnik.class)
-                         .setParameter("uporabnikId", potrjevalecId)
-                         .getSingleResult();
+            return  em.createNamedQuery("entitete.vpis.Vpis.vpisZaStudentaVLetu", Vpis.class)
+                      .setParameter("student", studentId)
+                      .setParameter("studijskoLeto", studijskoLeto)
+                      .setMaxResults(1)
+                      .getSingleResult();
         } catch (Exception e) {
+            return null;
         }
-        if (uporabnik == null || !uporabnik.getTip().equals("Referent")) {
-            return false;
-        }
+    }
+
+    @Transactional
+    public boolean potrdiVpis(int studentId, int studijskoLeto) {
+        Vpis vpis = vrniVpis(studentId, studijskoLeto);
+        if (vpis == null) return false;
         vpis.setPotrjen(true);
         em.merge(vpis);
         return true;
