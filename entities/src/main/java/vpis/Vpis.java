@@ -31,7 +31,8 @@ import vloge.Student;
                 "WHERE v.student.id = :student " +
                 "AND v.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.vpis.Vpis.vrniVseVpisaneStudente", query = "SELECT v.student FROM Vpis v " +
-                "WHERE v.studijskoLeto.id = :studijskoLeto")
+                "WHERE v.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniSeNepotrjene", query = "SELECT v.student FROM Vpis v WHERE v.potrjen = FALSE")
 })
 @IdClass(VpisId.class)
 @XmlAccessorType(XmlAccessType.FIELD)

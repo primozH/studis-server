@@ -283,6 +283,12 @@ localhost:8080/api/v1/
     fail response: 500 internal server error
     primer: /student/64/potrdilo?studijsko-leto=2018
 
+    - GET /student/vrni-nepotrjene-vpise
+    Kot Authorization potrebuje token referenta
+    response:
+    ``` json [ {Vpis}, {Vpis},...]```
+    primer: /student/64/vrni-nepotrjene-vpise
+
 
 - vrni vse vpisane studente za zadnje studijsko leto
 	- GET student/seznam-vpisanih

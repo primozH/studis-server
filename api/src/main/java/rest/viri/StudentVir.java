@@ -196,4 +196,13 @@ public class StudentVir {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("vrni-nepotrjene-vpise")
+    @Auth(rolesAllowed = { Role.REFERENT})
+    public Response vrniNepotrjeneVpise() {
+        List<Vpis> nepotrjeniVpisi = vpisZrno.vrniNepotrjene();
+        if (nepotrjeniVpisi == null) return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok().entity(nepotrjeniVpisi).build();
+    }
+
 }

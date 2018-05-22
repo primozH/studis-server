@@ -369,4 +369,13 @@ public class VpisZrno {
         return true;
     }
 
+    public List<Vpis> vrniNepotrjene() {
+        try {
+            return em.createNamedQuery("entitete.vpis.Vpis.vrniSeNepotrjene", Vpis.class)
+                    .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
