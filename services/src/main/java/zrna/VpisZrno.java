@@ -1,7 +1,9 @@
 package zrna;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
+import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
 import predmetnik.Predmetnik;
@@ -301,6 +304,78 @@ public class VpisZrno {
 
     private void persistEnrollment(Vpis enrollment) {
         em.persist(enrollment);
+    }
+
+    public String zamenjajPodatkeZaPotrdiloVpisa (String html, Vpis vpis) {
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        String strDate = sdf.format(now);
+        Date datumRojstvaDate = java.sql.Date.valueOf(vpis.getStudent().getDatumRojstva());
+        sdf = new SimpleDateFormat("dd.MM.yyyy");
+        String datumRojstva = sdf.format(datumRojstvaDate);
+        return html.replace("PRIIMEK", vpis.getStudent().getPriimek())
+                .replace("IME", " " + vpis.getStudent().getIme())
+                .replace("ULICA", vpis.getStudent().getNaslovZacasno() != null ? vpis.getStudent().getNaslovZacasno() : vpis.getStudent().getNaslovStalno())
+                .replace("MESTO", vpis.getStudent().getObcinaZacasno() != null ? vpis.getStudent().getObcinaZacasno().getIme() : vpis.getStudent().getObcinaStalno().getIme())
+                .replace("DRZAVA", vpis.getStudent().getDrzavaStalno().getSlovenskiNaziv())
+                .replace("DATUMURA", " " + strDate)
+                .replace("EMSO", vpis.getStudent().getEmso())
+                .replace("VPISNA", " " + vpis.getStudent().getVpisnaStevilka() + "")
+                .replace("DATUMROJSTVA", datumRojstva)
+                .replace("KRAJROJSTVA", vpis.getStudent().getKrajRojstva())
+                .replace("LETNIK", vpis.getLetnik().getLetnik().toString() + ". letnik")
+                .replace("SOLSKOLETO", vpis.getStudijskoLeto().getStudijskoLeto())
+                .replace("NACINSTUDIJA", vpis.getNacinStudija().getOpis())
+                .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv())
+                .replace("Č", "C")
+                .replace("č", "c");
+//        Date now = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+//        String strDate = sdf.format(now);
+//        return html.replace("PRIIMEK",  "lalasafeaa")
+//                   .replace("IME", " " + "lalaa")
+//                   .replace("LETNIK", "2. letnik")
+//                   .replace("ULICA", "alalalla")
+//                   .replace("MESTO", "aefaefaa")
+//                   .replace("DRZAVA", "drzava")
+//                   .replace("EMSO", " " + "12424")
+//                   .replace("DATUMURA", " " + strDate)
+//                   .replace("VPISNA", " " + "1234567")
+//                   .replace("DATUMROJSTVA", "datum")
+//                   .replace("KRAJROJSTVA", "kraj")
+//                   .replace("SOLSKOLETO", "afeaa")
+//                   .replace("NACINSTUDIJA", "aaeaef")
+//                   .replace("STUDIJSKIPROGRAM", "studijskiProgram");
+    }
+
+    public Vpis vrniVpis(int studentId, int studijskoLeto) {
+        try {
+            return  em.createNamedQuery("entitete.vpis.Vpis.vpisZaStudentaVLetu", Vpis.class)
+                      .setParameter("student", studentId)
+                      .setParameter("studijskoLeto", studijskoLeto)
+                      .setMaxResults(1)
+                      .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    public boolean potrdiVpis(int studentId, int studijskoLeto) {
+        Vpis vpis = vrniVpis(studentId, studijskoLeto);
+        if (vpis == null) return false;
+        vpis.setPotrjen(true);
+        em.merge(vpis);
+        return true;
+    }
+
+    public List<Vpis> vrniNepotrjene() {
+        try {
+            return em.createNamedQuery("entitete.vpis.Vpis.vrniSeNepotrjene", Vpis.class)
+                    .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

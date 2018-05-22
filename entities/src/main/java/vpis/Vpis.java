@@ -12,7 +12,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
 
 import sifranti.Letnik;
 import sifranti.NacinStudija;
@@ -28,8 +27,12 @@ import vloge.Student;
         @NamedQuery(name = "entitete.vpis.Vpis.vpisiZaStudenta", query = "SELECT v FROM Vpis v " +
                 "WHERE v.student.id = :student " +
                 "ORDER BY v.studijskoLeto.id DESC"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vpisZaStudentaVLetu", query = "SELECT v FROM Vpis v " +
+                "WHERE v.student.id = :student " +
+                "AND v.studijskoLeto.id = :studijskoLeto"),
         @NamedQuery(name = "entitete.vpis.Vpis.vrniVseVpisaneStudente", query = "SELECT v.student FROM Vpis v " +
-                "WHERE v.studijskoLeto.id = :studijskoLeto")
+                "WHERE v.studijskoLeto.id = :studijskoLeto"),
+        @NamedQuery(name = "entitete.vpis.Vpis.vrniSeNepotrjene", query = "SELECT v.student FROM Vpis v WHERE v.potrjen = FALSE")
 })
 @IdClass(VpisId.class)
 @XmlAccessorType(XmlAccessType.FIELD)
