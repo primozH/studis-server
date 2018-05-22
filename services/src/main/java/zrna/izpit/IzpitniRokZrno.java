@@ -111,7 +111,12 @@ public class IzpitniRokZrno {
             throw new Exception("Izpitni rok ne obstaja");
         }
 
-        em.remove(izpitniRok);
+        try {
+            em.remove(izpitniRok);
+        } catch (Exception e) {
+            log.warning("Napaka pri brisanju roka");
+            throw new Exception("Za ta rok obstaja ocena");
+        }
     }
 
     private List<Izpit> exams(IzpitniRok izpitniRok) {

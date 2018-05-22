@@ -1,6 +1,5 @@
 package zrna;
 
-import student.Zeton;
 import vloge.Kandidat;
 import vloge.Student;
 

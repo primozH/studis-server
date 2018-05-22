@@ -151,7 +151,7 @@ public class UvozPodatkov {
 
     @Transactional
     private void emptyTable() {
-        em.createNativeQuery("DELETE FROM uporabnik WHERE tip = 'Kandidat'").executeUpdate();
+        em.createNativeQuery("DELETE FROM kandidat").executeUpdate();
 
     }
 }
