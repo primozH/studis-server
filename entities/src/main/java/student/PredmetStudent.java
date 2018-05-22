@@ -1,20 +1,26 @@
 package student;
 
-import sifranti.Predmet;
-import sifranti.StudijskoLeto;
-import vloge.Student;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+import sifranti.Predmet;
+import vpis.Vpis;
 
 @Entity
 @Table(name = "predmet_student")
 @IdClass(PredmetStudentId.class)
+@NamedQueries(value = {
+        @NamedQuery(name = "entitete.student.PredmetStudent.vrniSeznamStudentovZaPredmetInLeto",
+                query = "SELECT p.vpis FROM PredmetStudent p WHERE p.predmet.sifra = :sifraPredmeta AND p.vpis.studijskoLeto.id = :studijskoLeto")
+})
 public class PredmetStudent {
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "student")
-    private Student student;
 
     @Id
     @ManyToOne
@@ -23,23 +29,11 @@ public class PredmetStudent {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "studijsko_leto")
-    private StudijskoLeto studijskoLeto;
-
-    public PredmetStudent() { }
-
-    public PredmetStudent(Student student, Predmet predmet, StudijskoLeto studijskoLeto) {
-        this.student = student;
-        this.predmet = predmet;
-        this.studijskoLeto = studijskoLeto;
-    }
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+    @JoinColumns({
+            @JoinColumn(name = "student", referencedColumnName = "student"),
+            @JoinColumn(name = "studijsko_leto", referencedColumnName = "studijsko_leto")
+    })
+    private Vpis vpis;
 
     public Predmet getPredmet() {
         return predmet;
@@ -49,11 +43,11 @@ public class PredmetStudent {
         this.predmet = predmet;
     }
 
-    public StudijskoLeto getStudijskoLeto() {
-        return studijskoLeto;
+    public Vpis getVpis() {
+        return vpis;
     }
 
-    public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
-        this.studijskoLeto = studijskoLeto;
+    public void setVpis(Vpis vpis) {
+        this.vpis = vpis;
     }
 }

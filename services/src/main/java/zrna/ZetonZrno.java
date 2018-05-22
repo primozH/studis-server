@@ -30,9 +30,6 @@ public class ZetonZrno {
     private EntityManager em;
 
     @Inject
-    private KandidatZrno kandidatZrno;
-
-    @Inject
     private UserTransaction ux;
 
     public List<Zeton> getTokens(Integer student, Boolean izkoriscen) {
@@ -56,18 +53,8 @@ public class ZetonZrno {
         return em.find(Zeton.class, zetonId);
     }
 
-    public Zeton createTokenForCandidate(Integer id) throws Exception {
-        Kandidat kandidat = em.find(Kandidat.class, id);
-        if (kandidat == null) {
-            throw new Exception("Kandidat ne obstaja");
-        }
-        ux.begin();
-
-        kandidatZrno.createStudentFromCandidate(kandidat);
-
-        em.flush();
-        em.clear();
-        Student student = em.find(Student.class, id);
+    @Transactional
+    public Zeton createTokenForCandidate(Student student, StudijskiProgram studijskiProgram) throws Exception {
         Zeton zeton = new Zeton();
         Letnik letnik = em.find(Letnik.class, 1);
         NacinStudija nacinStudija = em.find(NacinStudija.class, 1);
@@ -75,7 +62,6 @@ public class ZetonZrno {
         StudijskoLeto studijskoLeto = (StudijskoLeto) em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniStudijkoLeto")
                 .setParameter("studijskoLeto", Integer.toString(LocalDate.now().getYear()) + "%")
                 .getSingleResult();
-        StudijskiProgram studijskiProgram = kandidat.getStudijskiProgram();
         VrstaVpisa vrstaVpisa = em.find(VrstaVpisa.class, 1);
 
         zeton.setLetnik(letnik);
@@ -87,14 +73,13 @@ public class ZetonZrno {
         zeton.setStudijskoLeto(studijskoLeto);
 
         em.persist(zeton);
-        ux.commit();
         return zeton;
     }
 
     @Transactional
     public Zeton createTokenForStudent(Integer studentId) {
-        Vpis zadnjiVpis = (Vpis) em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta")
-                .setParameter("studentId", studentId)
+        Vpis zadnjiVpis = (Vpis) em.createNamedQuery("entitete.vpis.Vpis.vpisiZaStudenta")
+                .setParameter("student", studentId)
                 .getResultList().get(0);
 
         if (zadnjiVpis == null) {

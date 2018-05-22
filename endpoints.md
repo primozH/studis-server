@@ -139,8 +139,8 @@ localhost:8080/api/v1/
         ```
         
         **Example 3 (vpis v 3. letnik):**
-        ```json
         POST localhost:8080/api/v1/student/34/vpis
+        ```json
         
         {
         	"zeton": {
@@ -189,10 +189,6 @@ localhost:8080/api/v1/
         na število uspešno uvoženih
     - GET: kandidat/neuspesni
         - vrne .txt datoteko z neuspešnimo uvoženimi kandidati
-    - GET: kandidat/{id}/ustvariStudenta
-        - se kliče, ko se kandidat prijavi v sistem; spremeni tip iz kandidata v študenta,
-        ustvari potrebni žeton za vpis in ga vrne (naj se kliče takoj ob prijavi kandidata, ki se ga 
-        potem preusmeri na stran za vpis študenta (vpisni list))
 
 - žeton:
     - GET: zeton
@@ -326,3 +322,113 @@ localhost:8080/api/v1/
         
         Elemeneti objekta *metadata* niso obvezni, v kolikor pa je element naveden,
         mora zadostiti zgornjemu zgledu.
+
+- izpitni roki:
+    - POST /rok/[prijava|odjava]
+        - prijava/odjava študenta na izpit, nastavljen authorization header
+        ```json
+        {
+            "rok": {
+            	"id": 4
+            },
+            "student": {
+                "id": 52
+            }
+        }
+        ```
+    - GET /rok/{id}/prijavljeni[?count=true]
+        - seznam vseh prijav na izbrani rok [id]. če je query parameter nastavljen na "true", se
+        vrne prazen objekt, v header "X-Total-Count" pa je nastavljeno število prijavljenih na rok
+        (za potrebe potrditve spremembe izpitnega roka)
+    - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
+        - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
+        študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
+    - POST /rok
+            - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
+            za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
+            "izvajalec" je učitelj, ki bo izpit izvajal.
+            - body: IzpitniRok
+            ```json
+            {
+            	"cas": "18:27:00",
+            	"datum": "2019-06-04",
+            	"izvajalec": {
+            		"id": 22
+            	},
+            	"izvajanjePredmeta": {
+            		"predmet": {
+            			"sifra": 63205
+            		},
+            		"studijskoLeto": {
+            			"id": 2018
+            		}
+            	},
+            	"prostor": "P01"
+            }
+            ```
+    - PUT /rok
+       - obvezen je nastavljen "Authorization" header. V primeru da kliče referent, lahko objavi rok 
+           za poljuben predmet. Če rok razpisuje učitelj, mora biti med nosilci predmeta. 
+           "izvajalec" je učitelj, ki bo izpit izvajal.
+       - body: IzpitniRok
+       ```json
+       {
+       	"id": 18,
+       	"cas": "10:00:00",
+       	"datum": "2019-06-07",
+       	"izvajalec": {
+       		"id": 22
+       	},
+       	"izvajanjePredmeta": {
+       		"predmet": {
+       			"sifra": 63205
+       		},
+       		"studijskoLeto": {
+       			"id": 2018
+       		}
+       	},
+       	"prostor": "PA"
+       }
+        ```
+    - DELETE /rok
+        - izbriše izpitni rok
+        -body: 
+        ```json
+        {
+        	"id": 18
+        }
+        ```
+    - GET /rok/vsi-roki?studijsko-leto={leto}
+        - vrne vse izpitne roke za to studijsko leto
+    
+- podatki o izvajanju predmetov:
+    - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
+        - seznam vseh študentov, vpisanih v predmet za študijsko leto
+    - GET /predmet/izvajanje?studijsko-leto={leto}
+        - seznam vseh predmetov, ki se izvajajo v {leto}. Referent dobi seznam vseh predmetov,
+        učitelj pa samo predmete, ki jih izvaja
+         
+         
+- podatki o izpitu:
+    - GET /izpit/rok/{id}/rezultati
+            - vrne vnesene izpitne rezultate za rok [id]
+    - POST /izpit/rok/{id}/rezultati
+            - shrani rezultate izpita
+            - body (array izpitnih rezultatov za studenta):
+            ```json
+            [
+            	{
+            		"student": {
+            			"id": 57
+            		},
+            		"predmet": {
+            			"sifra": 63280
+            		},
+            		"ocenaPisno": 45,
+            		"koncnaOcena": 5
+            	}
+            ]
+            ```
+    - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
+        - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
+        - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat

@@ -20,6 +20,8 @@ public class KandidatZrno {
     @Inject
     private UserTransaction ux;
 
+    @Inject private ZetonZrno zetonZrno;
+
     public List<Kandidat> getKandidats() {
         return em.createNamedQuery("entitete.vloge.Kandidat.vrniKandidate", Kandidat.class)
                 .getResultList();
@@ -29,15 +31,21 @@ public class KandidatZrno {
         return em.find(Kandidat.class, kandidatId);
     }
 
-    public Integer createStudentFromCandidate(Kandidat kandidat) {
-        em.createNamedQuery("entitete.vloge.Student.ustvariStudentaIzKandidata")
-                .setParameter("id", kandidat.getId())
-                .executeUpdate();
-        em.createNativeQuery("INSERT INTO student (id_uporabnik, vpisna_stevilka) VALUES (?, ?)")
-                .setParameter(1, kandidat.getId())
-                .setParameter(2, kandidat.getVpisnaStevilka())
-                .executeUpdate();
+    @Transactional
+    public Student createStudentFromCandidate(Kandidat kandidat) throws Exception {
+        Student student = new Student();
+        student.setVpisnaStevilka(kandidat.getVpisnaStevilka());
+        student.setEmail(kandidat.getEmail());
+        student.setGeslo(kandidat.getGesloPlain());
+        student.setIme(kandidat.getIme());
+        student.setPriimek(kandidat.getPriimek());
+        student.setUporabniskoIme(kandidat.getUporabniskoIme());
 
-        return kandidat.getId();
+        em.persist(student);
+
+        zetonZrno.createTokenForCandidate(student, kandidat.getStudijskiProgram());
+
+        em.remove(kandidat);
+        return student;
     }
 }

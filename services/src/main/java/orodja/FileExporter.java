@@ -29,13 +29,13 @@ public class FileExporter {
         FontFactory.register(NOTOSANS_BOLD, "notosans-bold");
         FontFactory.register(NOTOSANS_REGULAR, "notosans-regular");
 
-        notoRegular = FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12);
+        notoRegular = FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 8);
     }
 
     public File createFile(orodja.export.Document document) {
         StringBuilder sb = new StringBuilder();
-        sb.append(GENERATED_FILES);
-        sb.append("/");
+//        sb.append(GENERATED_FILES);
+//        sb.append("/");
         sb.append(document.getName());
         sb.append("_");
         sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")));
@@ -59,7 +59,13 @@ public class FileExporter {
         try {
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(fileName));
             writer.setPageEvent(new Footer());
+            doc.setPageSize(PageSize.A4.rotate());
             doc.open();
+
+            Paragraph paragraph = new Paragraph();
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+            paragraph.add(new Chunk(document.getName() != null ? document.getName() : ""));
+            doc.add(paragraph);
 
             addDocumentHeaders(document.getMetadata(), doc);
             PdfPTable table = createTable(document);
@@ -83,6 +89,7 @@ public class FileExporter {
         TableRow[] tableRow = document.getTableRows();
 
         try (FileWriter fileWriter = new FileWriter(fileName)) {
+            writeMetadataCsv(document.getMetadata(), fileWriter);
             addHeaders(header, fileWriter);
             addRowsCsv(tableRow, fileWriter);
 
@@ -124,7 +131,7 @@ public class FileExporter {
             try {
                 if (course != null) {
                     chunk = new Chunk(course + " (" + courseCode + ")",
-                            FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+                            FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12));
                     paragraph.add(chunk);
                     paragraph.add(Chunk.NEWLINE);
                 }
@@ -164,6 +171,34 @@ public class FileExporter {
             for (String celica : tableRow) {
                 table.addCell(new Phrase(celica, notoRegular));
             }
+        }
+    }
+
+    private void writeMetadataCsv(Metadata metadata, FileWriter fileWriter) throws IOException {
+        if (metadata != null) {
+            StringBuilder sb = new StringBuilder();
+
+            if (metadata.getStudyYear() != null) {
+                sb.append(metadata.getStudyYear().getStudijskoLeto());
+                sb.append("\n");
+            }
+            if (metadata.getStudyProgramme() != null) {
+                sb.append(metadata.getStudyProgramme().getNaziv());
+                sb.append(separator);
+                sb.append(metadata.getStudyProgramme().getSifraEVS().toString());
+                sb.append("\n");
+            }
+            if (metadata.getSubject() != null) {
+                sb.append(metadata.getSubject().getNaziv());
+                sb.append(separator);
+                sb.append(metadata.getSubject().getSifra().toString());
+                sb.append("\n");
+            }
+            if (metadata.getYearOfStudy() != null) {
+                sb.append(metadata.getYearOfStudy().getLetnik().toString());
+                sb.append("\n");
+            }
+            fileWriter.append(sb.toString());
         }
     }
 

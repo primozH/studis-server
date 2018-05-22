@@ -139,19 +139,9 @@ public class VpisZrno {
     }
 
     public List<Vpis> getVpisi(Integer studentId) {
-        return em.createNamedQuery("entitete.vpis.Vpis.vrniVpiseZaStudenta", Vpis.class)
-                .setParameter("studentId", studentId)
+        return em.createNamedQuery("entitete.vpis.Vpis.vpisiZaStudenta", Vpis.class)
+                .setParameter("student", studentId)
                 .getResultList();
-    }
-
-    public List<Vpis> getZadnjiVpis(Integer studentId) {
-        try {
-            return em.createNamedQuery("entitete.vpis.Vpis.zadnjiVpisZaStudenta", Vpis.class)
-                     .setParameter("studentId", studentId)
-                     .getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 
     public List<Student> getVpisaniStudenti() {
@@ -197,7 +187,7 @@ public class VpisZrno {
                     .setParameter("izkoriscen", true)
                     .executeUpdate();
 
-            List<PredmetStudent> studentCourses = new ArrayList<>(persistStudentsCourses(student, yearOfStudy, courses));
+            List<PredmetStudent> studentCourses = new ArrayList<>(persistStudentsCourses(enrollment, courses));
             ux.commit();
             return studentCourses;
         } catch (NotSupportedException e) {
@@ -293,14 +283,13 @@ public class VpisZrno {
         return module1;
     }
 
-    private List<PredmetStudent> persistStudentsCourses(Student student, StudijskoLeto yearOfStudy, List<Predmet> courses) {
+    private List<PredmetStudent> persistStudentsCourses(Vpis enrollment, List<Predmet> courses) {
         logger.info("Shranjevanje izbranega predmetnika");
         List<PredmetStudent> studentCourses = new ArrayList<>();
         courses.forEach(course -> {
             PredmetStudent studentCourse = new PredmetStudent();
             studentCourse.setPredmet(course);
-            studentCourse.setStudent(student);
-            studentCourse.setStudijskoLeto(yearOfStudy);
+            studentCourse.setVpis(enrollment);
 
             em.persist(studentCourse);
 

@@ -18,6 +18,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,7 +35,11 @@ import common.Email;
 import orodja.GeneratorPodatkov;
 import prijava.NapacnaPrijava;
 import prijava.Prijava;
+import student.Zeton;
+import vloge.Kandidat;
 import vloge.Uporabnik;
+import zrna.KandidatZrno;
+import zrna.ZetonZrno;
 
 @Path("avtorizacija")
 @Produces(MediaType.APPLICATION_JSON)
@@ -45,11 +50,11 @@ public class PrijavaVir {
     @PersistenceContext(unitName = "studis")
     private EntityManager em;
 
-    @Inject
-    private GeneratorPodatkov generator;
+    @Inject private UserTransaction ux;
 
-    @Inject
-    private HttpServletRequest httpServletRequest;
+    @Inject private GeneratorPodatkov generator;
+    @Inject private HttpServletRequest httpServletRequest;
+    @Inject private KandidatZrno kandidatZrno;
 
     private static Logger logger = Logger.getLogger(PrijavaVir.class.getSimpleName());
     private static final String STUDIS_MAIL = "studis.info.info@gmail.com";
@@ -95,20 +100,43 @@ public class PrijavaVir {
         }
         // Preveri, ce oseba obstaja v bazi
         Uporabnik uporabnik;
+        Kandidat kandidat = null;
         try {
-            uporabnik = (Uporabnik) this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava")
-                                                     .setParameter("uporabniskoIme", prijava.getUporabniskoIme()).getSingleResult();
-        } catch (javax.persistence.NoResultException e) {
-            povecajNapakoAliNarediNovo(ip, napacnaPrijava);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            uporabnik = this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava", Uporabnik.class)
+                    .setParameter("uporabniskoIme", prijava.getUporabniskoIme())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            logger.info("Uporabnik z uporabniskim imenom: " + prijava.getUporabniskoIme() + " ne obstaja");
+            uporabnik = null;
         }
+
         if (uporabnik == null) {
+            try {
+                kandidat = em.createNamedQuery("entitete.vloge.Kandidat.prijava", Kandidat.class)
+                        .setParameter("uporabniskoIme", prijava.getUporabniskoIme())
+                        .getSingleResult();
+            } catch (NoResultException e) {
+                logger.info("Ne najdem kandidata z uporabniskim imenom: " + prijava.getUporabniskoIme());
+            }
+        }
+
+        if (kandidat == null && uporabnik == null) {
             povecajNapakoAliNarediNovo(ip, napacnaPrijava);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
         logger.info("Uporabnik najden.");
+        if (kandidat != null) {
+            try {
+                uporabnik = kandidatZrno.createStudentFromCandidate(kandidat);
+            } catch (Exception e) {
+                logger.info("Napaka pri kreiranju studenta.");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        }
 
         if (uporabnik.primerjajGeslo(prijava.getGeslo())) {
+
             String token = null;
             try {
                 Algorithm algorithm = Algorithm.HMAC256("secret");
@@ -203,6 +231,7 @@ public class PrijavaVir {
         return true;
     }
 
+    @Transactional
     private void povecajNapakoAliNarediNovo(String ip, NapacnaPrijava napacnaPrijava) {
         if (napacnaPrijava == null) {
             logger.info("Narejena nova napacna prijava za ip = " + ip);
