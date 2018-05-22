@@ -2,7 +2,7 @@
 -- Strežnik:                     127.0.0.1
 -- Verzija strežnika:            10.2.9-MariaDB - mariadb.org binary distribution
 -- Operacijski sistem strežnika: Win64
--- HeidiSQL Različica:           9.5.0.5196
+-- HeidiSQL Različica:           9.4.0.5125
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS `izpitni_rok` (
 	KEY `FK_rok_predmet` (`predmet`,`studijsko_leto`),
 	CONSTRAINT `FK_rok_izvajalec` FOREIGN KEY (`izvajalec`) REFERENCES `uporabnik` (`id_uporabnik`),
 	CONSTRAINT `FK_rok_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`) REFERENCES `predmet_izvajanje` (`predmet`, `studijsko_leto`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpitni_rok: ~34 rows (približno)
+-- Dumping data for table studis.izpitni_rok: ~93 rows (približno)
 /*!40000 ALTER TABLE `izpitni_rok` DISABLE KEYS */;
 INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studijsko_leto`, `predmet`) VALUES
 	(2, '2019-02-19', '11:00:00', 'P01', 28, 2018, 63280),
@@ -120,7 +120,10 @@ INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studij
 	(94, '2017-08-28', '15:00:00', 'P01', 27, 2016, 63279),
 	(95, '2016-01-29', '14:00:00', 'P01', 27, 2015, 63279),
 	(96, '2016-02-12', '10:30:00', 'P01', 27, 2015, 63279),
-	(97, '2016-08-29', '16:00:00', 'P01', 27, 2015, 63279);
+	(97, '2016-08-29', '16:00:00', 'P01', 27, 2015, 63279),
+	(98, '2019-01-29', '16:30:00', 'PA', 21, 2018, 63204),
+	(99, '2019-02-12', '13:10:00', 'PA', 21, 2018, 63204),
+	(100, '2019-08-27', '10:00:00', 'P22', 21, 2018, 63204);
 /*!40000 ALTER TABLE `izpitni_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.odjava
@@ -137,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `odjava` (
 	CONSTRAINT `FK_odjava_prijava` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.odjava: ~32 rows (približno)
+-- Dumping data for table studis.odjava: ~35 rows (približno)
 /*!40000 ALTER TABLE `odjava` DISABLE KEYS */;
 INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(1, 3, '2018-05-15 16:22:03', 52),
@@ -193,9 +196,9 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	KEY `FK_prijava_rok_izpitni_rok` (`izpitni_rok`),
 	CONSTRAINT `FK_prijava_rok_izpitni_rok` FOREIGN KEY (`izpitni_rok`) REFERENCES `izpitni_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `FK_prijava_rok_uporabnik` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.prijava_rok: ~34 rows (približno)
+-- Dumping data for table studis.prijava_rok: ~60 rows (približno)
 /*!40000 ALTER TABLE `prijava_rok` DISABLE KEYS */;
 INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`, `valuta`, `zakljucena`, `brisana`) VALUES
 	(3, 4, '2018-05-15 16:19:35', 52, 0.00, NULL, 0, 1),
@@ -231,7 +234,33 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(34, 2, '2018-05-18 13:26:12', 57, 0.00, NULL, 0, 1),
 	(35, 2, '2018-05-18 13:34:07', 57, 0.00, NULL, 0, 1),
 	(36, 4, '2018-05-18 13:34:11', 57, 0.00, NULL, 0, 1),
-	(37, 2, '2018-05-18 13:34:14', 57, 0.00, NULL, 0, 1);
+	(37, 2, '2018-05-18 13:34:14', 57, 0.00, NULL, 0, 1),
+	(38, 60, '2018-05-22 21:39:47', 51, 0.00, NULL, 0, 0),
+	(39, 11, '2018-05-22 21:39:49', 51, 0.00, NULL, 0, 0),
+	(40, 98, '2018-05-22 21:39:52', 51, 0.00, NULL, 0, 0),
+	(41, 21, '2018-05-22 21:39:53', 51, 0.00, NULL, 0, 0),
+	(42, 19, '2018-05-22 21:39:55', 51, 0.00, NULL, 0, 0),
+	(43, 77, '2018-05-22 21:39:59', 51, 0.00, NULL, 0, 0),
+	(44, 4, '2018-05-22 21:40:01', 51, 0.00, NULL, 0, 0),
+	(45, 72, '2018-05-22 21:40:05', 51, 0.00, NULL, 0, 0),
+	(46, 73, '2018-05-22 21:40:07', 51, 0.00, NULL, 0, 0),
+	(47, 60, '2018-05-22 21:40:38', 52, 0.00, NULL, 0, 0),
+	(48, 11, '2018-05-22 21:40:40', 52, 0.00, NULL, 0, 0),
+	(49, 99, '2018-05-22 21:40:42', 52, 0.00, NULL, 0, 0),
+	(50, 22, '2018-05-22 21:40:43', 52, 0.00, NULL, 0, 0),
+	(51, 19, '2018-05-22 21:40:45', 52, 0.00, NULL, 0, 0),
+	(52, 78, '2018-05-22 21:40:47', 52, 0.00, NULL, 0, 0),
+	(53, 6, '2018-05-22 21:40:49', 52, 0.00, NULL, 0, 0),
+	(54, 72, '2018-05-22 21:40:51', 52, 0.00, NULL, 0, 0),
+	(55, 74, '2018-05-22 21:40:52', 52, 0.00, NULL, 0, 0),
+	(56, 60, '2018-05-22 21:41:10', 53, 0.00, NULL, 0, 0),
+	(57, 11, '2018-05-22 21:41:11', 53, 0.00, NULL, 0, 0),
+	(58, 22, '2018-05-22 21:41:14', 53, 0.00, NULL, 0, 0),
+	(59, 35, '2018-05-22 21:41:16', 53, 0.00, NULL, 0, 0),
+	(60, 77, '2018-05-22 21:41:18', 53, 0.00, NULL, 0, 0),
+	(61, 4, '2018-05-22 21:41:20', 53, 0.00, NULL, 0, 0),
+	(62, 72, '2018-05-22 21:41:21', 53, 0.00, NULL, 0, 0),
+	(63, 73, '2018-05-22 21:41:23', 53, 0.00, NULL, 0, 0);
 /*!40000 ALTER TABLE `prijava_rok` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
