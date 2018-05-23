@@ -1,23 +1,5 @@
 package zrna.izpit;
 
-import helpers.PrijavniPodatkiIzpit;
-import helpers.entities.PrijavaNaIzpit;
-import izpit.*;
-import prijava.Prijava;
-import sifranti.Cenik;
-import sifranti.Predmet;
-import sifranti.StudijskoLeto;
-import sifranti.VrstaVpisa;
-import vloge.Student;
-import vloge.Uporabnik;
-import vpis.Vpis;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.transaction.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +8,31 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
+
+import helpers.entities.PrijavaNaIzpit;
+import izpit.Izpit;
+import izpit.IzpitniRok;
+import izpit.IzvajanjePredmeta;
+import izpit.OdjavaIzpit;
+import izpit.PrijavaRok;
+import sifranti.Cenik;
+import sifranti.StudijskoLeto;
+import sifranti.VrstaVpisa;
+import vloge.Uporabnik;
+import vpis.Vpis;
 
 @ApplicationScoped
 public class PrijavaNaIzpitZrno {
@@ -38,7 +45,7 @@ public class PrijavaNaIzpitZrno {
 
     public PrijavaRok applyForExam(PrijavaRok prijavaRok, Uporabnik uporabnik) throws Exception {
 
-        if (!uporabnik.getId().equals(prijavaRok.getStudent().getId())) {
+        if (!uporabnik.getId().equals(prijavaRok.getStudent().getId()) && uporabnik.getTip().equals("Student")) {
             throw new Exception("Ni pravic za prijavo");
         }
         // preveri število polaganj
@@ -57,6 +64,14 @@ public class PrijavaNaIzpitZrno {
         checkIfApplicationExistsOrNotClosed(prijavaRok);
 
         return createApplication(izpitniRok, prijavaRok, applicationCount);
+    }
+
+    public IzpitniRok getExam(PrijavaRok prijavaRok) {
+        return em.find(IzpitniRok.class, prijavaRok.getRok().getId());
+    }
+
+    public Uporabnik getUser(Uporabnik uporabnik) {
+        return em.find(Uporabnik.class, uporabnik.getId());
     }
 
     @Transactional
