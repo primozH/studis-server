@@ -32,9 +32,9 @@ public class IzpitVir {
 
     @POST
     @Path("rok/{id}/rezultati")
-    public Response vnesiRezultate(@PathParam("id") Integer rokId, List<Izpit> izpit) {
+    public Response vnesiRezultate(@PathParam("id") Integer rokId, List<PrijavaNaIzpit> izpiti) {
         try {
-            izpitZrno.vnesiRezultateIzpita(izpit, rokId);
+            izpitZrno.vnesiRezultateIzpita(izpiti, rokId);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }

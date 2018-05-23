@@ -427,16 +427,24 @@ localhost:8080/api/v1/
             - body (array izpitnih rezultatov za studenta):
             ```json
             [
-            	{
-            		"student": {
-            			"id": 57
-            		},
-            		"predmet": {
-            			"sifra": 63280
-            		},
-            		"ocenaPisno": 45,
-            		"koncnaOcena": 5
-            	}
+                {
+                    "koncnaOcena": 5,
+                    "ocenaPisno": 45,
+                    "prijavaRok": {
+                        "id": 33,
+                        "rok": {
+                            "id": 2,
+                            "izvajanjePredmeta": {
+                                "predmet": {
+                                    "sifra": 63280
+                                }
+                            }
+                        },
+                        "student": {
+                            "id": 57
+                        }
+                    }
+                }
             ]
             ```
     - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
