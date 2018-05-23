@@ -83,14 +83,16 @@ public class IzpitZrno {
     private Izpit vnesiRezultate(Izpit stored, Izpit izpit, PrijavaRok prijavaRok) {
         if (stored == null) {
             stored = new Izpit();
-            Integer zapStPolaganja = stejPolaganja(izpit);
+            Izpit zadnjePolaganje = zadnjePolaganje(izpit);
 
             stored.setOcenaPisno(izpit.getOcenaPisno());
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
             stored.setPredmet(izpit.getPredmet());
             stored.setStudent(izpit.getStudent());
             stored.setPrijavaRok(prijavaRok);
-            stored.setZapStPolaganja(zapStPolaganja);
+
+            stored.setStPolaganjaLeto(zadnjePolaganje.getStPolaganjaLeto() + 1);
+            stored.setStPolaganjaSkupno(zadnjePolaganje.getStPolaganjaLeto() + 1);
 
             em.persist(stored);
         } else {
@@ -103,16 +105,16 @@ public class IzpitZrno {
         return stored;
     }
 
-    private Integer stejPolaganja(Izpit izpit) {
+    private Izpit zadnjePolaganje(Izpit izpit) {
         List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganja", Izpit.class)
                 .setParameter("studentId", izpit.getStudent().getId())
                 .setParameter("sifraPredmeta", izpit.getPredmet().getSifra())
                 .getResultList();
         if (izpiti.size() == 0) {
-            return 1;
+            return null;
         }
 
-        return izpiti.get(0).getZapStPolaganja() + 1;
+        return izpiti.get(0);
     }
 
     @Transactional

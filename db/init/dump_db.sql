@@ -11,8 +11,13 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
+-- Dumping database structure for studis
+DROP DATABASE IF EXISTS `studis`;
+CREATE DATABASE IF NOT EXISTS `studis` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_slovenian_ci */;
+USE `studis`;
+
 -- Dumping structure for tabela studis.cenik
-DROP TABLE IF EXISTS `cenik`;
 CREATE TABLE IF NOT EXISTS `cenik` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`naziv` varchar(50) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -28,7 +33,6 @@ INSERT INTO `cenik` (`id`, `naziv`, `cena`, `valuta`) VALUES
 /*!40000 ALTER TABLE `cenik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.del_predmetnika
-DROP TABLE IF EXISTS `del_predmetnika`;
 CREATE TABLE IF NOT EXISTS `del_predmetnika` (
 	`sifra` int(11) NOT NULL,
 	`tip` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -45,7 +49,6 @@ INSERT INTO `del_predmetnika` (`sifra`, `tip`) VALUES
 /*!40000 ALTER TABLE `del_predmetnika` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.drzava
-DROP TABLE IF EXISTS `drzava`;
 CREATE TABLE IF NOT EXISTS `drzava` (
 	`numericna_oznaka` int(11) NOT NULL,
 	`iso_naziv` varchar(255) COLLATE utf8_slovenian_ci NOT NULL,
@@ -312,7 +315,6 @@ INSERT INTO `drzava` (`numericna_oznaka`, `iso_naziv`, `iso_koda`, `opombe`, `sl
 /*!40000 ALTER TABLE `drzava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpit
-DROP TABLE IF EXISTS `izpit`;
 CREATE TABLE IF NOT EXISTS `izpit` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`prijava_id` int(11) DEFAULT NULL,
@@ -320,7 +322,8 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 	`koncna_ocena` int(11) DEFAULT NULL,
 	`ocena_pisno` int(11) DEFAULT NULL,
 	`ocena_ustno` int(11) DEFAULT NULL,
-	`zap_st_polaganja` int(11) NOT NULL,
+	`st_polaganja_leto` int(11) NOT NULL,
+	`st_polaganja_skupno` int(11) NOT NULL,
 	`predmet` int(11) NOT NULL,
 	`student` int(11) NOT NULL,
 	PRIMARY KEY (`id`),
@@ -329,20 +332,15 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 	CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`),
 	CONSTRAINT `izpit_predmet_sifra_fk` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
 	CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`id`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpit: ~0 rows (približno)
+-- Dumping data for table studis.izpit: ~1 rows (približno)
 /*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
-INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `zap_st_polaganja`, `predmet`, `student`) VALUES
-    (1, 28, '2019-07-07', NULL, 5, NULL, 1, 63216, 52),
-    (2, 30, '2019-06-25', 8, 8, NULL, 2, 63216, 52),
-    (3, 31, '2019-06-25', NULL, 7, NULL, 1, 63216, 57),
-    (4, 32, '2019-06-25', NULL, 8, NULL, 1, 63216, 51);
-
+INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `st_polaganja_leto`, `st_polaganja_skupno`, `predmet`, `student`) VALUES
+	(1, 33, '2018-05-18', 5, 45, NULL, 1, 1, 63280, 57);
 /*!40000 ALTER TABLE `izpit` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpitni_rok
-DROP TABLE IF EXISTS `izpitni_rok`;
 CREATE TABLE IF NOT EXISTS `izpitni_rok` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`datum` date NOT NULL,
@@ -356,12 +354,11 @@ CREATE TABLE IF NOT EXISTS `izpitni_rok` (
 	KEY `FK_rok_predmet` (`predmet`,`studijsko_leto`),
 	CONSTRAINT `FK_rok_izvajalec` FOREIGN KEY (`izvajalec`) REFERENCES `uporabnik` (`id_uporabnik`),
 	CONSTRAINT `FK_rok_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`) REFERENCES `predmet_izvajanje` (`predmet`, `studijsko_leto`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpitni_rok: ~12 rows (približno)
+-- Dumping data for table studis.izpitni_rok: ~93 rows (približno)
 /*!40000 ALTER TABLE `izpitni_rok` DISABLE KEYS */;
 INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studijsko_leto`, `predmet`) VALUES
-	(1, '2019-02-05', '11:00:00', 'P01', 28, 2018, 63280),
 	(2, '2019-02-19', '11:00:00', 'P01', 28, 2018, 63280),
 	(3, '2019-09-03', '11:00:00', 'P01', 28, 2018, 63280),
 	(4, '2019-06-05', '12:00:00', 'PA', 26, 2018, 63212),
@@ -373,13 +370,90 @@ INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studij
 	(10, '2019-01-22', '11:00:00', 'P01', 27, 2018, 63279),
 	(11, '2019-01-24', '10:00:00', NULL, 15, 2018, 63203),
 	(12, '2019-02-07', '10:00:00', NULL, 15, 2018, 63203),
-    (13, '2019-06-07', '11:00:00', 'P01', 29, 2018, 63216),
-    (14, '2019-06-21', '11:00:00', 'P01', 29, 2018, 63216),
-    (15, '2019-08-29', '11:00:00', 'P01', 29, 2018, 63216);
+	(19, '2019-06-10', '10:00:00', 'P01', 25, 2018, 63207),
+	(20, '2019-02-06', '10:00:00', '', 28, 2018, 63280),
+	(21, '2019-01-22', '10:00:00', 'PA', 22, 2018, 63205),
+	(22, '2019-02-05', '10:00:00', 'PA', 22, 2018, 63205),
+	(23, '2019-09-02', '10:00:00', 'PA', 22, 2018, 63205),
+	(24, '2019-09-03', '10:00:00', 'PA', 28, 2018, 63217),
+	(25, '2019-06-04', '11:00:00', 'PA', 28, 2018, 63217),
+	(26, '2019-06-19', '11:00:00', 'PA', 28, 2018, 63217),
+	(27, '2019-06-03', '11:00:00', 'PA', 10, 2018, 63218),
+	(28, '2019-06-17', '11:00:00', 'PA', 10, 2018, 63218),
+	(29, '2019-08-27', '11:00:00', 'PA', 10, 2018, 63218),
+	(30, '2019-02-05', '11:00:00', 'PA', 12, 2018, 63258),
+	(31, '2019-02-12', '11:00:00', 'PA', 12, 2018, 63258),
+	(32, '2019-08-29', '11:00:00', 'PA', 12, 2018, 63258),
+	(33, '2019-08-30', '11:00:00', 'PA', 25, 2018, 63207),
+	(34, '2019-06-28', '11:00:00', 'PA', 25, 2018, 63207),
+	(35, '2019-06-17', '11:00:00', 'PA', 25, 2018, 63207),
+	(36, '2019-02-04', '11:00:00', 'PA', 28, 2018, 63283),
+	(37, '2019-02-18', '09:00:00', 'PA', 28, 2018, 63283),
+	(38, '2019-09-13', '15:00:00', 'PA', 28, 2018, 63283),
+	(39, '2019-02-07', '09:00:00', 'PB', 27, 2018, 63279),
+	(40, '2019-08-28', '09:00:00', 'PB', 27, 2018, 63279),
+	(41, '2019-08-28', '09:00:00', 'PB', 20, 2018, 63219),
+	(42, '2019-02-12', '14:50:00', 'P12', 37, 2018, 63263),
+	(43, '2019-08-30', '12:10:00', 'P16', 37, 2018, 63263),
+	(44, '2019-02-22', '08:00:00', 'P18', 21, 2018, 63259),
+	(45, '2019-09-03', '17:30:00', 'P18', 21, 2018, 63259),
+	(46, '2019-09-04', '10:00:00', 'PA', 15, 2018, 63705),
+	(47, '2019-02-11', '12:40:00', 'PA', 15, 2018, 63705),
+	(48, '2019-02-22', '14:00:00', 'PA', 15, 2018, 63705),
+	(49, '2019-02-14', '11:00:00', 'PA', 15, 2018, 63203),
+	(50, '2019-02-13', '11:30:00', 'P22', 14, 2018, 63248),
+	(51, '2019-09-03', '18:00:00', 'P22', 14, 2018, 63248),
+	(52, '2019-01-25', '11:20:00', 'PB', 14, 2018, 63248),
+	(53, '2019-01-23', '18:00:00', 'P22', 32, 2018, 63249),
+	(54, '2019-08-20', '16:00:00', 'P22', 32, 2018, 63249),
+	(55, '2019-08-23', '14:00:00', 'P01', 44, 2018, 63709),
+	(56, '2019-01-29', '11:00:00', 'P01', 44, 2018, 63709),
+	(57, '2019-02-11', '16:00:00', 'P01', 44, 2018, 63709),
+	(58, '2019-02-07', '13:30:00', 'P17', 16, 2018, 63250),
+	(59, '2019-08-27', '16:50:00', 'P17', 16, 2018, 63250),
+	(61, '2019-02-05', '10:00:00', 'PA', 20, 2018, 63202),
+	(62, '2019-09-03', '18:30:00', 'PA', 20, 2018, 63202),
+	(63, '2019-01-23', '13:00:00', 'P22', 6, 2018, 63208),
+	(64, '2019-02-12', '16:20:00', 'P22', 6, 2018, 63208),
+	(65, '2019-02-12', '16:20:00', 'P22', 6, 2018, 63208),
+	(66, '2019-01-30', '18:00:00', 'P01', 8, 2018, 63214),
+	(67, '2019-09-13', '13:45:00', 'P01', 8, 2018, 63214),
+	(68, '2019-01-23', '11:00:00', 'P01', 18, 2018, 63710),
+	(69, '2019-08-22', '18:30:00', 'P01', 18, 2018, 63710),
+	(70, '2019-01-30', '08:45:00', 'PA', 41, 2018, 63702),
+	(71, '2019-02-01', '09:00:00', 'PA', 41, 2018, 63702),
+	(72, '2019-02-01', '12:00:00', 'PA', 19, 2018, 63277),
+	(73, '2019-02-06', '14:00:00', 'PA', 23, 2018, 63278),
+	(74, '2019-01-21', '16:00:00', 'PA', 23, 2018, 63278),
+	(75, '2019-09-04', '13:30:00', 'PA', 23, 2018, 63278),
+	(76, '2019-01-29', '18:00:00', 'P01', 13, 2018, 63706),
+	(77, '2019-01-24', '15:00:00', 'P01', 8, 2018, 63209),
+	(78, '2019-02-06', '10:00:00', 'P01', 8, 2018, 63209),
+	(79, '2019-02-01', '18:00:00', 'P01', 12, 2018, 63708),
+	(80, '2019-02-13', '15:30:00', 'P01', 12, 2018, 63708),
+	(81, '2019-01-30', '08:50:00', 'P01', 18, 2018, 63213),
+	(82, '2019-02-07', '09:30:00', 'P01', 18, 2018, 63213),
+	(83, '2019-08-27', '12:30:00', 'P01', 18, 2018, 63213),
+	(84, '2019-01-28', '10:00:00', 'P20', 11, 2018, 63224),
+	(85, '2019-01-21', '10:00:00', 'PA', 43, 2018, 63704),
+	(86, '2019-09-02', '14:00:00', '', 41, 2018, 63702),
+	(87, '2019-09-04', '14:30:00', '', 19, 2018, 63277),
+	(88, '2019-02-15', '11:00:00', '', 19, 2018, 63277),
+	(89, '2018-02-04', '17:00:00', 'P01', 27, 2017, 63279),
+	(90, '2018-01-22', '14:00:00', 'P01', 27, 2017, 63279),
+	(91, '2018-09-03', '11:30:00', 'P01', 27, 2017, 63279),
+	(92, '2017-01-23', '14:30:00', 'P01', 27, 2016, 63279),
+	(93, '2017-02-06', '10:00:00', 'P01', 27, 2016, 63279),
+	(94, '2017-08-28', '15:00:00', 'P01', 27, 2016, 63279),
+	(95, '2016-01-29', '14:00:00', 'P01', 27, 2015, 63279),
+	(96, '2016-02-12', '10:30:00', 'P01', 27, 2015, 63279),
+	(97, '2016-08-29', '16:00:00', 'P01', 27, 2015, 63279),
+	(98, '2019-01-29', '16:30:00', 'PA', 21, 2018, 63204),
+	(99, '2019-02-12', '13:10:00', 'PA', 21, 2018, 63204),
+	(100, '2019-08-27', '10:00:00', 'P22', 21, 2018, 63204);
 /*!40000 ALTER TABLE `izpitni_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.kandidat
-DROP TABLE IF EXISTS `kandidat`;
 CREATE TABLE IF NOT EXISTS `kandidat` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`ime` varchar(50) COLLATE utf8_slovenian_ci NOT NULL,
@@ -393,22 +467,19 @@ CREATE TABLE IF NOT EXISTS `kandidat` (
 	UNIQUE KEY `kandidat_vpisna_stevilka_uindex` (`vpisna_stevilka`),
 	KEY `kandidat_studijski_program_sifra_evs_fk` (`studijski_program`),
 	CONSTRAINT `kandidat_studijski_program_sifra_evs_fk` FOREIGN KEY (`studijski_program`) REFERENCES `studijski_program` (`sifra_evs`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.kandidat: ~7 rows (približno)
+-- Dumping data for table studis.kandidat: ~5 rows (približno)
 /*!40000 ALTER TABLE `kandidat` DISABLE KEYS */;
 INSERT INTO `kandidat` (`id`, `ime`, `priimek`, `studijski_program`, `email`, `uporabnisko_ime`, `geslo_plain`, `vpisna_stevilka`) VALUES
-	(9, 'Matija', 'Mlakar', 1000468, 'matija.mlakar@student.fri.si', 'mm6215', '123456', 63180001),
-	(10, 'Primož', 'Hrovat', 1000468, 'primoz.hrovat@student.fri.si', 'ph9426', '123456', 63180002),
-	(11, 'Marko', 'Potočar', 1000470, 'marko.potocar@student.fri.si', 'mp3194', '123456', 63180003),
-	(12, 'Eva', 'Prepih', 1000471, 'eva.prepih@student.fri.si', 'ep2334', '123456', 63180004),
-	(13, 'Gašper', 'Velik', 1000474, 'gasper@student.fri.si', 'gv8547', '123456', 63180005),
-	(14, 'Luka', 'Kovač', 1000470, 'luka@student.fri.si', 'lk8450', '123456', 63180006),
-	(15, 'Franc', 'Okoren', 1000470, 'franc.okoren@student.fri.si', 'fo3408', '123456', 63180007);
+	(46, 'Marko', 'Potočar', 1000470, 'marko.potocar@student.fri.si', 'mp7709', '123456', 63180005),
+	(47, 'Eva', 'Prepih', 1000471, 'eva.prepih@student.fri.si', 'ep8702', 'CTNDXKGDLP', 63180006),
+	(48, 'Gašper', 'Velik', 1000474, 'gasper@student.fri.si', 'gv8092', 'E3XFI9EXHQ', 63180007),
+	(49, 'Luka', 'Kovač', 1000470, 'luka@student.fri.si', 'lk8401', 'J5Q53GQII8', 63180008),
+	(50, 'Franc', 'Okoren', 1000470, 'franc.okoren@student.fri.si', 'fo3668', '24FY42HOJC', 63180009);
 /*!40000 ALTER TABLE `kandidat` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.klasius
-DROP TABLE IF EXISTS `klasius`;
 CREATE TABLE IF NOT EXISTS `klasius` (
 	`sifra` int(11) NOT NULL,
 	`opis` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -441,7 +512,6 @@ INSERT INTO `klasius` (`sifra`, `opis`, `raven_izobrazbe`, `strokovni_naslov`) V
 /*!40000 ALTER TABLE `klasius` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.letnik
-DROP TABLE IF EXISTS `letnik`;
 CREATE TABLE IF NOT EXISTS `letnik` (
 	`letnik` int(11) NOT NULL,
 	PRIMARY KEY (`letnik`)
@@ -456,7 +526,6 @@ INSERT INTO `letnik` (`letnik`) VALUES
 /*!40000 ALTER TABLE `letnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.nacin_studija
-DROP TABLE IF EXISTS `nacin_studija`;
 CREATE TABLE IF NOT EXISTS `nacin_studija` (
 	`sifra` int(11) NOT NULL,
 	`opis` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -472,21 +541,19 @@ INSERT INTO `nacin_studija` (`sifra`, `opis`, `opis_ang`) VALUES
 /*!40000 ALTER TABLE `nacin_studija` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.napacna_prijava
-DROP TABLE IF EXISTS `napacna_prijava`;
 CREATE TABLE IF NOT EXISTS `napacna_prijava` (
 	`id_napacnega` int(11) NOT NULL AUTO_INCREMENT,
 	`cas_poteka_izklopa` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
 	`IP` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
 	`st_napacnih_poskusov` int(11) DEFAULT NULL,
 	PRIMARY KEY (`id_napacnega`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Dumping data for table studis.napacna_prijava: ~0 rows (približno)
 /*!40000 ALTER TABLE `napacna_prijava` DISABLE KEYS */;
 /*!40000 ALTER TABLE `napacna_prijava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.obcina
-DROP TABLE IF EXISTS `obcina`;
 CREATE TABLE IF NOT EXISTS `obcina` (
 	`sifra` int(11) NOT NULL,
 	`ime` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -711,7 +778,6 @@ INSERT INTO `obcina` (`sifra`, `ime`) VALUES
 /*!40000 ALTER TABLE `obcina` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.oblika_studija
-DROP TABLE IF EXISTS `oblika_studija`;
 CREATE TABLE IF NOT EXISTS `oblika_studija` (
 	`sifra` int(11) NOT NULL,
 	`opis` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -728,7 +794,6 @@ INSERT INTO `oblika_studija` (`sifra`, `opis`, `opis_ang`) VALUES
 /*!40000 ALTER TABLE `oblika_studija` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.odjava
-DROP TABLE IF EXISTS `odjava`;
 CREATE TABLE IF NOT EXISTS `odjava` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`prijava_id` int(11) NOT NULL,
@@ -738,10 +803,10 @@ CREATE TABLE IF NOT EXISTS `odjava` (
 	KEY `FK_odjava_odjavitelj` (`odjavitelj`),
 	KEY `FK_odjava_studijsko_leto` (`prijava_id`),
 	CONSTRAINT `FK_odjava_odjavitelj` FOREIGN KEY (`odjavitelj`) REFERENCES `uporabnik` (`id_uporabnik`),
-	CONSTRAINT `FK_odjava_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+	CONSTRAINT `FK_odjava_prijava` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.odjava: ~28 rows (približno)
+-- Dumping data for table studis.odjava: ~35 rows (približno)
 /*!40000 ALTER TABLE `odjava` DISABLE KEYS */;
 INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(1, 3, '2018-05-15 16:22:03', 52),
@@ -767,16 +832,21 @@ INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(21, 21, '2018-05-15 21:47:17', 51),
 	(22, 22, '2018-05-15 22:00:29', 51),
 	(23, 23, '2018-05-15 22:00:41', 51),
-	(24, 1, '2018-05-15 22:01:30', 57),
 	(25, 26, '2018-05-15 22:02:05', 57),
 	(26, 25, '2018-05-15 22:02:06', 57),
 	(27, 24, '2018-05-15 22:02:07', 57),
 	(28, 27, '2018-05-15 22:04:34', 57),
-	(30, 29, '2018-06-15 16:21:35', 52);
+	(29, 28, '2018-05-16 13:48:33', 56),
+	(30, 30, '2018-05-16 14:56:35', 57),
+	(31, 31, '2018-05-16 14:58:58', 2),
+	(32, 32, '2018-05-16 15:02:07', 28),
+	(33, 34, '2018-05-18 13:33:03', 57),
+	(34, 35, '2018-05-18 13:34:08', 57),
+	(35, 36, '2018-05-18 13:34:12', 57),
+	(36, 37, '2018-05-18 13:34:18', 57);
 /*!40000 ALTER TABLE `odjava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.posta
-DROP TABLE IF EXISTS `posta`;
 CREATE TABLE IF NOT EXISTS `posta` (
 	`postna_stevilka` int(11) NOT NULL,
 	`naziv_poste` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -1267,7 +1337,6 @@ INSERT INTO `posta` (`postna_stevilka`, `naziv_poste`) VALUES
 /*!40000 ALTER TABLE `posta` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.praznik
-DROP TABLE IF EXISTS `praznik`;
 CREATE TABLE IF NOT EXISTS `praznik` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`datum` date NOT NULL,
@@ -1297,7 +1366,6 @@ INSERT INTO `praznik` (`id`, `datum`, `ime`) VALUES
 /*!40000 ALTER TABLE `praznik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmet
-DROP TABLE IF EXISTS `predmet`;
 CREATE TABLE IF NOT EXISTS `predmet` (
 	`sifra` int(11) NOT NULL,
 	`ects` int(11) DEFAULT NULL,
@@ -1405,7 +1473,6 @@ INSERT INTO `predmet` (`sifra`, `ects`, `naziv`, `semester`) VALUES
 /*!40000 ALTER TABLE `predmet` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmetnik
-DROP TABLE IF EXISTS `predmetnik`;
 CREATE TABLE IF NOT EXISTS `predmetnik` (
 	`modul` int(11) DEFAULT NULL,
 	`del_predmetnika` int(11) NOT NULL,
@@ -1508,7 +1575,6 @@ INSERT INTO `predmetnik` (`modul`, `del_predmetnika`, `letnik`, `predmet`, `stud
 /*!40000 ALTER TABLE `predmetnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmet_izvajanje
-DROP TABLE IF EXISTS `predmet_izvajanje`;
 CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
 	`nosilec1` int(11) DEFAULT NULL,
 	`nosilec2` int(11) DEFAULT NULL,
@@ -1838,7 +1904,6 @@ INSERT INTO `predmet_izvajanje` (`nosilec1`, `nosilec2`, `nosilec3`, `predmet`, 
 /*!40000 ALTER TABLE `predmet_izvajanje` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmet_student
-DROP TABLE IF EXISTS `predmet_student`;
 CREATE TABLE IF NOT EXISTS `predmet_student` (
 	`predmet` int(11) NOT NULL,
 	`studijsko_leto` int(11) NOT NULL,
@@ -1867,6 +1932,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63202, 2018, 51),
 	(63202, 2018, 53),
 	(63202, 2018, 63),
+	(63202, 2018, 66),
+	(63202, 2018, 68),
 	(63203, 2015, 57),
 	(63203, 2016, 56),
 	(63203, 2016, 59),
@@ -1882,6 +1949,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63203, 2018, 51),
 	(63203, 2018, 53),
 	(63203, 2018, 63),
+	(63203, 2018, 66),
+	(63203, 2018, 68),
 	(63204, 2015, 57),
 	(63204, 2016, 56),
 	(63204, 2016, 59),
@@ -1897,6 +1966,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63204, 2018, 51),
 	(63204, 2018, 53),
 	(63204, 2018, 63),
+	(63204, 2018, 66),
+	(63204, 2018, 68),
 	(63205, 2015, 57),
 	(63205, 2016, 56),
 	(63205, 2016, 59),
@@ -1912,6 +1983,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63205, 2018, 51),
 	(63205, 2018, 53),
 	(63205, 2018, 63),
+	(63205, 2018, 66),
+	(63205, 2018, 68),
 	(63207, 2015, 57),
 	(63207, 2016, 56),
 	(63207, 2016, 59),
@@ -1927,6 +2000,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63207, 2018, 51),
 	(63207, 2018, 53),
 	(63207, 2018, 63),
+	(63207, 2018, 66),
+	(63207, 2018, 68),
 	(63208, 2016, 57),
 	(63208, 2016, 59),
 	(63208, 2017, 56),
@@ -1950,6 +2025,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63209, 2018, 51),
 	(63209, 2018, 53),
 	(63209, 2018, 63),
+	(63209, 2018, 66),
+	(63209, 2018, 68),
 	(63212, 2015, 57),
 	(63212, 2016, 56),
 	(63212, 2016, 59),
@@ -1965,6 +2042,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63212, 2018, 51),
 	(63212, 2018, 53),
 	(63212, 2018, 63),
+	(63212, 2018, 66),
+	(63212, 2018, 68),
 	(63213, 2016, 57),
 	(63213, 2016, 59),
 	(63213, 2017, 56),
@@ -1993,6 +2072,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63215, 2018, 51),
 	(63215, 2018, 53),
 	(63215, 2018, 63),
+	(63215, 2018, 66),
+	(63215, 2018, 68),
 	(63216, 2016, 57),
 	(63216, 2016, 59),
 	(63216, 2017, 56),
@@ -2093,6 +2174,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63277, 2018, 51),
 	(63277, 2018, 53),
 	(63277, 2018, 63),
+	(63277, 2018, 66),
+	(63277, 2018, 68),
 	(63278, 2015, 57),
 	(63278, 2016, 56),
 	(63278, 2016, 59),
@@ -2108,6 +2191,8 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 	(63278, 2018, 51),
 	(63278, 2018, 53),
 	(63278, 2018, 63),
+	(63278, 2018, 66),
+	(63278, 2018, 68),
 	(63279, 2016, 57),
 	(63279, 2016, 59),
 	(63279, 2017, 56),
@@ -2150,7 +2235,6 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 /*!40000 ALTER TABLE `predmet_student` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.prijava_rok
-DROP TABLE IF EXISTS `prijava_rok`;
 CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`izpitni_rok` int(11) DEFAULT NULL,
@@ -2163,14 +2247,13 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	PRIMARY KEY (`id`),
 	KEY `FK_prijava_rok_uporabnik` (`student`),
 	KEY `FK_prijava_rok_izpitni_rok` (`izpitni_rok`),
-	CONSTRAINT `FK_prijava_rok_izpitni_rok` FOREIGN KEY (`izpitni_rok`) REFERENCES `izpitni_rok` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT `FK_prijava_rok_izpitni_rok` FOREIGN KEY (`izpitni_rok`) REFERENCES `izpitni_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `FK_prijava_rok_uporabnik` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.prijava_rok: ~26 rows (približno)
+-- Dumping data for table studis.prijava_rok: ~60 rows (približno)
 /*!40000 ALTER TABLE `prijava_rok` DISABLE KEYS */;
 INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`, `valuta`, `zakljucena`, `brisana`) VALUES
-	(1, 1, '2018-05-14 12:31:26', 57, 0.00, NULL, 0, 1),
 	(3, 4, '2018-05-15 16:19:35', 52, 0.00, NULL, 0, 1),
 	(4, 4, '2018-05-15 16:28:01', 52, 0.00, NULL, 0, 1),
 	(5, 4, '2018-05-15 16:42:39', 51, 0.00, NULL, 0, 1),
@@ -2196,15 +2279,41 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(25, 4, '2018-05-15 22:01:40', 57, 0.00, NULL, 0, 1),
 	(26, 3, '2018-05-15 22:01:46', 57, 0.00, NULL, 0, 1),
 	(27, 11, '2018-05-15 22:04:30', 57, 0.00, NULL, 0, 1),
-	(28, 13, '2018-05-14 12:31:26', 52, 0.00, NULL, 1, 0),
-    (29, 14, '2018-06-15 16:19:35', 52, 0.00, NULL, 0, 1),
-    (30, 14, '2018-06-15 16:28:01', 52, 0.00, NULL, 1, 0),
-    (31, 14, '2018-06-15 16:28:01', 57, 0.00, NULL, 1, 0),
-    (32, 14, '2018-06-15 20:45:36', 51, 0.00, NULL, 1, 0);
+	(28, 2, '2018-05-16 13:48:28', 56, 0.00, NULL, 0, 1),
+	(30, 2, '2018-05-16 14:21:59', 57, 0.00, NULL, 0, 1),
+	(31, 2, '2018-05-16 14:57:01', 57, 0.00, NULL, 0, 1),
+	(32, 2, '2018-05-16 14:59:31', 57, 0.00, NULL, 0, 1),
+	(33, 2, '2018-05-16 15:02:33', 57, 0.00, NULL, 1, 0),
+	(34, 2, '2018-05-18 13:26:12', 57, 0.00, NULL, 0, 1),
+	(35, 2, '2018-05-18 13:34:07', 57, 0.00, NULL, 0, 1),
+	(36, 4, '2018-05-18 13:34:11', 57, 0.00, NULL, 0, 1),
+	(37, 2, '2018-05-18 13:34:14', 57, 0.00, NULL, 0, 1),
+	(39, 11, '2018-05-22 21:39:49', 51, 0.00, NULL, 0, 0),
+	(40, 98, '2018-05-22 21:39:52', 51, 0.00, NULL, 0, 0),
+	(41, 21, '2018-05-22 21:39:53', 51, 0.00, NULL, 0, 0),
+	(42, 19, '2018-05-22 21:39:55', 51, 0.00, NULL, 0, 0),
+	(43, 77, '2018-05-22 21:39:59', 51, 0.00, NULL, 0, 0),
+	(44, 4, '2018-05-22 21:40:01', 51, 0.00, NULL, 0, 0),
+	(45, 72, '2018-05-22 21:40:05', 51, 0.00, NULL, 0, 0),
+	(46, 73, '2018-05-22 21:40:07', 51, 0.00, NULL, 0, 0),
+	(48, 11, '2018-05-22 21:40:40', 52, 0.00, NULL, 0, 0),
+	(49, 99, '2018-05-22 21:40:42', 52, 0.00, NULL, 0, 0),
+	(50, 22, '2018-05-22 21:40:43', 52, 0.00, NULL, 0, 0),
+	(51, 19, '2018-05-22 21:40:45', 52, 0.00, NULL, 0, 0),
+	(52, 78, '2018-05-22 21:40:47', 52, 0.00, NULL, 0, 0),
+	(53, 6, '2018-05-22 21:40:49', 52, 0.00, NULL, 0, 0),
+	(54, 72, '2018-05-22 21:40:51', 52, 0.00, NULL, 0, 0),
+	(55, 74, '2018-05-22 21:40:52', 52, 0.00, NULL, 0, 0),
+	(57, 11, '2018-05-22 21:41:11', 53, 0.00, NULL, 0, 0),
+	(58, 22, '2018-05-22 21:41:14', 53, 0.00, NULL, 0, 0),
+	(59, 35, '2018-05-22 21:41:16', 53, 0.00, NULL, 0, 0),
+	(60, 77, '2018-05-22 21:41:18', 53, 0.00, NULL, 0, 0),
+	(61, 4, '2018-05-22 21:41:20', 53, 0.00, NULL, 0, 0),
+	(62, 72, '2018-05-22 21:41:21', 53, 0.00, NULL, 0, 0),
+	(63, 73, '2018-05-22 21:41:23', 53, 0.00, NULL, 0, 0);
 /*!40000 ALTER TABLE `prijava_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.referent
-DROP TABLE IF EXISTS `referent`;
 CREATE TABLE IF NOT EXISTS `referent` (
 	`id_uporabnik` int(11) NOT NULL,
 	PRIMARY KEY (`id_uporabnik`),
@@ -2221,7 +2330,6 @@ INSERT INTO `referent` (`id_uporabnik`) VALUES
 /*!40000 ALTER TABLE `referent` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.skrbnik
-DROP TABLE IF EXISTS `skrbnik`;
 CREATE TABLE IF NOT EXISTS `skrbnik` (
 	`id_uporabnik` int(11) NOT NULL,
 	PRIMARY KEY (`id_uporabnik`),
@@ -2235,7 +2343,6 @@ INSERT INTO `skrbnik` (`id_uporabnik`) VALUES
 /*!40000 ALTER TABLE `skrbnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.student
-DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
 	`id_uporabnik` int(11) NOT NULL,
 	`drzava_rojstva` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -2268,7 +2375,7 @@ CREATE TABLE IF NOT EXISTS `student` (
 	CONSTRAINT `FK_student_posta_zacasno` FOREIGN KEY (`posta_zacasno`) REFERENCES `posta` (`postna_stevilka`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.student: ~14 rows (približno)
+-- Dumping data for table studis.student: ~18 rows (približno)
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
 INSERT INTO `student` (`id_uporabnik`, `drzava_rojstva`, `kraj_rojstva`, `naslov_stalno`, `privzeti_naslov`, `naslov_zacasno`, `obcina_rojstva`, `tel_stevilka`, `vpisna_stevilka`, `drzava_stalno`, `drzava_zacasno`, `obcina_stalno`, `obcina_zacasno`, `posta_stalno`, `posta_zacasno`) VALUES
 	(51, 'Slovenija', 'Ljubljana', 'Ljubljanska cesta 15b', 'Novomeška 1', NULL, 'Ljubljana', '070123123', 63150001, 705, NULL, 85, NULL, 8000, NULL),
@@ -2284,11 +2391,14 @@ INSERT INTO `student` (`id_uporabnik`, `drzava_rojstva`, `kraj_rojstva`, `naslov
 	(61, 'SLoven', 'asd asd', 'asd', 'Asda s1', 'asdwe', 'asdasd', '070123123', 63150011, 850, 222, NULL, NULL, NULL, NULL),
 	(62, 'SLovenija', 'Ljublja nja', 'ASda', 'Domači nalslov 1', 'aslkd', 'ljubljana', '070123123', 63150012, 248, 705, NULL, 155, NULL, 1223),
 	(63, 'Slovenija', 'Novo mesto', 'Novomeška cesta 15', 'Novomeška 1', NULL, 'Novo mesto', '123456789', 63130001, 705, NULL, 85, NULL, 8000, NULL),
-	(64, 'Slovenija', 'Novo mesto', 'Ljubljanska cesta 15', 'Ljubljanska 1', NULL, 'Novo mesto', '123456789', 63130002, 705, NULL, 85, NULL, 8000, NULL);
+	(64, 'Slovenija', 'Novo mesto', 'Ljubljanska cesta 15', 'Ljubljanska 1', NULL, 'Novo mesto', '123456789', 63130002, 705, NULL, 85, NULL, 8000, NULL),
+	(65, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180001, NULL, NULL, NULL, NULL, NULL, NULL),
+	(66, 'Slovenija', 'Novo mesto', 'Krajčeva ulica 15', 'Krajčeva ulica 15', NULL, 'Novo mesto', '070365019', 63180002, 705, NULL, 85, NULL, 8000, NULL),
+	(67, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63180003, NULL, NULL, NULL, NULL, NULL, NULL),
+	(68, 'Slovenija', 'Novo mesto', 'Pod komendo', 'Pod komendo', 'Sadsa ds', 'Novo mesto', '070123456', 63180004, 705, 218, 52, NULL, 4000, NULL);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.studijski_program
-DROP TABLE IF EXISTS `studijski_program`;
 CREATE TABLE IF NOT EXISTS `studijski_program` (
 	`sifra_evs` int(11) NOT NULL,
 	`naziv` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -2312,7 +2422,6 @@ INSERT INTO `studijski_program` (`sifra_evs`, `naziv`, `sifra`, `stevilo_semestr
 /*!40000 ALTER TABLE `studijski_program` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.studijsko_leto
-DROP TABLE IF EXISTS `studijsko_leto`;
 CREATE TABLE IF NOT EXISTS `studijsko_leto` (
 	`sifra` int(11) NOT NULL,
 	`studijsko_leto` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -2333,7 +2442,6 @@ INSERT INTO `studijsko_leto` (`sifra`, `studijsko_leto`) VALUES
 /*!40000 ALTER TABLE `studijsko_leto` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.ucitelj
-DROP TABLE IF EXISTS `ucitelj`;
 CREATE TABLE IF NOT EXISTS `ucitelj` (
 	`id_uporabnik` int(11) NOT NULL,
 	PRIMARY KEY (`id_uporabnik`),
@@ -2391,7 +2499,6 @@ INSERT INTO `ucitelj` (`id_uporabnik`) VALUES
 /*!40000 ALTER TABLE `ucitelj` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.uporabnik
-DROP TABLE IF EXISTS `uporabnik`;
 CREATE TABLE IF NOT EXISTS `uporabnik` (
 	`id_uporabnik` int(11) NOT NULL AUTO_INCREMENT,
 	`tip` varchar(31) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -2411,7 +2518,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
 	PRIMARY KEY (`id_uporabnik`),
 	KEY `FK_uporabnik_drzavljanstvo` (`drzavljanstvo`),
 	CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Dumping data for table studis.uporabnik: ~64 rows (približno)
 /*!40000 ALTER TABLE `uporabnik` DISABLE KEYS */;
@@ -2479,11 +2586,14 @@ INSERT INTO `uporabnik` (`id_uporabnik`, `tip`, `datum_rojstva`, `davcna_stevilk
 	(61, 'Student', '1995-07-05', '12345678', 'primoz.hrovat@gmx.com', '0507995505034', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Ana', 'Morder', 0, '2018-05-09 08:51:33', 'am3165', '2018-04-05 21:10:56', NULL, 703),
 	(62, 'Student', '1995-07-05', '12345678', 'primoz.hrovat@gmx.com', '0507995505034', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Neja', 'Goluša', 0, '2018-05-09 08:48:45', 'ng1689', '2018-04-05 21:10:56', NULL, 705),
 	(63, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@gmx.com', '2301996500052', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Matjaž', 'Ćasar', 1, '2018-04-05 21:10:56', 'mc5548', NULL, NULL, 705),
-	(64, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@gmx.com', '2301996500052', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Mitja', 'Župan', 1, '2018-04-05 21:10:56', 'mz1239', NULL, NULL, 705);
+	(64, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@gmx.com', '2301996500052', '$31$16$irG9VKXkRV0pxhGRhYZWDZZGO71V--R5_sLsBOWPUWI', 'Mitja', 'Župan', 1, '2018-04-05 21:10:56', 'mz1239', NULL, NULL, 705),
+	(65, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$tIlE8CGsiDZQ4teay5kIdGUy61WTXxZyaN7t9yIgLt0', 'Matija', 'Mlakar', NULL, NULL, 'mm4248', '2018-05-21 19:30:49', NULL, NULL),
+	(66, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@student.fri.si', '2301996500052', '$31$16$Wt3vmiBGTM6k4z7IJd66jjbyUTwbVroVV09OSpFUJMg', 'Primož', 'Hrovat', 1, '2018-05-21 19:39:24', 'ph5461', '2018-05-21 19:36:27', NULL, 705),
+	(67, 'Student', NULL, NULL, 'matija.mlakar@student.fri.si', NULL, '$31$16$JGfj2yqLe5-mQAmtljeZZe5s9KAGAbe2HrjefMpdCUU', 'Matija', 'Mlakar', NULL, NULL, 'mm1178', '2018-05-22 23:58:30', NULL, NULL),
+	(68, 'Student', '1996-01-23', '12345678', 'primoz.hrovat@student.fri.si', '2301996500052', '$31$16$5P8YZp1eumaGkYVn3J1t_r_1zay-YjdOEKrMRkxTTQ8', 'Primož', 'Hrovat', 1, '2018-05-23 08:19:22', 'ph5036', '2018-05-23 08:18:13', NULL, 705);
 /*!40000 ALTER TABLE `uporabnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.vpis
-DROP TABLE IF EXISTS `vpis`;
 CREATE TABLE IF NOT EXISTS `vpis` (
 	`potrjen` tinyint(1) DEFAULT 0,
 	`letnik` int(11) DEFAULT NULL,
@@ -2509,7 +2619,7 @@ CREATE TABLE IF NOT EXISTS `vpis` (
 	CONSTRAINT `FK_vpis_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.vpis: ~29 rows (približno)
+-- Dumping data for table studis.vpis: ~30 rows (približno)
 /*!40000 ALTER TABLE `vpis` DISABLE KEYS */;
 INSERT INTO `vpis` (`potrjen`, `letnik`, `nacin_studija`, `oblika_studija`, `student`, `studijski_program`, `studijsko_leto`, `vrsta_vpisa`) VALUES
 	(1, 1, 1, 1, 51, 1000468, 2018, 1),
@@ -2526,12 +2636,12 @@ INSERT INTO `vpis` (`potrjen`, `letnik`, `nacin_studija`, `oblika_studija`, `stu
 	(1, 1, 1, 1, 57, 1000468, 2015, 1),
 	(1, 2, 1, 1, 57, 1000468, 2016, 1),
 	(1, 3, 1, 1, 57, 1000468, 2017, 1),
-	(0, 3, 1, 1, 57, 1000468, 2018, 2),
+	(1, 3, 1, 1, 57, 1000468, 2018, 2),
 	(1, 1, 1, 1, 58, 1000468, 2017, 1),
-	(0, 2, 1, 1, 58, 1000468, 2018, 1),
+	(1, 2, 1, 1, 58, 1000468, 2018, 1),
 	(1, 1, 1, 1, 59, 1000470, 2016, 1),
 	(1, 2, 1, 1, 59, 1000470, 2017, 1),
-	(0, 2, 1, 1, 59, 1000470, 2018, 2),
+	(1, 2, 1, 1, 59, 1000470, 2018, 2),
 	(1, 1, 1, 1, 60, 1000468, 2016, 1),
 	(1, 1, 1, 1, 60, 1000468, 2017, 2),
 	(1, 2, 1, 1, 60, 1000468, 2018, 1),
@@ -2539,13 +2649,14 @@ INSERT INTO `vpis` (`potrjen`, `letnik`, `nacin_studija`, `oblika_studija`, `stu
 	(1, 2, 1, 1, 61, 1000468, 2018, 1),
 	(1, 1, 1, 1, 62, 1000468, 2016, 1),
 	(1, 1, 1, 1, 63, 1000468, 2017, 1),
-	(0, 1, 1, 1, 63, 1000468, 2018, 2),
+	(1, 1, 1, 1, 63, 1000468, 2018, 2),
 	(1, 1, 1, 1, 64, 1000471, 2017, 1),
-	(0, 2, 1, 1, 64, 1000471, 2018, 1);
+	(1, 2, 1, 1, 64, 1000471, 2018, 1),
+	(0, 1, 1, 1, 66, 1000468, 2018, 1),
+	(0, 1, 1, 1, 68, 1000468, 2018, 1);
 /*!40000 ALTER TABLE `vpis` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.vrsta_vpisa
-DROP TABLE IF EXISTS `vrsta_vpisa`;
 CREATE TABLE IF NOT EXISTS `vrsta_vpisa` (
 	`sifra` int(11) NOT NULL,
 	`vrsta_vpisa` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -2566,7 +2677,6 @@ INSERT INTO `vrsta_vpisa` (`sifra`, `vrsta_vpisa`) VALUES
 /*!40000 ALTER TABLE `vrsta_vpisa` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.zeton
-DROP TABLE IF EXISTS `zeton`;
 CREATE TABLE IF NOT EXISTS `zeton` (
 	`izkoriscen` tinyint(1) DEFAULT 0,
 	`prosta_izbira` tinyint(1) DEFAULT 0,
@@ -2593,8 +2703,11 @@ CREATE TABLE IF NOT EXISTS `zeton` (
 	CONSTRAINT `FK_zeton_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.zeton: ~0 rows (približno)
+-- Dumping data for table studis.zeton: ~2 rows (približno)
 /*!40000 ALTER TABLE `zeton` DISABLE KEYS */;
+INSERT INTO `zeton` (`izkoriscen`, `prosta_izbira`, `letnik`, `nacin_studija`, `oblika_studija`, `student`, `studijski_program`, `studijsko_leto`, `vrsta_vpisa`) VALUES
+	(1, 0, 1, 1, 1, 66, 1000468, 2018, 1),
+	(1, 0, 1, 1, 1, 68, 1000468, 2018, 1);
 /*!40000 ALTER TABLE `zeton` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
