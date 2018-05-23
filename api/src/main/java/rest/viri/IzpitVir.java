@@ -66,16 +66,4 @@ public class IzpitVir {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
     }
-
-
-    @GET
-    @Auth(rolesAllowed = { Role.REFERENT, Role.PREDAVATELJ})
-    @Path("prijavljeni-ocene")
-    public Response vrniPrijavljeneKandidateZOcenami(@QueryParam("sifra-roka") Integer sifraRoka) {
-        try {
-            return Response.ok(izpitZrno.vrniPrijavljeneKandidateZOcenami(sifraRoka)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
-        }
-    }
 }
