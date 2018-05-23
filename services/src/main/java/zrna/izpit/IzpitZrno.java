@@ -90,8 +90,8 @@ public class IzpitZrno {
             stored.setStudent(izpit.getPrijavaRok().getStudent());
             stored.setPrijavaRok(prijavaRok);
 
-            stored.setStPolaganjaLeto(zadnjePolaganje.getStPolaganjaLeto() + 1);
-            stored.setStPolaganjaSkupno(zadnjePolaganje.getStPolaganjaSkupno() + 1);
+            stored.setStPolaganjaLeto((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaLeto() : 0) + 1);
+            stored.setStPolaganjaSkupno((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaSkupno() : 0) + 1);
 
             em.persist(stored);
         } else {
