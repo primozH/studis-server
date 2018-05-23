@@ -420,3 +420,6 @@ localhost:8080/api/v1/
             	}
             ]
             ```
+    - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
+        - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
+        - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat

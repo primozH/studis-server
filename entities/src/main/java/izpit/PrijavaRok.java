@@ -45,11 +45,15 @@ import vloge.Student;
                         "p.student.id = :student " +
                         "AND p.brisana = FALSE " +
                         "AND p.zakljucena = FALSE"),
-
         @NamedQuery(name = "entitete.izpit.PrijavaRok.prijavljeniStudentiZOcenami",
                 query = "SELECT p, i FROM PrijavaRok p LEFT OUTER JOIN Izpit i ON p = i.prijavaRok " +
                         "WHERE p.rok.id = :rokId " +
-                        "AND p.brisana = FALSE")
+                        "AND p.brisana = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniVsePrijaveZaRok",
+                query = "SELECT i FROM PrijavaRok i " +
+                        "WHERE i.casPrijave = " +
+                        "(SELECT MAX(ip.casPrijave) FROM PrijavaRok ip WHERE ip.rok.id = :rok " +
+                        "AND ip.student.id = i.student.id GROUP BY ip.student.id)")
 })
 public class PrijavaRok {
 
