@@ -111,12 +111,16 @@ public class IzpitniRokZrno {
             throw new Exception("Izpitni rok ne obstaja");
         }
 
-        try {
-            em.remove(izpitniRok);
-        } catch (Exception e) {
-            log.warning("Napaka pri brisanju roka");
-            throw new Exception("Za ta rok obstaja ocena");
+        List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vneseneOceneZaRok", Izpit.class)
+                .setParameter("rok", rokId)
+                .getResultList();
+
+        if (izpiti.size() > 0) {
+            log.warning("Za ta izpitni rok so ze vpisane ocene");
+            throw new Exception("Za ta izpitni rok so ze vpisane ocene");
         }
+
+        em.remove(izpitniRok);
     }
 
     private List<Izpit> exams(IzpitniRok izpitniRok) {
