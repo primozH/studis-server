@@ -178,6 +178,10 @@ localhost:8080/api/v1/
         	]
         }
         ```
+        
+    - GET localhost:8080/api/v1/student/{id}/kartoteka
+        - obvezen Authorization header. Študent ima vpogled samo v svoj kartotečni list, učitelj in referent lahko
+        ima vpogled za vse študente
                         
 - kandidati:
     - GET: kandidat
@@ -271,6 +275,25 @@ localhost:8080/api/v1/
 		"msg": "nepotrjen"
 	}
 
+	- GET /student/{id}/potrdi-vpis?studijsko-leto={studijskoLeto}
+	Kot Authorization potrebuje token referenta
+	response: 200 OK
+	fail response: 406 NOT_ACCEPTABLE
+	primer: /student/64/potrdi-vpis?studijsko-leto=2018
+
+	- GET /student/{id}/potrdilo?studijsko-leto={studijskoLeto}
+    Kot Authorization potrebuje token referenta
+    response: PDF
+    fail response: 500 internal server error
+    primer: /student/64/potrdilo?studijsko-leto=2018
+
+    - GET /student/vrni-nepotrjene-vpise
+    Kot Authorization potrebuje token referenta
+    response:
+    ``` json [ {Vpis}, {Vpis},...]```
+    primer: /student/vrni-nepotrjene-vpise
+
+
 - vrni vse vpisane studente za zadnje studijsko leto
 	- GET student/seznam-vpisanih
 	response:
@@ -315,7 +338,6 @@ localhost:8080/api/v1/
         		{
         			"row": ["Aljaž", "Črni", "20"]
         		}
-  		      // ...
         	]
         }
         ```
@@ -336,10 +358,6 @@ localhost:8080/api/v1/
             }
         }
         ```
-    - GET /rok/{id}/prijavljeni[?count=true]
-        - seznam vseh prijav na izbrani rok [id]. če je query parameter nastavljen na "true", se
-        vrne prazen objekt, v header "X-Total-Count" pa je nastavljeno število prijavljenih na rok
-        (za potrebe potrditve spremembe izpitnega roka)
     - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
         - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto
@@ -390,16 +408,8 @@ localhost:8080/api/v1/
        	"prostor": "PA"
        }
         ```
-    - DELETE /rok
+    - DELETE /rok/{id}
         - izbriše izpitni rok
-        -body: 
-        ```json
-        {
-        	"id": 18
-        }
-        ```
-    - GET /rok/vsi-roki?studijsko-leto={leto}
-        - vrne vse izpitne roke za to studijsko leto
     
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
@@ -407,26 +417,34 @@ localhost:8080/api/v1/
     - GET /predmet/izvajanje?studijsko-leto={leto}
         - seznam vseh predmetov, ki se izvajajo v {leto}. Referent dobi seznam vseh predmetov,
         učitelj pa samo predmete, ki jih izvaja
-         
-         
+            
 - podatki o izpitu:
-    - GET /izpit/rok/{id}/rezultati
-            - vrne vnesene izpitne rezultate za rok [id]
+    - GET /izpit/rok/{id}/rezultati[?count=true]
+            - vrne študente, prijavljene na rok [id] in njihove izpitne rezultat. Če je nastavljen [count], 
+            v Header "X-Total-Count" vrne število prijavljenih (za potrebe potrditve spremembe izpitnega roka)
     - POST /izpit/rok/{id}/rezultati
             - shrani rezultate izpita
             - body (array izpitnih rezultatov za studenta):
             ```json
             [
-            	{
-            		"student": {
-            			"id": 57
-            		},
-            		"predmet": {
-            			"sifra": 63280
-            		},
-            		"ocenaPisno": 45,
-            		"koncnaOcena": 5
-            	}
+                {
+                    "koncnaOcena": 5,
+                    "ocenaPisno": 45,
+                    "prijavaRok": {
+                        "id": 33,
+                        "rok": {
+                            "id": 2,
+                            "izvajanjePredmeta": {
+                                "predmet": {
+                                    "sifra": 63280
+                                }
+                            }
+                        },
+                        "student": {
+                            "id": 57
+                        }
+                    }
+                }
             ]
             ```
     - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}

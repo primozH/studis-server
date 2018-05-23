@@ -77,8 +77,11 @@ public class Izpit {
     @JoinColumn(name = "student")
     private Student student;
 
-    @Column(name = "zap_st_polaganja")
-    private Integer zapStPolaganja;
+    @Column(name = "st_polaganja_leto", nullable = false)
+    private Integer stPolaganjaLeto;
+
+    @Column(name = "st_polaganja_skupno", nullable = false)
+    private Integer stPolaganjaSkupno;
 
     @Column(name = "ocena_ustno")
     private Integer ocenaUstno = null;
@@ -141,12 +144,20 @@ public class Izpit {
         this.id = id;
     }
 
-    public Integer getZapStPolaganja() {
-        return zapStPolaganja;
+    public Integer getStPolaganjaLeto() {
+        return stPolaganjaLeto;
     }
 
-    public void setZapStPolaganja(Integer zapStPolaganja) {
-        this.zapStPolaganja = zapStPolaganja;
+    public void setStPolaganjaLeto(Integer zapStPolaganja) {
+        this.stPolaganjaLeto = zapStPolaganja;
+    }
+
+    public Integer getStPolaganjaSkupno() {
+        return stPolaganjaSkupno;
+    }
+
+    public void setStPolaganjaSkupno(Integer stPolaganjaSkupno) {
+        this.stPolaganjaSkupno = stPolaganjaSkupno;
     }
 
     public Predmet getPredmet() {

@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS `izpit` (
   `koncna_ocena` int(11) DEFAULT NULL,
   `ocena_pisno` int(11) DEFAULT NULL,
   `ocena_ustno` int(11) DEFAULT NULL,
-  `zap_st_polaganja` int(11) NOT NULL,
+  `st_polaganja_leto` int(11) NOT NULL,
+  `st_polaganja_skupno` int(11) NOT NULL,
   `predmet` int(11) NOT NULL,
   `student` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -65,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `izpit` (
   CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`),
   CONSTRAINT `izpit_predmet_sifra_fk` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
   CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`id`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.izpitni_rok
@@ -82,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `izpitni_rok` (
   KEY `FK_rok_predmet` (`predmet`,`studijsko_leto`),
   CONSTRAINT `FK_rok_izvajalec` FOREIGN KEY (`izvajalec`) REFERENCES `uporabnik` (`id_uporabnik`),
   CONSTRAINT `FK_rok_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`) REFERENCES `predmet_izvajanje` (`predmet`, `studijsko_leto`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.kandidat
@@ -99,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `kandidat` (
   UNIQUE KEY `kandidat_vpisna_stevilka_uindex` (`vpisna_stevilka`),
   KEY `kandidat_studijski_program_sifra_evs_fk` (`studijski_program`),
   CONSTRAINT `kandidat_studijski_program_sifra_evs_fk` FOREIGN KEY (`studijski_program`) REFERENCES `studijski_program` (`sifra_evs`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.klasius
@@ -135,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `napacna_prijava` (
   `IP` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
   `st_napacnih_poskusov` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_napacnega`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.obcina
@@ -166,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `odjava` (
   KEY `FK_odjava_studijsko_leto` (`prijava_id`),
   CONSTRAINT `FK_odjava_odjavitelj` FOREIGN KEY (`odjavitelj`) REFERENCES `uporabnik` (`id_uporabnik`),
   CONSTRAINT `FK_odjava_prijava` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.posta
@@ -264,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
   KEY `FK_prijava_rok_izpitni_rok` (`izpitni_rok`),
   CONSTRAINT `FK_prijava_rok_izpitni_rok` FOREIGN KEY (`izpitni_rok`) REFERENCES `izpitni_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_prijava_rok_uporabnik` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.referent
@@ -367,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
   PRIMARY KEY (`id_uporabnik`),
   KEY `FK_uporabnik_drzavljanstvo` (`drzavljanstvo`),
   CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for tabela studis.vpis

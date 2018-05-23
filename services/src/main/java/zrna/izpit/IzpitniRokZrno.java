@@ -116,14 +116,23 @@ public class IzpitniRokZrno {
     }
 
     @Transactional
-    public void izbrisiRok(IzpitniRok izpitniRok, Uporabnik uporabnik) throws Exception {
+    public void izbrisiRok(Integer rokId, Uporabnik uporabnik) throws Exception {
         log.info("Brisanje izpitnega roka");
-
+        IzpitniRok izpitniRok;
         try {
-            izpitniRok = em.getReference(IzpitniRok.class, izpitniRok.getId());
+            izpitniRok = em.getReference(IzpitniRok.class, rokId);
         } catch (NoResultException e) {
             log.warning("Izpitni rok ne obstaja");
             throw new Exception("Izpitni rok ne obstaja");
+        }
+
+        List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vneseneOceneZaRok", Izpit.class)
+                .setParameter("rok", rokId)
+                .getResultList();
+
+        if (izpiti.size() > 0) {
+            log.warning("Za ta izpitni rok so ze vpisane ocene");
+            throw new Exception("Za ta izpitni rok so ze vpisane ocene");
         }
 
         em.remove(izpitniRok);

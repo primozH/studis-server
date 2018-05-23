@@ -158,27 +158,16 @@ public class IzpitniRokVir {
     }
 
     @DELETE
+    @Path("{id}")
     @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
-    public Response brisiIzpitniRok(IzpitniRok rok, @Context HttpServletRequest request) {
+    public Response brisiIzpitniRok(@PathParam("id") Integer rokId, @Context HttpServletRequest request) {
         Uporabnik uporabnik = (Uporabnik) request.getAttribute("user");
         try {
-            izpitniRokZrno.izbrisiRok(rok, uporabnik);
+            izpitniRokZrno.izbrisiRok(rokId, uporabnik);
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
-    }
-
-    @GET
-    @Path("{id}/prijavljeni")
-    public Response vrniPrijavljeneStudente(@PathParam("id") Integer rokId,
-                                            @QueryParam("count") Boolean count) {
-        if (count != null && count) {
-            return Response.ok()
-                    .header("X-Total-Count", prijavaNaIzpitZrno.vrniPrijavljeneStudenteCount(rokId)).build();
-        }
-        List<PrijavaRok> prijavaRok = prijavaNaIzpitZrno.vrniPrijavljeneStudente(rokId);
-        return Response.ok(prijavaRok).header("X-Total-Count", prijavaRok.size()).build();
     }
 
 }

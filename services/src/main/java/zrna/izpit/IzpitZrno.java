@@ -14,8 +14,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
+import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
 import izpit.PrijavaRok;
+import prijava.Prijava;
 import vloge.Student;
 
 @ApplicationScoped
@@ -26,17 +28,14 @@ public class IzpitZrno {
     @PersistenceContext
     private EntityManager em;
 
-    @Inject
-    private UserTransaction userTransaction;
-
     @Transactional
-    public void vnesiRezultateIzpita(List<Izpit> izpiti, Integer rokId) {
-        for (Izpit izpit : izpiti) {
+    public void vnesiRezultateIzpita(List<PrijavaNaIzpit> izpiti, Integer rokId) {
+        for (PrijavaNaIzpit izpit : izpiti) {
             PrijavaRok prijavaRok;
             try {
                 prijavaRok = preveriPrijavo(izpit, rokId);
             } catch (NoResultException e) {
-                log.warning("Ne najdem prijave na izpit za studenta " + izpit.getStudent().getId() + " in rok " + rokId);
+                log.warning("Ne najdem prijave na izpit za studenta " + izpit.getPrijavaRok().getStudent().getId()+ " in rok " + rokId);
                 continue;
             }
 
@@ -51,7 +50,7 @@ public class IzpitZrno {
                 log.warning("Neveljavna končna ocena");
             }
 
-            Izpit stored = izpitObstaja(izpit.getStudent(), rokId);
+            Izpit stored = izpitObstaja(izpit.getPrijavaRok().getStudent(), rokId);
             stored = vnesiRezultate(stored, izpit, prijavaRok);
 
             if (stored.getKoncnaOcena() != null) {
@@ -60,22 +59,10 @@ public class IzpitZrno {
         }
     }
 
-    public List<Izpit> vrniVneseneRezultate(Integer rokId) {
-        List<Izpit> izpiti = null;
-        try {
-            izpiti = em.createNamedQuery("entitete.izpit.Izpit.vneseneOceneZaRok", Izpit.class)
-                    .setParameter("rok", rokId)
-                    .getResultList();
-        } catch (Exception e) {
-            log.warning("Napaka pri pridobivanju izpitnih podatkov. " + e.getMessage());
-        }
-        return izpiti;
-    }
-
-    private PrijavaRok preveriPrijavo(Izpit izpit, Integer rokId) throws NoResultException {
+    private PrijavaRok preveriPrijavo(PrijavaNaIzpit izpit, Integer rokId) throws NoResultException {
         return em.createNamedQuery("entitete.izpit.PrijavaRok.vrniNebrisanoPrijavo", PrijavaRok.class)
                 .setParameter("rok", rokId)
-                .setParameter("studentId", izpit.getStudent().getId())
+                .setParameter("studentId", izpit.getPrijavaRok().getStudent().getId())
                 .getSingleResult();
     }
 
@@ -92,17 +79,19 @@ public class IzpitZrno {
     }
 
     @Transactional
-    private Izpit vnesiRezultate(Izpit stored, Izpit izpit, PrijavaRok prijavaRok) {
+    private Izpit vnesiRezultate(Izpit stored, PrijavaNaIzpit izpit, PrijavaRok prijavaRok) {
         if (stored == null) {
             stored = new Izpit();
-            Integer zapStPolaganja = stejPolaganja(izpit);
+            Izpit zadnjePolaganje = zadnjePolaganje(izpit);
 
             stored.setOcenaPisno(izpit.getOcenaPisno());
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
-            stored.setPredmet(izpit.getPredmet());
-            stored.setStudent(izpit.getStudent());
+            stored.setPredmet(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet());
+            stored.setStudent(izpit.getPrijavaRok().getStudent());
             stored.setPrijavaRok(prijavaRok);
-            stored.setZapStPolaganja(zapStPolaganja);
+
+            stored.setStPolaganjaLeto((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaLeto() : 0) + 1);
+            stored.setStPolaganjaSkupno((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaSkupno() : 0) + 1);
 
             em.persist(stored);
         } else {
@@ -115,16 +104,16 @@ public class IzpitZrno {
         return stored;
     }
 
-    private Integer stejPolaganja(Izpit izpit) {
+    private Izpit zadnjePolaganje(PrijavaNaIzpit izpit) {
         List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganja", Izpit.class)
-                .setParameter("studentId", izpit.getStudent().getId())
-                .setParameter("sifraPredmeta", izpit.getPredmet().getSifra())
+                .setParameter("studentId", izpit.getPrijavaRok().getStudent().getId())
+                .setParameter("sifraPredmeta", izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet().getSifra())
                 .getResultList();
         if (izpiti.size() == 0) {
-            return 1;
+            return null;
         }
 
-        return izpiti.get(0).getZapStPolaganja() + 1;
+        return izpiti.get(0);
     }
 
     @Transactional

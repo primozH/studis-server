@@ -32,7 +32,10 @@ import vloge.Ucitelj;
                 "OR i.nosilec2.id = :ucitelj " +
                 "OR i.nosilec3.id = :ucitelj) " +
                 "AND i.studijskoLeto.id = :studijskoLeto " +
-                "AND i.predmet.sifra = :predmet")
+                "AND i.predmet.sifra = :predmet"),
+        @NamedQuery(name = "entitete.izpit.IzvajanjePredmeta.vrniIzvajanje", query = "SELECT i FROM IzvajanjePredmeta i " +
+                "WHERE i.predmet = :predmet " +
+                "AND i.studijskoLeto = :studijskoLeto")
 })
 public class IzvajanjePredmeta {
 
