@@ -17,18 +17,14 @@ import vloge.Student;
                         "AND p.student.id = :studentId " +
                         "AND p.brisana = FALSE " +
                         "AND p.zakljucena = FALSE"),
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.zakljucenePrijave", query = "SELECT p FROM PrijavaRok p WHERE " +
+                "p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
+                "AND p.student.id = :studentId " +
+                "AND p.zakljucena = TRUE " +
+                "ORDER BY p.rok.datum DESC"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniNebrisanoPrijavo", query = "SELECT p FROM PrijavaRok p WHERE p.rok.id = :rok " +
                 "AND p.student.id = :studentId " +
                 "AND p.brisana = FALSE "),
-        @NamedQuery(name = "entitete.izpit.PrijavaRok.stejPrijave", query = "SELECT COUNT(p) FROM PrijavaRok p WHERE " +
-                "p.student.id = :student " +
-                "AND p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
-                "AND p.brisana = FALSE"),
-        @NamedQuery(name = "entitete.izpit.PrijavaRok.stejPrijaveStudijskoLeto", query = "SELECT COUNT(p) FROM PrijavaRok p WHERE " +
-                "p.student.id = :student " +
-                "AND p.rok.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
-                "AND p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
-                "AND p.brisana = FALSE"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.aktivnePrijave", query = "SELECT p FROM PrijavaRok p WHERE " +
                 "p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
                 "AND p.student.id = :student " +
