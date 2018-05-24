@@ -21,6 +21,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONObject;
+
 import authentication.Auth;
 import authentication.Role;
 import common.CustomErrorMessage;
@@ -100,7 +102,7 @@ public class IzpitniRokVir {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
 
-        return Response.ok().build();
+        return Response.ok().entity(new JSONObject().put("message", "Odjava uspešna").toString()).build();
     }
 
     @POST
