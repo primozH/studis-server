@@ -346,9 +346,8 @@ localhost:8080/api/v1/
         mora zadostiti zgornjemu zgledu.
 
 - izpitni roki:
-    - POST /rok/[prijava|odjava|prijavi-studenta|odjavi-studenta]
+    - POST /rok/[prijava|odjava]
         - prijava/odjava študenta na izpit, nastavljen authorization header
-        - prijavi/odjavi-studenta na izpit s strani referenta in ucitelja
         ```json
         {
             "rok": {
@@ -359,6 +358,18 @@ localhost:8080/api/v1/
             }
         }
         ```
+    - POST /rok/[prijavi-studenta|odjavi-studenta]
+            - prijavi/odjavi-studenta na izpit s strani referenta in ucitelja
+            ```json
+            {
+                "rok": {
+                	"id": 4
+                },
+                "student": {
+                    "vpisnaStevilka": 63150006
+                }
+            }
+            ```
     - GET /rok?studijsko-leto={sifra}&[predmet={sifra}]
         - seznam vseh razpisanih rokov studijsko leto in predmet oz. v primeru, da dostopa
         študent, se mu vrne seznam vseh rokov neopravljenih izpitov za študijsko leto

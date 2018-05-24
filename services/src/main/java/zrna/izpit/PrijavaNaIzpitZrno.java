@@ -31,6 +31,7 @@ import izpit.PrijavaRok;
 import sifranti.Cenik;
 import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
+import vloge.Student;
 import vloge.Uporabnik;
 import vpis.Vpis;
 
@@ -72,6 +73,12 @@ public class PrijavaNaIzpitZrno {
 
     public Uporabnik getUser(Uporabnik uporabnik) {
         return em.find(Uporabnik.class, uporabnik.getId());
+    }
+
+    public Student getStudentVpisna(Student student) {
+        return em.createNamedQuery("entitete.vloge.Student.vrniStudentaPoVpisniStevilki", Student.class)
+                .setParameter("vpisnaStevilka", student.getVpisnaStevilka())
+                .getSingleResult();
     }
 
     @Transactional

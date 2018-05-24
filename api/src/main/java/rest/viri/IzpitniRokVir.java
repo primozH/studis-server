@@ -72,6 +72,7 @@ public class IzpitniRokVir {
                 if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
+            prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
             prijava = prijavaNaIzpitZrno.applyForExam(prijavaRok, prijavaRok.getStudent());
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
@@ -93,6 +94,7 @@ public class IzpitniRokVir {
                 if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
+            prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
             prijavaNaIzpitZrno.returnApplication(prijavaRok, prijavaNaIzpitZrno.getUser(uporabnik));
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
