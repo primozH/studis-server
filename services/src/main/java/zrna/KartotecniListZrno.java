@@ -5,6 +5,7 @@ import helpers.entities.Vrstica;
 import izpit.Izpit;
 import izpit.IzvajanjePredmeta;
 import student.PredmetStudent;
+import vloge.Student;
 import vpis.Vpis;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -27,6 +28,8 @@ public class KartotecniListZrno {
 
     public KartotecniList pripraviKartotecniList(Integer studentId) {
         log.info("Ustvarjam kartotecni list za studenta");
+
+        Student student = em.find(Student.class, studentId);
 
         log.info("Pridobivanje vseh vpisov");
         List<Vpis> vpisi = vpisZrno.getVpisi(studentId);
@@ -97,6 +100,9 @@ public class KartotecniListZrno {
         }
 
         KartotecniList kartotecniList = new KartotecniList();
+        kartotecniList.setIme(student.getIme());
+        kartotecniList.setPriimek(student.getPriimek());
+        kartotecniList.setVpisnaStevilka(student.getVpisnaStevilka());
         kartotecniList.setVrstica(vrstice);
 
         log.info("Kartotecni list za studenta " + studentId + " ustvarjen");
