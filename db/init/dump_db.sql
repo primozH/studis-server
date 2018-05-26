@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `cenik` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.cenik: ~0 rows (približno)
+-- Dumping data for table studis.cenik: ~1 rows (približno)
 /*!40000 ALTER TABLE `cenik` DISABLE KEYS */;
 INSERT INTO `cenik` (`id`, `naziv`, `cena`, `valuta`) VALUES
 	(1, 'Cena izpita', 9.00, 'EUR');
@@ -332,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 	CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`id`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpit: ~11 rows (približno)
+-- Dumping data for table studis.izpit: ~12 rows (približno)
 /*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
 INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `st_polaganja_leto`, `st_polaganja_skupno`, `predmet`, `student`) VALUES
 	(1, 33, '2018-05-18', 5, 45, NULL, 1, 1, 63280, 57),
@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `izpitni_rok` (
 	CONSTRAINT `FK_rok_predmet` FOREIGN KEY (`predmet`, `studijsko_leto`) REFERENCES `predmet_izvajanje` (`predmet`, `studijsko_leto`)
 ) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpitni_rok: ~101 rows (približno)
+-- Dumping data for table studis.izpitni_rok: ~102 rows (približno)
 /*!40000 ALTER TABLE `izpitni_rok` DISABLE KEYS */;
 INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studijsko_leto`, `predmet`) VALUES
 	(2, '2019-02-19', '11:00:00', 'P01', 28, 2018, 63280),
@@ -834,7 +834,7 @@ CREATE TABLE IF NOT EXISTS `odjava` (
 	CONSTRAINT `FK_odjava_prijava` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.odjava: ~39 rows (približno)
+-- Dumping data for table studis.odjava: ~47 rows (približno)
 /*!40000 ALTER TABLE `odjava` DISABLE KEYS */;
 INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(1, 3, '2018-05-15 16:22:03', 52),
@@ -1638,7 +1638,7 @@ CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
 	CONSTRAINT `FK_predmet_izvajanje_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.predmet_izvajanje: ~305 rows (približno)
+-- Dumping data for table studis.predmet_izvajanje: ~310 rows (približno)
 /*!40000 ALTER TABLE `predmet_izvajanje` DISABLE KEYS */;
 INSERT INTO `predmet_izvajanje` (`nosilec1`, `nosilec2`, `nosilec3`, `predmet`, `studijsko_leto`) VALUES
 	(20, 43, 32, 63202, 2014),
@@ -1751,6 +1751,11 @@ INSERT INTO `predmet_izvajanje` (`nosilec1`, `nosilec2`, `nosilec3`, `predmet`, 
 	(34, NULL, NULL, 63226, 2016),
 	(34, NULL, NULL, 63226, 2017),
 	(34, NULL, NULL, 63226, 2018),
+	(41, NULL, NULL, 63241, 2014),
+	(41, NULL, NULL, 63241, 2015),
+	(41, NULL, NULL, 63241, 2016),
+	(41, NULL, NULL, 63241, 2017),
+	(41, NULL, NULL, 63241, 2018),
 	(15, NULL, NULL, 63242, 2014),
 	(15, NULL, NULL, 63242, 2015),
 	(15, NULL, NULL, 63242, 2016),
@@ -3024,7 +3029,7 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	CONSTRAINT `FK_prijava_rok_uporabnik` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.prijava_rok: ~72 rows (približno)
+-- Dumping data for table studis.prijava_rok: ~80 rows (približno)
 /*!40000 ALTER TABLE `prijava_rok` DISABLE KEYS */;
 INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`, `valuta`, `zakljucena`, `brisana`) VALUES
 	(3, 4, '2018-05-15 16:19:35', 52, 0.00, NULL, 0, 1),
@@ -3134,7 +3139,7 @@ CREATE TABLE IF NOT EXISTS `skrbnik` (
 	CONSTRAINT `FK_skrbnik_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.skrbnik: ~0 rows (približno)
+-- Dumping data for table studis.skrbnik: ~1 rows (približno)
 /*!40000 ALTER TABLE `skrbnik` DISABLE KEYS */;
 INSERT INTO `skrbnik` (`id_uporabnik`) VALUES
 	(1);
