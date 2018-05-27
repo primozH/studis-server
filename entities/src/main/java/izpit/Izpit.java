@@ -52,7 +52,9 @@ import vloge.Student;
                         "AND i.prijavaRok.rok.id = :rok"),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniPodatkeOIzpituZaRok",
                 query = "SELECT i FROM Izpit i " +
-                        "WHERE i.prijavaRok.rok.id = :rok")
+                        "WHERE i.prijavaRok.rok.id = :rok"),
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaPrijavo",
+                query = "SELECT i FROM Izpit i WHERE i.prijavaRok.id = :prijavaRokId")
 })
 public class Izpit {
 
