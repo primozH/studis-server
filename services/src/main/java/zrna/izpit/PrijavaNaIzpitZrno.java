@@ -1,17 +1,5 @@
 package zrna.izpit;
 
-import helpers.entities.PrijavaNaIzpit;
-import sifranti.Cenik;
-import sifranti.StudijskoLeto;
-import sifranti.VrstaVpisa;
-import vloge.Uporabnik;
-import vpis.Vpis;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -29,12 +22,18 @@ import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
+import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
 import izpit.IzpitniRok;
 import izpit.IzvajanjePredmeta;
 import izpit.OdjavaIzpit;
 import izpit.PrijavaRok;
+import sifranti.Cenik;
+import sifranti.StudijskoLeto;
+import sifranti.VrstaVpisa;
 import vloge.Student;
+import vloge.Uporabnik;
+import vpis.Vpis;
 
 @ApplicationScoped
 public class PrijavaNaIzpitZrno {
@@ -46,6 +45,10 @@ public class PrijavaNaIzpitZrno {
     @Inject private UserTransaction ux;
 
     public PrijavaRok applyForExam(PrijavaRok prijavaRok, Uporabnik uporabnik) throws Exception {
+        return applyForExam(prijavaRok, uporabnik, false);
+    }
+
+    public PrijavaRok applyForExam(PrijavaRok prijavaRok, Uporabnik uporabnik, boolean prijavaZaNazaj) throws Exception {
 
         if (!uporabnik.getId().equals(prijavaRok.getStudent().getId()) && uporabnik.getTip().equals("Student")) {
             throw new Exception("Ni pravic za prijavo");
@@ -62,7 +65,7 @@ public class PrijavaNaIzpitZrno {
         Integer totalTries = checkApplicationCount(prijavaRok, vpisi);
 
         // preveri roke (prijava po izteku, premalo dni)
-        checkDates(prijavaRok);
+        checkDates(prijavaRok, prijavaZaNazaj);
 
         // preveri prijavo na že opravljen izpit
         checkForPassedExam(prijavaRok);
@@ -223,7 +226,7 @@ public class PrijavaNaIzpitZrno {
         return countAll;
     }
 
-    private IzpitniRok checkDates(PrijavaRok prijavaRok) throws Exception {
+    private IzpitniRok checkDates(PrijavaRok prijavaRok, boolean prijavaZaNazaj) throws Exception {
         IzpitniRok izpitniRok;
         try {
             izpitniRok = em.createQuery("SELECT i FROM IzpitniRok i WHERE " +
@@ -237,7 +240,9 @@ public class PrijavaNaIzpitZrno {
         } catch (NoResultException e) {
             throw new Exception("Ni razpisanega roka.");
         }
-
+        if (prijavaZaNazaj) {
+            return izpitniRok;
+        }
         LocalDateTime lastValidDateTime = getLastValidDay(izpitniRok.getDatum());
 
 

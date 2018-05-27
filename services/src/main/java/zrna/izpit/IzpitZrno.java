@@ -1,23 +1,22 @@
 package zrna.izpit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 
 import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
 import izpit.PrijavaRok;
-import prijava.Prijava;
 import vloge.Student;
 
 @ApplicationScoped
@@ -165,6 +164,36 @@ public class IzpitZrno {
             }
         }
         return noviIzpiti;
+    }
+
+    @Transactional
+    public Izpit vnesiKoncnoOceno(PrijavaNaIzpit prijavaNaIzpit) throws Exception {
+        Izpit izpit;
+        try {
+             izpit = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
+                            .setParameter("prijavaRokId", prijavaNaIzpit.getPrijavaRok().getId())
+                            .getSingleResult();
+        } catch (NoResultException e) {
+            throw new Exception("Izpit za to prijavo ne obstaja");
+        }
+
+        if (izpit.getPrijavaRok().getRok().getDatum().isAfter(LocalDate.now())
+            && izpit.getPrijavaRok().getRok().getCas().after(new Date())) {
+            throw new Exception("Izpit se še ni izvajal");
+        }
+        Integer ocenaPisno = izpit.getOcenaPisno();
+        if (ocenaPisno == null) {
+            throw new Exception("Pisna ocena še ni vpisana");
+        } else if (ocenaPisno < 6) {
+            throw new Exception("Pisna ocena je negativna");
+        }
+        Integer ocenaUstno = izpit.getOcenaUstno();
+        if (ocenaUstno != null && ocenaUstno < 6) {
+            throw new Exception("Ustna ocena je negativna");
+        }
+        izpit.setKoncnaOcena(prijavaNaIzpit.getKoncnaOcena());
+        em.merge(izpit);
+        return izpit;
     }
 
 }

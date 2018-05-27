@@ -1,11 +1,19 @@
 package rest.viri;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -13,9 +21,8 @@ import authentication.Auth;
 import authentication.Role;
 import common.CustomErrorMessage;
 import helpers.entities.PrijavaNaIzpit;
-import izpit.Izpit;
-import izpit.PrijavaRok;
-import prijava.Prijava;
+import izpit.IzpitniRok;
+import vloge.Uporabnik;
 import zrna.izpit.IzpitZrno;
 import zrna.izpit.PrijavaNaIzpitZrno;
 
@@ -66,4 +73,25 @@ public class IzpitVir {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
     }
+
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
+    @Path("koncna")
+    @POST
+    public Response vnesiKoncnoOcenoZaIzpit(PrijavaNaIzpit prijavaNaIzpit,
+                                            @Context HttpServletRequest httpServletRequest) {
+        Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
+        Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
+        if (uporabnikTip == Role.PREDAVATELJ) {
+            IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaNaIzpit.getPrijavaRok());
+            if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        try {
+            return Response.ok(izpitZrno.vnesiKoncnoOceno(prijavaNaIzpit)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+    }
+
+
 }

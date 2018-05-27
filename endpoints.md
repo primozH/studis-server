@@ -434,8 +434,9 @@ localhost:8080/api/v1/
     - GET /izpit/rok/{id}/rezultati[?count=true]
             - vrne študente, prijavljene na rok [id] in njihove izpitne rezultat. Če je nastavljen [count], 
             v Header "X-Total-Count" vrne število prijavljenih (za potrebe potrditve spremembe izpitnega roka)
-    - POST /izpit/rok/{id}/rezultati
+    - POST /izpit/rok/{id}/rezultati[?po-roku=true]
             - shrani rezultate izpita
+            - ce je nastavljen flag "po-roku=true", potem se lahko vpise rezultate (in kreira izpit) po izpitnem roku
             - body (array izpitnih rezultatov za studenta):
             ```json
             [
@@ -462,3 +463,15 @@ localhost:8080/api/v1/
     - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
         - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
         - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat
+
+    - POST /izpit/koncna
+        - authorization (le referent in ucitelj, ki uci predmet)
+        - vpise koncno oceno
+        ```json
+        {
+        	"koncnaOcena":6,
+        	"prijavaRok":{
+        		"id":88
+        	}
+        }
+        ```
