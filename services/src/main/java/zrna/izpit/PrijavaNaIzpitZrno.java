@@ -46,10 +46,6 @@ public class PrijavaNaIzpitZrno {
     @Inject private UserTransaction ux;
 
     public PrijavaRok applyForExam(PrijavaRok prijavaRok, Uporabnik uporabnik) throws Exception {
-        return applyForExam(prijavaRok, uporabnik, false);
-    }
-
-    public PrijavaRok applyForExam(PrijavaRok prijavaRok, Uporabnik uporabnik, boolean prijavaZaNazaj) throws Exception {
 
         if (!uporabnik.getId().equals(prijavaRok.getStudent().getId()) && uporabnik.getTip().equals("Student")) {
             throw new Exception("Ni pravic za prijavo");
@@ -66,7 +62,7 @@ public class PrijavaNaIzpitZrno {
         Integer totalTries = checkApplicationCount(prijavaRok, vpisi);
 
         // preveri roke (prijava po izteku, premalo dni)
-        checkDates(prijavaRok, prijavaZaNazaj);
+        checkDates(prijavaRok);
 
         // preveri prijavo na že opravljen izpit
         checkForPassedExam(prijavaRok);
@@ -227,7 +223,7 @@ public class PrijavaNaIzpitZrno {
         return countAll;
     }
 
-    private IzpitniRok checkDates(PrijavaRok prijavaRok, boolean prijavaZaNazaj) throws Exception {
+    private IzpitniRok checkDates(PrijavaRok prijavaRok) throws Exception {
         IzpitniRok izpitniRok;
         try {
             izpitniRok = em.createQuery("SELECT i FROM IzpitniRok i WHERE " +
@@ -240,9 +236,6 @@ public class PrijavaNaIzpitZrno {
                     .getSingleResult();
         } catch (NoResultException e) {
             throw new Exception("Ni razpisanega roka.");
-        }
-        if (prijavaZaNazaj) {
-            return izpitniRok;
         }
         LocalDateTime lastValidDateTime = getLastValidDay(izpitniRok.getDatum());
 
