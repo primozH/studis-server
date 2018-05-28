@@ -28,6 +28,7 @@ import izpit.IzpitniRok;
 import izpit.IzvajanjePredmeta;
 import izpit.OdjavaIzpit;
 import izpit.PrijavaRok;
+import prijava.Prijava;
 import sifranti.Cenik;
 import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
@@ -96,7 +97,7 @@ public class PrijavaNaIzpitZrno {
         odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
 
         try {
-            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniPrijavo", PrijavaRok.class)
+            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.prijavaZaRokInPredmet", PrijavaRok.class)
                     .setParameter("rok", prijavaRok.getRok().getId())
                     .setParameter("studentId", prijavaRok.getStudent().getId())
                     .getSingleResult();
@@ -124,7 +125,7 @@ public class PrijavaNaIzpitZrno {
         prijavaRok.setBrisana(true);
 
         em.persist(prijavaRok);
-        log.info("Prijava uspešno vrnjena");
+        log.info("Prijava uspešno brisana");
     }
 
     public List<PrijavaRok> vrniPrijaveNaIzpit(Uporabnik uporabnik) {

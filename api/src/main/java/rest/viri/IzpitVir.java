@@ -6,13 +6,7 @@ import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +16,7 @@ import authentication.Role;
 import common.CustomErrorMessage;
 import helpers.entities.PrijavaNaIzpit;
 import izpit.IzpitniRok;
+import izpit.PrijavaRok;
 import vloge.Uporabnik;
 import zrna.izpit.IzpitZrno;
 import zrna.izpit.PrijavaNaIzpitZrno;
@@ -60,6 +55,21 @@ public class IzpitVir {
         List<PrijavaNaIzpit> prijaveZRezultati = prijavaNaIzpitZrno.vrniPrijavljeneStudenteZOcenami(rokId);
 
         return Response.ok(prijaveZRezultati).header("X-Total-Count", prijaveZRezultati.size()).build();
+    }
+
+    @DELETE
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
+    @Path("rok/{id}/rezultati/{student}")
+    public Response vrniPrijavo(@PathParam("id") Integer rokId,  @PathParam("student")
+            Integer studentId, @Context HttpServletRequest httpServletRequest) {
+        try {
+            Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
+            izpitZrno.vrniPrijavo(rokId, studentId, uporabnik);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+
+        return Response.ok().build();
     }
 
 

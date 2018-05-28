@@ -460,6 +460,8 @@ localhost:8080/api/v1/
                 }
             ]
             ```
+    - DELETE /izpit/rok/{rokid}/rezultati/{studentId}
+        - vrne prijavo za študenta in izbriše morebitne vnešene rezultate
     - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
         - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
         - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat

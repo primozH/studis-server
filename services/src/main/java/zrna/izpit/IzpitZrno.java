@@ -16,8 +16,10 @@ import javax.transaction.Transactional;
 
 import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
+import izpit.OdjavaIzpit;
 import izpit.PrijavaRok;
 import vloge.Student;
+import vloge.Uporabnik;
 
 @ApplicationScoped
 public class IzpitZrno {
@@ -89,7 +91,13 @@ public class IzpitZrno {
             stored.setStudent(izpit.getPrijavaRok().getStudent());
             stored.setPrijavaRok(prijavaRok);
 
-            stored.setStPolaganjaLeto((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaLeto() : 0) + 1);
+            if (zadnjePolaganje != null &&
+                    zadnjePolaganje.getPrijavaRok().getRok().getIzvajanjePredmeta().getStudijskoLeto().getId()
+                            .equals(prijavaRok.getRok().getIzvajanjePredmeta().getStudijskoLeto().getId())) {
+                stored.setStPolaganjaLeto(zadnjePolaganje.getStPolaganjaLeto() + 1);
+            } else {
+                stored.setStPolaganjaLeto(1);
+            }
             stored.setStPolaganjaSkupno((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaSkupno() : 0) + 1);
 
             em.persist(stored);
@@ -194,6 +202,49 @@ public class IzpitZrno {
         izpit.setKoncnaOcena(prijavaNaIzpit.getKoncnaOcena());
         em.merge(izpit);
         return izpit;
+    }
+
+    @Transactional
+    public void vrniPrijavo(Integer rokId, Integer studentId, Uporabnik odjavitelj) throws Exception {
+        log.info("Vracanje prijave");
+        odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
+
+        if (odjavitelj.getTip().equalsIgnoreCase("student")) {
+            throw new Exception("Ni pravic za vračanje prijave");
+        }
+
+        PrijavaRok prijavaRok;
+        try {
+            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniNebrisanoPrijavo", PrijavaRok.class)
+                    .setParameter("studentId", studentId)
+                    .setParameter("rok", rokId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new Exception("Ni prijave");
+        }
+
+        Izpit izpit;
+        try {
+            izpit = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
+                    .setParameter("prijavaRokId", prijavaRok.getId())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            izpit = null;
+        }
+
+        if (izpit != null) {
+            em.remove(izpit);
+        }
+
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setOdjavitelj(odjavitelj);
+        odjavaIzpit.setPrijavaRok(prijavaRok);
+
+        em.persist(odjavaIzpit);
+
+        prijavaRok.setBrisana(true);
+
+        log.info("Prijava uspešno vrnjena");
     }
 
 }
