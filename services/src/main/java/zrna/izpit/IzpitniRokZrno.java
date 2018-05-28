@@ -223,4 +223,15 @@ public class IzpitniRokZrno {
         rok.setIzvajalec(ucitelj);
         rok.setIzvajanjePredmeta(predmet);
     }
+
+    public IzpitniRok vrniPosamezenRok(int rok) throws Exception {
+        IzpitniRok izpitniRok = new IzpitniRok();
+        izpitniRok.setId(rok);
+        try {
+            return em.find(IzpitniRok.class, izpitniRok.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("IzpitniRok za ta ID ni najden");
+        }
+    }
 }

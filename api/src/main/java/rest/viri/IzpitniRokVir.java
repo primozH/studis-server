@@ -229,4 +229,13 @@ public class IzpitniRokVir {
         }
     }
 
+    @GET
+    @Path("{id}")
+    public Response vrniPosamezenRok(@PathParam("id") Integer rokId) {
+        try {
+            return Response.ok(izpitniRokZrno.vrniPosamezenRok(rokId)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+    }
 }
