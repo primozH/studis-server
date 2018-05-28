@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -64,7 +65,9 @@ public class IzpitniRokVir {
     @Path("prijavi-studenta")
     @Auth(rolesAllowed = { Role.PREDAVATELJ, Role.REFERENT })
     public Response prijaviStudentaNaIzpit(PrijavaRok prijavaRok,
+                                           @DefaultValue("false") @QueryParam("po-roku") boolean prijavaZaNazaj,
                                            @Context HttpServletRequest httpServletRequest) {
+        log.info("prijavaZaNazaj = " + prijavaZaNazaj);
         PrijavaRok prijava;
         try {
             Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
@@ -75,7 +78,7 @@ public class IzpitniRokVir {
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
-            prijava = prijavaNaIzpitZrno.applyForExam(prijavaRok, prijavaRok.getStudent());
+            prijava = prijavaNaIzpitZrno.applyForExam(prijavaRok, prijavaRok.getStudent(), prijavaZaNazaj);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
