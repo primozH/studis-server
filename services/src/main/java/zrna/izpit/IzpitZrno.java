@@ -1,9 +1,7 @@
 package zrna.izpit;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,6 +15,7 @@ import javax.transaction.Transactional;
 import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
 import izpit.PrijavaRok;
+import sifranti.Predmet;
 import vloge.Student;
 
 @ApplicationScoped
@@ -83,7 +82,7 @@ public class IzpitZrno {
             stored = new Izpit();
             Izpit zadnjePolaganje = zadnjePolaganje(izpit);
 
-            stored.setOcenaPisno(izpit.getOcenaPisno());
+            if (izpit.getOcenaPisno() != null) stored.setOcenaPisno(izpit.getOcenaPisno());
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
             stored.setPredmet(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet());
             stored.setStudent(izpit.getPrijavaRok().getStudent());
@@ -94,7 +93,7 @@ public class IzpitZrno {
 
             em.persist(stored);
         } else {
-            stored.setOcenaPisno(izpit.getOcenaPisno());
+            if (izpit.getOcenaPisno() != null) stored.setOcenaPisno(izpit.getOcenaPisno());
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
 
             em.merge(stored);
@@ -136,7 +135,7 @@ public class IzpitZrno {
               .setParameter("rok", sifraRoka)
               .getResultList();
         Iterator<PrijavaRok> prijaveIterator = prijave.iterator();
-        Iterator<Izpit> izpitiIterator = izpiti.iterator();
+        Iterator<Izpit> izpitiIterator;
         List<Izpit> noviIzpiti = new ArrayList<>();
          log.info("prijavaRok " + Arrays.toString(prijave.toArray()));
 
@@ -145,11 +144,13 @@ public class IzpitZrno {
             najden = false;
             PrijavaRok prijavaRok = prijaveIterator.next();
              log.info("prijavaRok " + prijavaRok.getStudent().getId() + "  " + prijavaRok.getCasPrijave() + "  " + prijavaRok.isBrisana());
+             izpitiIterator = izpiti.iterator();
             while (izpitiIterator.hasNext()) {
                 Izpit izpit = izpitiIterator.next();
                 // Vrne izpit, ce je enak kot casPrijave pri zadnjem prijavnemRoku
                 if (prijavaRok.getStudent().getId() == izpit.getStudent().getId()
-                    && (prijavaRok.getCasPrijave().isBefore(izpit.getPrijavaRok().getCasPrijave()) || prijavaRok.getCasPrijave().isEqual(izpit.getPrijavaRok().getCasPrijave()))) {
+                    && (prijavaRok.getCasPrijave().isBefore(izpit.getPrijavaRok().getCasPrijave()) || prijavaRok.getCasPrijave().isEqual(izpit.getPrijavaRok().getCasPrijave()))
+                        || izpit.getPrijavaRok() == null) {
                     najden = true;
                     noviIzpiti.add(izpit);
                     break;
@@ -166,34 +167,47 @@ public class IzpitZrno {
         return noviIzpiti;
     }
 
+    /**
+     * Vpise koncno oceno za predmet.
+     * @param prijavaNaIzpit V prijavaNaIzpit.prijavaRok so ze podatki IzpitniRok ter id Studenta.
+     * @return
+     * @throws Exception
+     */
     @Transactional
     public Izpit vnesiKoncnoOceno(PrijavaNaIzpit prijavaNaIzpit) throws Exception {
-        Izpit izpit;
+        Izpit izpit = null;
+        Integer koncnaOcena = prijavaNaIzpit.getKoncnaOcena();
+        if (koncnaOcena == null
+                || koncnaOcena < 5
+                || koncnaOcena > 10) {
+            throw new Exception("Format koncne ocene ni pravilen");
+        }
         try {
              izpit = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
                             .setParameter("prijavaRokId", prijavaNaIzpit.getPrijavaRok().getId())
                             .getSingleResult();
-        } catch (NoResultException e) {
-            throw new Exception("Izpit za to prijavo ne obstaja");
+        } catch (NoResultException | NullPointerException e) {
+//            throw new Exception("Izpit za to prijavo ne obstaja");
+            log.info("Izpit za studenta se ne obstaja, kreiramo novega.");
+            Student student;
+            try {
+                student = em.createNamedQuery("entitete.vloge.Student.vrniStudentaPoVpisniStevilki",Student.class)
+                        .setParameter("vpisnaStevilka", prijavaNaIzpit.getPrijavaRok().getStudent().getVpisnaStevilka())
+                        .getSingleResult();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new Exception("Student ni bil najden");
+            }
+            prijavaNaIzpit.getPrijavaRok().setStudent(student);
+            Predmet predmet;
+            try {
+                predmet = em.find(Predmet.class, prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet().getSifra());
+            } catch (Exception exc) {
+                throw new Exception("Predmet ne obstaja");
+            }
+            prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setPredmet(predmet);
         }
-
-        if (izpit.getPrijavaRok().getRok().getDatum().isAfter(LocalDate.now())
-            && izpit.getPrijavaRok().getRok().getCas().after(new Date())) {
-            throw new Exception("Izpit se še ni izvajal");
-        }
-        Integer ocenaPisno = izpit.getOcenaPisno();
-        if (ocenaPisno == null) {
-            throw new Exception("Pisna ocena še ni vpisana");
-        } else if (ocenaPisno < 6) {
-            throw new Exception("Pisna ocena je negativna");
-        }
-        Integer ocenaUstno = izpit.getOcenaUstno();
-        if (ocenaUstno != null && ocenaUstno < 6) {
-            throw new Exception("Ustna ocena je negativna");
-        }
-        izpit.setKoncnaOcena(prijavaNaIzpit.getKoncnaOcena());
-        em.merge(izpit);
-        return izpit;
+        return vnesiRezultate(izpit, prijavaNaIzpit, null);
     }
 
 }
