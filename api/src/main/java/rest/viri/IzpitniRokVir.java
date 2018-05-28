@@ -162,15 +162,17 @@ public class IzpitniRokVir {
                 .collect(Collectors.toList());
 
         for (IzpitniRokJson prijava : rokiZaStudenta) {
-            List<IzpitniRok> tmp = izpitniRoki.stream()
+            // filtriramo roke po predmetih
+            List<IzpitniRok> roki = izpitniRoki.stream()
                     .filter(rok -> rok
                             .getIzvajanjePredmeta()
                             .getPredmet()
                             .getSifra()
                             .equals(prijava.getPredmet().getSifra()))
                     .collect(Collectors.toList());
-            prijava.setRoki(tmp);
+            prijava.setRoki(roki);
 
+            // oznacimo na kateri rok je student prijavljen
             List<IzpitniRok> prijavljen = prijave.stream()
                     .filter(prijavaRok ->
                             prijavaRok

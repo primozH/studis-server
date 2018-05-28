@@ -29,6 +29,9 @@ import vloge.Ucitelj;
                         "AND p.predmet = i.izvajanjePredmeta.predmet " +
                         "AND p.vpis.student.id = :student " +
                         "AND i.datum > :datum " +
+                        "AND i NOT IN (" +
+                            "SELECT iz2.prijavaRok.rok FROM Izpit iz2 " +
+                            "WHERE iz2.prijavaRok.rok = i) " +
                         "ORDER BY i.datum"),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
         query = "SELECT i FROM IzpitniRok i " +

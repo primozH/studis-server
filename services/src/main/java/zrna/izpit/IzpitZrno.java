@@ -176,12 +176,8 @@ public class IzpitZrno {
 
     @Transactional
     public Izpit vnesiKoncnoOceno(PrijavaNaIzpit prijavaNaIzpit) throws Exception {
-        Izpit izpit;
-        try {
-             izpit = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
-                            .setParameter("prijavaRokId", prijavaNaIzpit.getPrijavaRok().getId())
-                            .getSingleResult();
-        } catch (NoResultException e) {
+        Izpit izpit = vrniIzpitZaPrijavo(prijavaNaIzpit.getPrijavaRok().getId());
+        if (izpit == null) {
             throw new Exception("Izpit za to prijavo ne obstaja");
         }
 
@@ -223,14 +219,7 @@ public class IzpitZrno {
             throw new Exception("Ni prijave");
         }
 
-        Izpit izpit;
-        try {
-            izpit = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
-                    .setParameter("prijavaRokId", prijavaRok.getId())
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            izpit = null;
-        }
+        Izpit izpit = vrniIzpitZaPrijavo(prijavaRok.getId());
 
         if (izpit != null) {
             em.remove(izpit);
@@ -247,4 +236,14 @@ public class IzpitZrno {
         log.info("Prijava uspešno vrnjena");
     }
 
+
+    private Izpit vrniIzpitZaPrijavo(Integer prijavaRokId) {
+        try {
+            return em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
+                    .setParameter("prijavaRokId", prijavaRokId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

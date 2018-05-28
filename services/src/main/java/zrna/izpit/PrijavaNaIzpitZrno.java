@@ -250,7 +250,7 @@ public class PrijavaNaIzpitZrno {
                     lastValidDateTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         }
 
-        LocalDate timeBetweenApplications = izpitniRok.getDatum().plusDays(14);
+        LocalDate timeBetweenApplications = izpitniRok.getDatum().minusDays(14);
 
         List<PrijavaRok> zakljucenePrijave = em.createNamedQuery("entitete.izpit.PrijavaRok.zakljucenePrijave", PrijavaRok.class)
                 .setParameter("predmet", prijavaRok.getRok().getIzvajanjePredmeta().getPredmet().getSifra())
@@ -258,9 +258,9 @@ public class PrijavaNaIzpitZrno {
                 .getResultList();
 
         if (zakljucenePrijave.size() != 0 &&
-            zakljucenePrijave.get(0).getRok().getDatum().isBefore(timeBetweenApplications)) {
-            log.info("Od zadnje prijave še ni minilo dovolj časa");
-            throw new Exception("Od zadnje prijave še ni minilo dovolj časa");
+            zakljucenePrijave.get(0).getRok().getDatum().isAfter(timeBetweenApplications)) {
+            log.info("Od zadnjega polaganja še ni minilo dovolj časa");
+            throw new Exception("Od zadnjega polaganja še ni minilo dovolj časa");
         }
 
         return izpitniRok;

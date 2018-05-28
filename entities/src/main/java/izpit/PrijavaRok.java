@@ -21,6 +21,7 @@ import vloge.Student;
                 "p.rok.izvajanjePredmeta.predmet.sifra = :predmet " +
                 "AND p.student.id = :studentId " +
                 "AND p.zakljucena = TRUE " +
+                "AND p.brisana = FALSE " +
                 "ORDER BY p.rok.datum DESC"),
         @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniNebrisanoPrijavo", query = "SELECT p FROM PrijavaRok p " +
                 "WHERE p.rok.id = :rok " +
