@@ -2,7 +2,7 @@
 -- Strežnik:                     127.0.0.1
 -- Verzija strežnika:            10.2.9-MariaDB - mariadb.org binary distribution
 -- Operacijski sistem strežnika: Win64
--- HeidiSQL Različica:           9.5.0.5196
+-- HeidiSQL Različica:           9.4.0.5125
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `cenik` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.cenik: ~1 rows (približno)
+-- Dumping data for table studis.cenik: ~0 rows (približno)
 /*!40000 ALTER TABLE `cenik` DISABLE KEYS */;
 INSERT INTO `cenik` (`id`, `naziv`, `cena`, `valuta`) VALUES
 	(1, 'Cena izpita', 9.00, 'EUR');
@@ -330,9 +330,9 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 	CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`),
 	CONSTRAINT `izpit_predmet_sifra_fk` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
 	CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`id`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpit: ~12 rows (približno)
+-- Dumping data for table studis.izpit: ~24 rows (približno)
 /*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
 INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `st_polaganja_leto`, `st_polaganja_skupno`, `predmet`, `student`) VALUES
 	(1, 33, '2018-05-18', 5, 45, NULL, 1, 1, 63280, 57),
@@ -346,7 +346,19 @@ INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`,
 	(9, 73, '2018-05-18', 5, 15, NULL, 1, 1, 63279, 56),
 	(10, 74, '2018-05-18', 5, 22, NULL, 2, 2, 63279, 56),
 	(11, 75, '2018-05-18', 5, 45, NULL, 3, 3, 63279, 56),
-	(12, 87, '2018-05-24', 5, 22, NULL, 1, 1, 63202, 51);
+	(12, 87, '2018-05-24', 5, 22, NULL, 1, 1, 63202, 51),
+	(13, 117, '2018-05-28', 7, 64, NULL, 1, 1, 63279, 59),
+	(14, 88, '2018-05-27', 7, 64, NULL, 1, 1, 63202, 58),
+	(15, 121, '2018-05-27', 5, 43, NULL, 1, 1, 63202, 60),
+	(16, 147, '2018-05-27', 10, 91, NULL, 1, 1, 63202, 62),
+	(17, 156, '2018-05-27', 8, 72, NULL, 1, 1, 63202, 63),
+	(18, 45, '2018-05-28', 9, 80, NULL, 1, 1, 63277, 51),
+	(19, 54, '2018-05-28', 6, 52, NULL, 1, 1, 63277, 52),
+	(20, 62, '2018-05-28', 5, 35, NULL, 1, 1, 63277, 53),
+	(21, 95, '2018-05-28', 10, 96, NULL, 1, 1, 63277, 58),
+	(22, 115, '2018-05-28', 6, 58, NULL, 1, 1, 63277, 59),
+	(23, 154, '2018-05-28', NULL, NULL, NULL, 1, 1, 63277, 62),
+	(24, 163, '2018-05-28', NULL, NULL, NULL, 1, 1, 63277, 63);
 /*!40000 ALTER TABLE `izpit` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpitni_rok
@@ -832,7 +844,7 @@ CREATE TABLE IF NOT EXISTS `odjava` (
 	KEY `FK_odjava_studijsko_leto` (`prijava_id`),
 	CONSTRAINT `FK_odjava_odjavitelj` FOREIGN KEY (`odjavitelj`) REFERENCES `uporabnik` (`id_uporabnik`),
 	CONSTRAINT `FK_odjava_prijava` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
 -- Dumping data for table studis.odjava: ~47 rows (približno)
 /*!40000 ALTER TABLE `odjava` DISABLE KEYS */;
@@ -883,7 +895,11 @@ INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(45, 84, '2018-05-24 19:54:17', 56),
 	(46, 85, '2018-05-24 19:55:15', 56),
 	(47, 76, '2018-05-24 20:20:36', 51),
-	(48, 39, '2018-05-24 20:20:57', 51);
+	(48, 39, '2018-05-24 20:20:57', 51),
+	(49, 140, '2018-05-27 08:37:48', 60),
+	(50, 143, '2018-05-27 08:38:49', 60),
+	(51, 146, '2018-05-27 08:43:05', 61),
+	(52, 145, '2018-05-27 08:59:24', 2);
 /*!40000 ALTER TABLE `odjava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.posta
@@ -3027,9 +3043,9 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	KEY `FK_prijava_rok_izpitni_rok` (`izpitni_rok`),
 	CONSTRAINT `FK_prijava_rok_izpitni_rok` FOREIGN KEY (`izpitni_rok`) REFERENCES `izpitni_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `FK_prijava_rok_uporabnik` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.prijava_rok: ~80 rows (približno)
+-- Dumping data for table studis.prijava_rok: ~162 rows (približno)
 /*!40000 ALTER TABLE `prijava_rok` DISABLE KEYS */;
 INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`, `valuta`, `zakljucena`, `brisana`) VALUES
 	(3, 4, '2018-05-15 16:19:35', 52, 0.00, NULL, 0, 1),
@@ -3072,7 +3088,7 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(42, 19, '2018-05-22 21:39:55', 51, 0.00, NULL, 0, 0),
 	(43, 77, '2018-05-22 21:39:59', 51, 0.00, NULL, 0, 0),
 	(44, 4, '2018-05-22 21:40:01', 51, 0.00, NULL, 0, 0),
-	(45, 72, '2018-05-22 21:40:05', 51, 0.00, NULL, 0, 0),
+	(45, 72, '2018-05-22 21:40:05', 51, 0.00, NULL, 1, 0),
 	(46, 73, '2018-05-22 21:40:07', 51, 0.00, NULL, 0, 0),
 	(48, 11, '2018-05-22 21:40:40', 52, 0.00, NULL, 0, 0),
 	(49, 99, '2018-05-22 21:40:42', 52, 0.00, NULL, 0, 0),
@@ -3080,14 +3096,14 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(51, 19, '2018-05-22 21:40:45', 52, 0.00, NULL, 0, 0),
 	(52, 78, '2018-05-22 21:40:47', 52, 0.00, NULL, 0, 0),
 	(53, 6, '2018-05-22 21:40:49', 52, 0.00, NULL, 0, 0),
-	(54, 72, '2018-05-22 21:40:51', 52, 0.00, NULL, 0, 0),
+	(54, 72, '2018-05-22 21:40:51', 52, 0.00, NULL, 1, 0),
 	(55, 74, '2018-05-22 21:40:52', 52, 0.00, NULL, 0, 0),
 	(57, 11, '2018-05-22 21:41:11', 53, 0.00, NULL, 0, 0),
 	(58, 22, '2018-05-22 21:41:14', 53, 0.00, NULL, 0, 0),
 	(59, 35, '2018-05-22 21:41:16', 53, 0.00, NULL, 0, 0),
 	(60, 77, '2018-05-22 21:41:18', 53, 0.00, NULL, 0, 0),
 	(61, 4, '2018-05-22 21:41:20', 53, 0.00, NULL, 0, 0),
-	(62, 72, '2018-05-22 21:41:21', 53, 0.00, NULL, 0, 0),
+	(62, 72, '2018-05-22 21:41:21', 53, 0.00, NULL, 1, 0),
 	(63, 73, '2018-05-22 21:41:23', 53, 0.00, NULL, 0, 0),
 	(65, 61, '2018-05-24 18:17:00', 65, 0.00, NULL, 0, 1),
 	(66, 109, '2018-05-15 22:01:40', 53, 0.00, NULL, 1, 0),
@@ -3111,7 +3127,97 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(84, 10, '2018-05-24 19:54:15', 56, 0.00, NULL, 0, 1),
 	(85, 10, '2018-05-24 19:55:08', 56, 9.00, NULL, 0, 1),
 	(86, 111, '2018-05-24 19:55:47', 57, 9.00, NULL, 0, 0),
-	(87, 61, '2018-05-24 20:21:16', 51, 0.00, NULL, 1, 0);
+	(87, 61, '2018-05-24 20:21:16', 51, 0.00, NULL, 1, 0),
+	(88, 61, '2018-05-27 08:33:58', 58, 0.00, NULL, 1, 0),
+	(89, 11, '2018-05-27 08:34:00', 58, 0.00, NULL, 0, 0),
+	(90, 98, '2018-05-27 08:34:03', 58, 0.00, NULL, 0, 0),
+	(91, 22, '2018-05-27 08:34:05', 58, 0.00, NULL, 0, 0),
+	(92, 19, '2018-05-27 08:34:07', 58, 0.00, NULL, 0, 0),
+	(93, 77, '2018-05-27 08:34:08', 58, 0.00, NULL, 0, 0),
+	(94, 5, '2018-05-27 08:34:12', 58, 0.00, NULL, 0, 0),
+	(95, 72, '2018-05-27 08:34:13', 58, 0.00, NULL, 1, 0),
+	(96, 73, '2018-05-27 08:34:15', 58, 0.00, NULL, 0, 0),
+	(97, 71, '2018-05-27 08:34:16', 58, 0.00, NULL, 0, 0),
+	(98, 85, '2018-05-27 08:34:21', 58, 0.00, NULL, 0, 0),
+	(99, 46, '2018-05-27 08:34:23', 58, 0.00, NULL, 0, 0),
+	(100, 76, '2018-05-27 08:34:27', 58, 0.00, NULL, 0, 0),
+	(101, 79, '2018-05-27 08:34:29', 58, 0.00, NULL, 0, 0),
+	(102, 55, '2018-05-27 08:34:31', 58, 0.00, NULL, 0, 0),
+	(103, 69, '2018-05-27 08:34:32', 58, 0.00, NULL, 0, 0),
+	(104, 62, '2018-05-27 08:35:17', 59, 0.00, NULL, 0, 0),
+	(105, 12, '2018-05-27 08:35:19', 59, 0.00, NULL, 0, 0),
+	(106, 99, '2018-05-27 08:35:21', 59, 0.00, NULL, 0, 0),
+	(107, 22, '2018-05-27 08:35:22', 59, 0.00, NULL, 0, 0),
+	(108, 33, '2018-05-27 08:35:24', 59, 0.00, NULL, 0, 0),
+	(109, 77, '2018-05-27 08:36:09', 59, 0.00, NULL, 0, 0),
+	(110, 5, '2018-05-27 08:36:16', 59, 0.00, NULL, 0, 0),
+	(111, 82, '2018-05-27 08:36:18', 59, 0.00, NULL, 0, 0),
+	(112, 25, '2018-05-27 08:36:20', 59, 0.00, NULL, 0, 0),
+	(113, 28, '2018-05-27 08:36:21', 59, 0.00, NULL, 0, 0),
+	(114, 51, '2018-05-27 08:36:23', 59, 0.00, NULL, 0, 0),
+	(115, 72, '2018-05-27 08:36:24', 59, 0.00, NULL, 1, 0),
+	(116, 74, '2018-05-27 08:36:25', 59, 0.00, NULL, 0, 0),
+	(117, 10, '2018-05-27 08:36:27', 59, 0.00, NULL, 1, 0),
+	(118, 3, '2018-05-27 08:36:28', 59, 0.00, NULL, 0, 0),
+	(119, 37, '2018-05-27 08:36:30', 59, 0.00, NULL, 0, 0),
+	(120, 41, '2018-05-27 08:36:33', 59, 0.00, NULL, 0, 0),
+	(121, 61, '2018-05-27 08:37:07', 60, 0.00, NULL, 1, 0),
+	(122, 12, '2018-05-27 08:37:12', 60, 0.00, NULL, 0, 0),
+	(123, 99, '2018-05-27 08:37:14', 60, 0.00, NULL, 0, 0),
+	(124, 22, '2018-05-27 08:37:16', 60, 0.00, NULL, 0, 0),
+	(125, 33, '2018-05-27 08:37:17', 60, 0.00, NULL, 0, 0),
+	(126, 78, '2018-05-27 08:37:19', 60, 0.00, NULL, 0, 0),
+	(127, 5, '2018-05-27 08:37:20', 60, 0.00, NULL, 0, 0),
+	(128, 67, '2018-05-27 08:37:22', 60, 0.00, NULL, 0, 0),
+	(129, 54, '2018-05-27 08:37:23', 60, 0.00, NULL, 0, 0),
+	(130, 59, '2018-05-27 08:37:24', 60, 0.00, NULL, 0, 0),
+	(131, 45, '2018-05-27 08:37:25', 60, 0.00, NULL, 0, 0),
+	(132, 88, '2018-05-27 08:37:28', 60, 0.00, NULL, 0, 0),
+	(133, 74, '2018-05-27 08:37:30', 60, 0.00, NULL, 0, 0),
+	(134, 8, '2018-05-27 08:37:32', 60, 0.00, NULL, 0, 0),
+	(135, 63, '2018-05-27 08:37:34', 60, 0.00, NULL, 0, 0),
+	(136, 82, '2018-05-27 08:37:36', 60, 0.00, NULL, 0, 0),
+	(137, 25, '2018-05-27 08:37:37', 60, 0.00, NULL, 0, 0),
+	(138, 28, '2018-05-27 08:37:39', 60, 0.00, NULL, 0, 0),
+	(139, 41, '2018-05-27 08:37:40', 60, 0.00, NULL, 0, 0),
+	(140, 10, '2018-05-27 08:37:42', 60, 0.00, NULL, 0, 1),
+	(141, 3, '2018-05-27 08:37:44', 60, 0.00, NULL, 0, 0),
+	(142, 37, '2018-05-27 08:37:45', 60, 0.00, NULL, 0, 0),
+	(143, 10, '2018-05-27 08:38:00', 60, 0.00, NULL, 0, 1),
+	(144, 66, '2018-05-27 08:42:57', 61, 0.00, NULL, 0, 0),
+	(145, 42, '2018-05-27 08:42:59', 61, 0.00, NULL, 0, 1),
+	(146, 7, '2018-05-27 08:43:02', 61, 0.00, NULL, 0, 1),
+	(147, 61, '2018-05-27 08:44:28', 62, 9.00, NULL, 1, 0),
+	(148, 12, '2018-05-27 08:44:31', 62, 9.00, NULL, 0, 0),
+	(149, 98, '2018-05-27 08:44:34', 62, 9.00, NULL, 0, 0),
+	(150, 21, '2018-05-27 08:44:35', 62, 9.00, NULL, 0, 0),
+	(151, 33, '2018-05-27 08:44:37', 62, 9.00, NULL, 0, 0),
+	(152, 77, '2018-05-27 08:44:38', 62, 9.00, NULL, 0, 0),
+	(153, 4, '2018-05-27 08:44:40', 62, 9.00, NULL, 0, 0),
+	(154, 72, '2018-05-27 08:44:41', 62, 9.00, NULL, 0, 0),
+	(155, 73, '2018-05-27 08:44:42', 62, 9.00, NULL, 0, 0),
+	(156, 61, '2018-05-27 08:45:18', 63, 0.00, NULL, 1, 0),
+	(157, 11, '2018-05-27 08:45:21', 63, 0.00, NULL, 0, 0),
+	(158, 98, '2018-05-27 08:45:22', 63, 0.00, NULL, 0, 0),
+	(159, 21, '2018-05-27 08:45:23', 63, 0.00, NULL, 0, 0),
+	(160, 19, '2018-05-27 08:45:24', 63, 0.00, NULL, 0, 0),
+	(161, 77, '2018-05-27 08:45:25', 63, 0.00, NULL, 0, 0),
+	(162, 4, '2018-05-27 08:45:26', 63, 0.00, NULL, 0, 0),
+	(163, 72, '2018-05-27 08:45:27', 63, 0.00, NULL, 0, 0),
+	(164, 73, '2018-05-27 08:45:28', 63, 0.00, NULL, 0, 0),
+	(165, 62, '2018-05-27 08:46:12', 65, 9.00, NULL, 0, 0),
+	(166, 12, '2018-05-27 08:46:13', 65, 9.00, NULL, 0, 0),
+	(167, 99, '2018-05-27 08:46:15', 65, 9.00, NULL, 0, 0),
+	(168, 23, '2018-05-27 08:47:10', 65, 9.00, NULL, 0, 0),
+	(169, 33, '2018-05-27 08:47:12', 65, 9.00, NULL, 0, 0),
+	(170, 78, '2018-05-27 08:47:13', 65, 9.00, NULL, 0, 0),
+	(171, 4, '2018-05-27 08:47:14', 65, 9.00, NULL, 0, 0),
+	(172, 88, '2018-05-27 08:47:16', 65, 9.00, NULL, 0, 0),
+	(173, 75, '2018-05-27 08:47:17', 65, 9.00, NULL, 0, 0),
+	(174, 63, '2018-05-27 08:47:22', 65, 9.00, NULL, 0, 0),
+	(175, 81, '2018-05-27 08:47:23', 65, 9.00, NULL, 0, 0),
+	(176, 25, '2018-05-27 08:47:25', 65, 9.00, NULL, 0, 0),
+	(177, 27, '2018-05-27 08:47:27', 65, 9.00, NULL, 0, 0);
 /*!40000 ALTER TABLE `prijava_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.referent
@@ -3139,7 +3245,7 @@ CREATE TABLE IF NOT EXISTS `skrbnik` (
 	CONSTRAINT `FK_skrbnik_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.skrbnik: ~1 rows (približno)
+-- Dumping data for table studis.skrbnik: ~0 rows (približno)
 /*!40000 ALTER TABLE `skrbnik` DISABLE KEYS */;
 INSERT INTO `skrbnik` (`id_uporabnik`) VALUES
 	(1);
