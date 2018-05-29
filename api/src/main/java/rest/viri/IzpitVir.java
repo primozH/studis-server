@@ -21,7 +21,8 @@ import authentication.Auth;
 import authentication.Role;
 import common.CustomErrorMessage;
 import helpers.entities.PrijavaNaIzpit;
-import izpit.IzpitniRok;
+import izpit.Izpit;
+import vloge.Ucitelj;
 import vloge.Uporabnik;
 import zrna.izpit.IzpitZrno;
 import zrna.izpit.PrijavaNaIzpitZrno;
@@ -77,17 +78,17 @@ public class IzpitVir {
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
     @Path("koncna")
     @POST
-    public Response vnesiKoncnoOcenoZaIzpit(PrijavaNaIzpit prijavaNaIzpit,
+    public Response vnesiKoncnoOcenoZaIzpit(Izpit izpit,
                                             @Context HttpServletRequest httpServletRequest) {
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
         Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
-        if (uporabnikTip == Role.PREDAVATELJ) {
-            IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaNaIzpit.getPrijavaRok());
-            if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
-                return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
         try {
-            return Response.ok(izpitZrno.vnesiKoncnoOceno(prijavaNaIzpit)).build();
+            if (uporabnikTip == Role.PREDAVATELJ) {
+                izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setNosilec1((Ucitelj) uporabnik);
+                if (prijavaNaIzpitZrno.getExamExecution(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta()) == null)
+                    return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            return Response.ok(izpitZrno.vnesiKoncnoOceno(izpit)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }

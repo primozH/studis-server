@@ -49,7 +49,9 @@ import vloge.Student;
                 query = "SELECT i FROM PrijavaRok i " +
                         "WHERE i.casPrijave = " +
                         "(SELECT MAX(ip.casPrijave) FROM PrijavaRok ip WHERE ip.rok.id = :rok " +
-                        "AND ip.student.id = i.student.id GROUP BY ip.student.id)")
+                        "AND ip.student.id = i.student.id GROUP BY ip.student.id)"),
+        @NamedQuery(name = "entitete.izpit.PrijavaRok.vrniPrijavoZaId",
+                query = "SELECT i FROM PrijavaRok i WHERE i.id = :prijavaRokId")
 })
 public class PrijavaRok {
 

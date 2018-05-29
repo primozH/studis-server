@@ -367,4 +367,16 @@ public class PrijavaNaIzpitZrno {
             }
         }
     }
+
+    public IzvajanjePredmeta getExamExecution(IzvajanjePredmeta izvajanjePredmeta) throws Exception {
+        try {
+            return em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
+                     .setParameter("studijskoLeto", izvajanjePredmeta.getStudijskoLeto().getId())
+                     .setParameter("predmet", izvajanjePredmeta.getPredmet().getSifra())
+                     .setParameter("ucitelj", izvajanjePredmeta.getNosilec1().getId())
+                     .getSingleResult();
+        } catch (Exception e) {
+            throw new Exception("Ucitelj ne uci tega predmeta");
+        }
+    }
 }
