@@ -225,6 +225,7 @@ public class IzpitZrno {
         if (requestIzpit.getStPolaganjaSkupno() != null) {
             izpit.setStPolaganjaSkupno(requestIzpit.getStPolaganjaSkupno());
         }
+        em.merge(izpit);
         return izpit;
     }
 
