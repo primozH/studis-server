@@ -379,4 +379,14 @@ public class PrijavaNaIzpitZrno {
             throw new Exception("Ucitelj ne uci tega predmeta");
         }
     }
+
+    public Student getStudent(int studentId) throws Exception {
+        Student student = new Student();
+        student.setId(studentId);
+        try {
+            return em.find(Student.class, student.getId());
+        } catch (Exception e) {
+            throw new Exception("Student ne obstaja");
+        }
+    }
 }

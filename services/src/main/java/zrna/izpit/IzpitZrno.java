@@ -2,8 +2,10 @@ package zrna.izpit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -227,6 +229,46 @@ public class IzpitZrno {
         }
         em.merge(izpit);
         return izpit;
+    }
+
+    public List<Izpit> vrniOpravljeneIzpite(Student student, int studijskoLeto) throws Exception {
+        try {
+            List<Izpit> izpiti;
+            if (studijskoLeto > 0) {
+                izpiti = em.createNamedQuery("entitete.izpit.Izpit.pozitivniPredmetiZaLeto", Izpit.class)
+                           .setParameter("student", student.getId())
+                           .setParameter("studijskoLeto", studijskoLeto)
+                           .getResultList();
+            } else {
+                izpiti = em.createNamedQuery("entitete.izpit.Izpit.pozitivniPredmeti", Izpit.class)
+                           .setParameter("student", student.getId())
+                           .getResultList();
+            }
+            if (izpiti.isEmpty()) throw new NoResultException();
+            Iterator<Izpit> iterator = izpiti.iterator();
+            Map<Integer, Izpit> zadnjeOceneMap = new HashMap<>();
+            while (iterator.hasNext()) {
+                Izpit izpit = iterator.next();
+                if (!zadnjeOceneMap.containsKey(izpit.getPredmet().getSifra())) {
+                    zadnjeOceneMap.put(izpit.getPredmet().getSifra(), izpit);
+                } else {
+                    Izpit trenutnoNajbolsi = zadnjeOceneMap.get(izpit.getPredmet().getSifra());
+                    if (trenutnoNajbolsi.getDatum().isBefore(izpit.getDatum()) ||
+                            trenutnoNajbolsi.getDatum().isEqual(izpit.getDatum()) && izpit.getStPolaganjaSkupno() > trenutnoNajbolsi.getStPolaganjaSkupno()) {
+                        zadnjeOceneMap.replace(izpit.getPredmet().getSifra(), izpit);
+                    }
+                }
+            }
+            List<Izpit> filtriraniIzpiti = new ArrayList<>();
+            for (Izpit izpit : zadnjeOceneMap.values()) {
+                filtriraniIzpiti.add(izpit);
+                log.info("predmet = " + izpit.getPredmet().getSifra() + "  ocena = " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getId());
+            }
+
+            return filtriraniIzpiti;
+        } catch (NoResultException e) {
+            throw new Exception("Student nima opravljenih izpitov");
+        }
     }
 
 }
