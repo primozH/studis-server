@@ -149,8 +149,7 @@ public class IzpitZrno {
                 Izpit izpit = izpitiIterator.next();
                 // Vrne izpit, ce je enak kot casPrijave pri zadnjem prijavnemRoku
                 if (prijavaRok.getStudent().getId() == izpit.getStudent().getId()
-                    && (prijavaRok.getCasPrijave().isBefore(izpit.getPrijavaRok().getCasPrijave()) || prijavaRok.getCasPrijave().isEqual(izpit.getPrijavaRok().getCasPrijave()))
-                        || izpit.getPrijavaRok() == null) {
+                    && (prijavaRok.getCasPrijave().isBefore(izpit.getPrijavaRok().getCasPrijave()) || prijavaRok.getCasPrijave().isEqual(izpit.getPrijavaRok().getCasPrijave()))) {
                     najden = true;
                     noviIzpiti.add(izpit);
                     break;
@@ -167,21 +166,18 @@ public class IzpitZrno {
         return noviIzpiti;
     }
 
-    /**
-     * Vpise koncno oceno za predmet.
-     * @param prijavaNaIzpit V prijavaNaIzpit.prijavaRok so ze podatki IzpitniRok ter id Studenta.
-     * @return
-     * @throws Exception
-     */
     @Transactional
-    public Izpit vnesiKoncnoOceno(PrijavaNaIzpit prijavaNaIzpit) throws Exception {
+    public Izpit vnesiKoncnoOceno(Izpit requestIzpit) throws Exception {
         Izpit izpit = null;
-        Integer koncnaOcena = prijavaNaIzpit.getKoncnaOcena();
+        PrijavaNaIzpit prijavaNaIzpit = new PrijavaNaIzpit();
+        prijavaNaIzpit.setPrijavaRok(requestIzpit.getPrijavaRok());
+        Integer koncnaOcena = requestIzpit.getKoncnaOcena();
         if (koncnaOcena == null
                 || koncnaOcena < 5
                 || koncnaOcena > 10) {
             throw new Exception("Format koncne ocene ni pravilen");
         }
+        prijavaNaIzpit.setKoncnaOcena(requestIzpit.getKoncnaOcena());
         try {
              izpit = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
                             .setParameter("prijavaRokId", prijavaNaIzpit.getPrijavaRok().getId())
@@ -207,7 +203,11 @@ public class IzpitZrno {
             }
             prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setPredmet(predmet);
         }
-        return vnesiRezultate(izpit, prijavaNaIzpit, null);
+        izpit = vnesiRezultate(izpit, prijavaNaIzpit, null);
+        if (requestIzpit.getDatum() != null) izpit.setDatum(requestIzpit.getDatum());
+        if (requestIzpit.getStPolaganjaLeto() != null) izpit.setStPolaganjaLeto(requestIzpit.getStPolaganjaLeto());
+        if (requestIzpit.getStPolaganjaSkupno() != null) izpit.setStPolaganjaSkupno(requestIzpit.getStPolaganjaSkupno());
+        return izpit;
     }
 
 }

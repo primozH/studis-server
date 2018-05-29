@@ -467,10 +467,26 @@ localhost:8080/api/v1/
         - authorization (le referent in ucitelj, ki uci predmet)
         - vpise koncno oceno
         ```json
-        {
-        	"koncnaOcena":6,
-        	"prijavaRok":{
-        		"id":88
-        	}
-        }
+       {
+       	"koncnaOcena":6,
+       	"prijavaRok":{
+       	    "id":10,            <--- izpusti ali -1, ce gre za neprijavljenega stutenda
+       		"rok":{
+       			"izvajanjePredmeta":{
+       				"predmet":{
+       					"sifra":63279
+       				},
+       				"studijskoLeto":{
+       					"id":2017
+       				}
+       			}
+       		},
+       		"student":{
+       			"vpisnaStevilka":63170001
+       		}
+       	},
+       	"stPolaganjaLeto":2,    <--- izpusti, ce gre za prijavljenega stutenda
+        "stPolaganjaSkupno":3,  <--- izpusti, ce gre za prijavljenega stutenda
+        "datum": "2018-05-30"   <--- izpusti, ce gre za prijavljenega stutenda
+       }
         ```
