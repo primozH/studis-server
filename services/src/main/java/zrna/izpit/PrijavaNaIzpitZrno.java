@@ -163,6 +163,19 @@ public class PrijavaNaIzpitZrno {
         return prijaveZRezultati;
     }
 
+    public PrijavaRok aktivnaPrijava(Integer predmetId, Integer studentId) {
+        PrijavaRok prijavaRok;
+        try {
+            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.aktivnePrijave", PrijavaRok.class)
+                    .setParameter("student", studentId)
+                    .setParameter("predmet", predmetId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            prijavaRok = null;
+        }
+
+        return prijavaRok;
+    }
     /* HELPERS */
     private Integer checkApplicationCount(PrijavaRok prijavaRok, List<Vpis> vpisi) throws Exception {
         Integer countStudyYear;

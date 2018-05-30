@@ -423,6 +423,9 @@ localhost:8080/api/v1/
     - DELETE /rok/{id}
         - izbriše izpitni rok
     
+    - GET /rok/prijava/{predmet}/{student}
+        - vrne aktivno prijavo študenta, če obstaja
+    
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
         - seznam vseh študentov, vpisanih v predmet za študijsko leto

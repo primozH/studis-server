@@ -61,51 +61,6 @@ public class IzpitniRokVir {
     }
 
     @POST
-    @Path("prijavi-studenta")
-    @Auth(rolesAllowed = { Role.PREDAVATELJ, Role.REFERENT })
-    public Response prijaviStudentaNaIzpit(PrijavaRok prijavaRok,
-                                           @Context HttpServletRequest httpServletRequest) {
-        PrijavaRok prijava;
-        try {
-            Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-            Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
-            if (uporabnikTip == Role.PREDAVATELJ) {
-                IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaRok);
-                if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
-                    return Response.status(Response.Status.UNAUTHORIZED).build();
-            }
-            prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
-            prijava = prijavaNaIzpitZrno.applyForExam(prijavaRok, prijavaRok.getStudent());
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
-        }
-
-        return Response.status(Response.Status.CREATED).entity(prijava).build();
-    }
-
-    @POST
-    @Path("odjavi-studenta")
-    @Auth(rolesAllowed = { Role.PREDAVATELJ, Role.REFERENT })
-    public Response odjaviStudentOdIzpita(PrijavaRok prijavaRok,
-                                           @Context HttpServletRequest httpServletRequest) {
-        try {
-            Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
-            Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
-            if (uporabnikTip == Role.PREDAVATELJ) {
-                IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaRok);
-                if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
-                    return Response.status(Response.Status.UNAUTHORIZED).build();
-            }
-            prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
-            prijavaNaIzpitZrno.returnApplication(prijavaRok, prijavaNaIzpitZrno.getUser(uporabnik));
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
-        }
-
-        return Response.ok().entity(new JSONObject().put("message", "Odjava uspešna").toString()).build();
-    }
-
-    @POST
     @Path("odjava")
     @Auth(rolesAllowed = {Role.STUDENT, Role.PREDAVATELJ, Role.REFERENT})
     public Response odjavaOdIzpita(PrijavaRok prijavaRok, @Context HttpServletRequest request) {
@@ -120,21 +75,10 @@ public class IzpitniRokVir {
     }
 
     @GET
-    @Path("vsi-roki")
-    @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
-    public Response vrniVseIzpitneRoke(@QueryParam("studijsko-leto") Integer studijskoLeto) {
-        try {
-            return Response.ok().entity(izpitniRokZrno.vrniVseRoke(studijskoLeto)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
-        }
-    }
-
-    @GET
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ, Role.STUDENT})
     public Response vrniRoke(@QueryParam("predmet") Integer predmet,
-                                      @QueryParam("studijsko-leto") Integer studijskoLeto,
-                                      @Context HttpServletRequest httpServletRequest) {
+                             @QueryParam("studijsko-leto") Integer studijskoLeto,
+                             @Context HttpServletRequest httpServletRequest) {
 
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
 
@@ -223,6 +167,71 @@ public class IzpitniRokVir {
         try {
             izpitniRokZrno.izbrisiRok(rokId, uporabnik);
             return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+    }
+
+    @GET
+    @Path("prijava/{predmet}/{student}")
+    public Response preveriZaAktivnoPrijavo(@PathParam("predmet") Integer predmetId,
+                                            @PathParam("student") Integer studentId) {
+
+        PrijavaRok prijavaRok = prijavaNaIzpitZrno.aktivnaPrijava(predmetId, studentId);
+        return Response.ok(prijavaRok).build();
+    }
+
+    @POST
+    @Path("prijavi-studenta")
+    @Auth(rolesAllowed = { Role.PREDAVATELJ, Role.REFERENT })
+    public Response prijaviStudentaNaIzpit(PrijavaRok prijavaRok,
+                                           @Context HttpServletRequest httpServletRequest) {
+        PrijavaRok prijava;
+        try {
+            Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
+            Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
+            if (uporabnikTip == Role.PREDAVATELJ) {
+                IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaRok);
+                if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
+                    return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
+            prijava = prijavaNaIzpitZrno.applyForExam(prijavaRok, prijavaRok.getStudent());
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+
+        return Response.status(Response.Status.CREATED).entity(prijava).build();
+    }
+
+    @POST
+    @Path("odjavi-studenta")
+    @Auth(rolesAllowed = { Role.PREDAVATELJ, Role.REFERENT })
+    public Response odjaviStudentOdIzpita(PrijavaRok prijavaRok,
+                                          @Context HttpServletRequest httpServletRequest) {
+        try {
+            Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
+            Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
+            if (uporabnikTip == Role.PREDAVATELJ) {
+                IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaRok);
+                if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
+                    return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
+            prijavaNaIzpitZrno.returnApplication(prijavaRok, prijavaNaIzpitZrno.getUser(uporabnik));
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+
+        return Response.ok().entity(new JSONObject().put("message", "Odjava uspešna").toString()).build();
+    }
+
+    @GET
+    @Path("vsi-roki")
+    @Auth(rolesAllowed = {Role.PREDAVATELJ, Role.REFERENT})
+    public Response vrniVseIzpitneRoke(@QueryParam("studijsko-leto") Integer studijskoLeto) {
+        try {
+            return Response.ok().entity(izpitniRokZrno.vrniVseRoke(studijskoLeto)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }

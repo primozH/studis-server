@@ -72,7 +72,6 @@ public class IzpitVir {
         return Response.ok().build();
     }
 
-
     @GET
     @Auth(rolesAllowed = { Role.REFERENT, Role.PREDAVATELJ})
     @Path("prijavljeni-ocene")
@@ -102,6 +101,4 @@ public class IzpitVir {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
     }
-
-
 }
