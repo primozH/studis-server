@@ -277,7 +277,7 @@ public class VpisZrno {
         }
 
         module1.addAll(module2);
-        module1.add(optionalModuleCourse);
+        if (optionalModuleCourse != null) module1.add(optionalModuleCourse);
 
         if (module1.size() < 6) {
             return null;
