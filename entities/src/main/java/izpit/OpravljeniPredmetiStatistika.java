@@ -1,5 +1,6 @@
 package izpit;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import sifranti.StudijskoLeto;
@@ -12,7 +13,7 @@ public class OpravljeniPredmetiStatistika {
     private int skupnoPovprecje = 0;
     private StudijskoLeto studijskoLeto;
 
-    public OpravljeniPredmetiStatistika(List<Izpit> opravljeniPredmeti, StudijskoLeto studijskoLeto) {
+    public OpravljeniPredmetiStatistika(List<Izpit> opravljeniPredmeti) {
         int sestevekOcen = 0;
         for (Izpit izpit : opravljeniPredmeti) {
             steviloOpravljenihPredmetov ++;
@@ -20,7 +21,7 @@ public class OpravljeniPredmetiStatistika {
             sestevekOcen += izpit.getKoncnaOcena();
         }
         skupnoPovprecje = sestevekOcen / opravljeniPredmeti.size();
-        this.studijskoLeto = studijskoLeto;
+        this.studijskoLeto = vrniStudijskoLeto(opravljeniPredmeti.get(0).getDatum());
         this.opravljeniPredmeti = opravljeniPredmeti;
     }
 
@@ -62,5 +63,16 @@ public class OpravljeniPredmetiStatistika {
 
     public void setStudijskoLeto(StudijskoLeto studijskoLeto) {
         this.studijskoLeto = studijskoLeto;
+    }
+
+    private StudijskoLeto vrniStudijskoLeto(LocalDate date) {
+        StudijskoLeto studijskoLetoZaIzpit = new StudijskoLeto();
+        int studijskoLeto =  date.getYear();
+        if (date.getMonth().getValue() < 10) {
+            studijskoLeto--;
+        }
+        studijskoLetoZaIzpit.setId(studijskoLeto);
+        studijskoLetoZaIzpit.setStudijskoLeto(studijskoLeto +"/"+ (studijskoLeto + 1));
+        return studijskoLetoZaIzpit;
     }
 }

@@ -1,6 +1,5 @@
 package zrna.izpit;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import izpit.OdjavaIzpit;
 import izpit.OpravljeniPredmetiStatistika;
 import izpit.PrijavaRok;
 import sifranti.Predmet;
-import sifranti.StudijskoLeto;
 import vloge.Student;
 import vloge.Uporabnik;
 
@@ -313,43 +311,35 @@ public class IzpitZrno {
                 }
             }
 
-            Map<StudijskoLeto, ArrayList<Izpit>> filtriraniIzpiti = new HashMap<>();
+            Map<Integer, ArrayList<Izpit>> filtriraniIzpiti = new HashMap<>();
 
             for (Izpit izpit : zadnjeOceneMap.values()) {
-                StudijskoLeto studijskoLetoZaIzpit = vrniStudijskoLeto(izpit.getDatum());
+                int studijskoLeto = izpit.getDatum().getYear();
+                if (izpit.getDatum().getMonth().getValue() < 10) {
+                    studijskoLeto--;
+                }
 
-                log.info("studijsko leto = " + studijskoLetoZaIzpit.getStudijskoLeto() + "  " + izpit.getPredmet().getNaziv() + "  " + izpit.getPredmet().getSifra());
-                if (filtriraniIzpiti.containsKey(studijskoLetoZaIzpit)) {
-                    filtriraniIzpiti.get(studijskoLetoZaIzpit).add(izpit);
+                log.info("studijsko leto = " + studijskoLeto + "  " + izpit.getPredmet().getNaziv() + "  " + izpit.getPredmet().getSifra());
+                if (filtriraniIzpiti.containsKey(studijskoLeto)) {
+                    ArrayList<Izpit> izpitArrayList = filtriraniIzpiti.get(studijskoLeto);
+                    izpitArrayList.add(izpit);
+                    filtriraniIzpiti.replace(studijskoLeto, izpitArrayList);
                 } else {
                     ArrayList<Izpit> izpitList = new ArrayList<>();
                     izpitList.add(izpit);
-                    filtriraniIzpiti.put(studijskoLetoZaIzpit, izpitList);
+                    filtriraniIzpiti.put(studijskoLeto, izpitList);
                 }
                 log.info("predmet = " + izpit.getPredmet().getSifra() + "  ocena = " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getId());
             }
 
             List<OpravljeniPredmetiStatistika> opravljeniPredmetiStatistika = new ArrayList<>();
-            for (StudijskoLeto studijskoLeto : filtriraniIzpiti.keySet()) {
-                opravljeniPredmetiStatistika.add(new OpravljeniPredmetiStatistika(filtriraniIzpiti.get(studijskoLeto), studijskoLeto));
+            for (int studijskoLeto : filtriraniIzpiti.keySet()) {
+                opravljeniPredmetiStatistika.add(new OpravljeniPredmetiStatistika(filtriraniIzpiti.get(studijskoLeto)));
             }
             return opravljeniPredmetiStatistika;
         } catch (NoResultException e) {
             throw new Exception("Študent nima opravljenih izpitov");
         }
-    }
-
-    private StudijskoLeto vrniStudijskoLeto(LocalDate date) {
-        StudijskoLeto studijskoLetoZaIzpit = new StudijskoLeto();
-        int studijskoLeto =  date.getYear();
-        if (date.getMonth().getValue() >= 10 &&  date.getMonth().getValue() <= 12) {
-
-        } else {
-            studijskoLeto--;
-        }
-        studijskoLetoZaIzpit.setId(studijskoLeto);
-        studijskoLetoZaIzpit.setStudijskoLeto(studijskoLeto +"/"+ (studijskoLeto + 1));
-        return studijskoLetoZaIzpit;
     }
 
 }
