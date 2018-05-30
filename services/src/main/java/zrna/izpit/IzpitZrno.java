@@ -132,7 +132,6 @@ public class IzpitZrno {
         em.merge(prijavaRok);
     }
 
-    // TODO: 30/05/2018 zadnji status studenta + vrnjenaPrijava (odjavitelj drugacen -> vrnjena je ce je odjavitelj != student)
     @Transactional
     public List<Izpit> vrniPrijavljeneKandidateZOcenami(int sifraRoka) throws Exception{
         List<Izpit> izpiti;
@@ -143,9 +142,11 @@ public class IzpitZrno {
         } catch (Exception e) {
             izpiti = new ArrayList<>();
         }
+
         List<PrijavaRok> prijave = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniVsePrijaveZaRok", PrijavaRok.class)
               .setParameter("rok", sifraRoka)
               .getResultList();
+
         Iterator<PrijavaRok> prijaveIterator = prijave.iterator();
         Iterator<Izpit> izpitiIterator;
         List<Izpit> noviIzpiti = new ArrayList<>();

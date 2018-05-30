@@ -80,6 +80,7 @@ public class IzpitVir {
         try {
             return Response.ok(izpitZrno.vrniPrijavljeneKandidateZOcenami(sifraRoka)).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }
     }
