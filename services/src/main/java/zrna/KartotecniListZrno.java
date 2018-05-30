@@ -70,13 +70,13 @@ public class KartotecniListZrno {
                         .setParameter("studentId", studentId)
                         .getResultList();
 
-                sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() > 5)
+                sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .mapToInt(Izpit::getKoncnaOcena)
                         .sum();
-                countGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() > 5)
+                countGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .count();
 
-                sumECTS += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() > 5)
+                sumECTS += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .mapToInt(izpit -> izpit.getPredmet().getECTS())
                         .sum();
 

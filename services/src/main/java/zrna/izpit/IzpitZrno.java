@@ -289,6 +289,52 @@ public class IzpitZrno {
             return null;
         }
     }
+    @Transactional
+    public void vrniPrijavo(Integer rokId, Integer studentId, Uporabnik odjavitelj) throws Exception {
+        log.info("Vracanje prijave");
+        odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
+
+        if (odjavitelj.getTip().equalsIgnoreCase("student")) {
+            throw new Exception("Ni pravic za vračanje prijave");
+        }
+
+        PrijavaRok prijavaRok;
+        try {
+            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniNebrisanoPrijavo", PrijavaRok.class)
+                    .setParameter("studentId", studentId)
+                    .setParameter("rok", rokId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new Exception("Ni prijave");
+        }
+
+        Izpit izpit = vrniIzpitZaPrijavo(prijavaRok.getId());
+
+        if (izpit != null) {
+            em.remove(izpit);
+        }
+
+        OdjavaIzpit odjavaIzpit = new OdjavaIzpit();
+        odjavaIzpit.setOdjavitelj(odjavitelj);
+        odjavaIzpit.setPrijavaRok(prijavaRok);
+
+        em.persist(odjavaIzpit);
+
+        prijavaRok.setBrisana(true);
+
+        log.info("Prijava uspešno vrnjena");
+    }
+
+
+    private Izpit vrniIzpitZaPrijavo(Integer prijavaRokId) {
+        try {
+            return em.createNamedQuery("entitete.izpit.Izpit.vrniIzpitZaPrijavo", Izpit.class)
+                    .setParameter("prijavaRokId", prijavaRokId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
     @Transactional
     public List<OpravljeniPredmetiStatistika> vrniOpravljeneIzpite(Student student) throws Exception {

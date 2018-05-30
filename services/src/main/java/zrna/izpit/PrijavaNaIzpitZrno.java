@@ -165,15 +165,18 @@ public class PrijavaNaIzpitZrno {
 
     public PrijavaRok aktivnaPrijava(Integer predmetId, Integer studentId) {
         PrijavaRok prijavaRok;
+        log.info("Pridobivam aktivne prijave studenta " + studentId + " na izpit pri predmetu " + predmetId);
         try {
             prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.aktivnePrijave", PrijavaRok.class)
                     .setParameter("student", studentId)
                     .setParameter("predmet", predmetId)
                     .getSingleResult();
         } catch (NoResultException e) {
+            log.info("Prijava ne obstaja za studenta " + studentId + " in predmet " + predmetId);
             prijavaRok = null;
         }
 
+        log.info("Prijava najdena za studenta " + studentId + " in predmet " + predmetId);
         return prijavaRok;
     }
     /* HELPERS */
