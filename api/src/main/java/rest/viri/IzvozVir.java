@@ -5,9 +5,7 @@ import orodja.FileExporter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -39,6 +37,19 @@ public class IzvozVir {
         return Response.ok(file)
                 .header("Content-Disposition", "attachment; filename=" + file.getName())
                 .header("Content-Type", contentType)
+                .build();
+    }
+
+    @GET
+    @Path("kartoteka/{id}")
+    public Response exportKartoteka(@PathParam("id") Integer studentId,
+                                    @QueryParam("expanded") Boolean expanded) {
+        log.info("Zahteva za izvoz kartotecnega lista");
+        File file = fileExporter.createKartoteka(studentId, expanded);
+
+        return Response.ok(file)
+                .header("Content-Disposition", "attachment; filename=" + file.getName())
+                .header("Content-Type", "application/csv")
                 .build();
     }
 }

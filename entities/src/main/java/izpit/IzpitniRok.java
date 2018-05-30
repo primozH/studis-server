@@ -14,12 +14,12 @@ import vloge.Ucitelj;
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaPredmet", query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.predmet.sifra = :sifraPredmeta " +
-                "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto "),
+                "AND i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
+                "ORDER BY i.datum"),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRoke", query = "SELECT i " +
                 "FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +
                 "ORDER BY i.datum ASC"),
-
         @NamedQuery(name = "entitete.izpit.IzpitniRok.izpitniRokiZaStudenta",
                 query = "SELECT DISTINCT i FROM IzpitniRok i, PredmetStudent p " +
                         "WHERE p.predmet NOT IN (" +
@@ -28,7 +28,11 @@ import vloge.Ucitelj;
                             "AND iz.student.id = :student) " +
                         "AND p.predmet = i.izvajanjePredmeta.predmet " +
                         "AND p.vpis.student.id = :student " +
-                        "AND i.datum > :datum"),
+                        "AND i.datum > :datum " +
+                        "AND i NOT IN (" +
+                            "SELECT iz2.prijavaRok.rok FROM Izpit iz2 " +
+                            "WHERE iz2.prijavaRok.rok = i) " +
+                        "ORDER BY i.datum"),
         @NamedQuery(name = "entitete.izpit.IzpitniRok.vrniIzpitneRokeZaTaDan",
         query = "SELECT i FROM IzpitniRok i " +
                 "WHERE i.izvajanjePredmeta.studijskoLeto.id = :studijskoLeto " +

@@ -51,7 +51,7 @@ public class KartotecniListZrno {
             HashMap<Integer, List<Izpit>> ocene = new HashMap<>();
             /* pridobi vse ocene za predmete */
             int sumECTS = 0;
-            int sumGrade = 0;
+            double sumGrade = 0;
             int countGrade = 0;
 
             for (PredmetStudent predmet : predmeti) {
@@ -89,7 +89,7 @@ public class KartotecniListZrno {
             if (countGrade == 0) {
                 vrstica.setPovprecnaOcena(0d);
             } else {
-                vrstica.setPovprecnaOcena((double) (sumGrade / countGrade));
+                vrstica.setPovprecnaOcena((sumGrade / countGrade));
             }
             vrstica.setKreditneTocke(sumECTS);
 
