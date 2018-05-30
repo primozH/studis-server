@@ -2,15 +2,26 @@ package orodja;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import helpers.entities.KartotecniList;
+import helpers.entities.Vrstica;
+import izpit.Izpit;
+import izpit.IzvajanjePredmeta;
 import orodja.export.Metadata;
 import orodja.export.TableHeader;
 import orodja.export.TableRow;
+import sifranti.Predmet;
+import vpis.Vpis;
+import zrna.KartotecniListZrno;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -23,6 +34,9 @@ public class FileExporter {
     private String NOTOSANS_BOLD = "/fonts/NotoSans-Bold.ttf";
     private String NOTOSANS_REGULAR = "/fonts/NotoSans-Regular.ttf";
     private Font notoRegular;
+
+    @Inject
+    private KartotecniListZrno kartotecniListZrno;
 
     @PostConstruct
     public void init() {
@@ -99,6 +113,89 @@ public class FileExporter {
             e.printStackTrace();
         }
 
+    }
+
+    public File createKartoteka(Integer studentId, Boolean expanded) {
+        KartotecniList kartotecniList = kartotecniListZrno.pripraviKartotecniList(studentId);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Kartotecni_list");
+        sb.append("_");
+        sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")));
+        String fileName = sb.toString();
+        sb = new StringBuilder();
+
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
+            sb.append(kartotecniList.getPriimek());
+            sb.append(separator);
+            sb.append(kartotecniList.getIme());
+            sb.append(separator);
+            sb.append(kartotecniList.getVpisnaStevilka());
+            sb.append("\n");
+
+            for (Vrstica vrstica : kartotecniList.getVrstica()) {
+                List<IzvajanjePredmeta> predmeti = vrstica.getPredmeti();
+                HashMap<Integer, List<Izpit>> oceneZaPredmete = vrstica.getOceneZaPredmete();
+
+                Vpis vpis = vrstica.getVpis();
+                sb.append(vpis.getStudijskoLeto().getStudijskoLeto());
+                sb.append(separator);
+                sb.append(vpis.getStudijskiProgram().getNaziv());
+                sb.append(separator);
+                sb.append(vpis.getLetnik().getLetnik());
+                sb.append(separator);
+                sb.append(vpis.getVrstaVpisa().getVrstaVpisa());
+                sb.append(separator);
+                sb.append(vpis.getNacinStudija().getOpis());
+                sb.append("\n");
+
+                for(IzvajanjePredmeta izvajanjePredmeta : predmeti) {
+                    sb.append(izvajanjePredmeta.getPredmet().getSifra());
+                    sb.append(separator);
+                    sb.append(izvajanjePredmeta.getPredmet().getNaziv());
+                    sb.append(separator);
+                    sb.append(izvajanjePredmeta.getPredmet().getECTS());
+                    sb.append(separator);
+                    sb.append(izvajanjePredmeta.getNosilec1().getPriimek());
+                    sb.append(separator);
+                    sb.append(izvajanjePredmeta.getNosilec1().getIme());
+                    sb.append(separator);
+
+                    List<Izpit> izpiti = oceneZaPredmete.get(izvajanjePredmeta.getPredmet().getSifra());
+                    for(Izpit izpit : izpiti) {
+                        sb.append(izpit.getDatum().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                        sb.append(separator);
+                        sb.append(izpit.getKoncnaOcena());
+                        sb.append(separator);
+                        sb.append(izpit.getStPolaganjaLeto());
+                        sb.append(separator);
+                        sb.append(izpit.getStPolaganjaSkupno());
+                        sb.append("\n");
+                    }
+                    if (izpiti.size() == 0) {
+                        sb.append("\n");
+                    }
+                }
+
+                sb.append("Skupno stevilo kreditnih tock");
+                sb.append(separator);
+                sb.append("Povprečje izpitov");
+                sb.append(separator);
+                sb.append("\n");
+
+                sb.append(vrstica.getKreditneTocke());
+                sb.append(separator);
+                sb.append(vrstica.getPovprecnaOcena());
+                sb.append(separator);
+                sb.append("\n");
+
+                fileWriter.append(sb.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new File(fileName);
     }
 
     private PdfPTable createTable(orodja.export.Document document) {

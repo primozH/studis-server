@@ -28,6 +28,7 @@ import izpit.IzpitniRok;
 import izpit.IzvajanjePredmeta;
 import izpit.OdjavaIzpit;
 import izpit.PrijavaRok;
+import prijava.Prijava;
 import sifranti.Cenik;
 import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
@@ -92,7 +93,7 @@ public class PrijavaNaIzpitZrno {
         odjavitelj = em.find(Uporabnik.class, odjavitelj.getId());
 
         try {
-            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.vrniPrijavo", PrijavaRok.class)
+            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.prijavaZaRokInPredmet", PrijavaRok.class)
                     .setParameter("rok", prijavaRok.getRok().getId())
                     .setParameter("studentId", prijavaRok.getStudent().getId())
                     .getSingleResult();
@@ -120,7 +121,7 @@ public class PrijavaNaIzpitZrno {
         prijavaRok.setBrisana(true);
 
         em.persist(prijavaRok);
-        log.info("Prijava uspešno vrnjena");
+        log.info("Prijava uspešno brisana");
     }
 
     public List<PrijavaRok> vrniPrijaveNaIzpit(Uporabnik uporabnik) {
@@ -162,6 +163,19 @@ public class PrijavaNaIzpitZrno {
         return prijaveZRezultati;
     }
 
+    public PrijavaRok aktivnaPrijava(Integer predmetId, Integer studentId) {
+        PrijavaRok prijavaRok;
+        try {
+            prijavaRok = em.createNamedQuery("entitete.izpit.PrijavaRok.aktivnePrijave", PrijavaRok.class)
+                    .setParameter("student", studentId)
+                    .setParameter("predmet", predmetId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            prijavaRok = null;
+        }
+
+        return prijavaRok;
+    }
     /* HELPERS */
     private Integer checkApplicationCount(PrijavaRok prijavaRok, List<Vpis> vpisi) throws Exception {
         Integer countStudyYear;
@@ -249,7 +263,7 @@ public class PrijavaNaIzpitZrno {
                     lastValidDateTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy")));
         }
 
-        LocalDate timeBetweenApplications = izpitniRok.getDatum().plusDays(14);
+        LocalDate timeBetweenApplications = izpitniRok.getDatum().minusDays(14);
 
         List<PrijavaRok> zakljucenePrijave = em.createNamedQuery("entitete.izpit.PrijavaRok.zakljucenePrijave", PrijavaRok.class)
                 .setParameter("predmet", prijavaRok.getRok().getIzvajanjePredmeta().getPredmet().getSifra())
@@ -257,9 +271,9 @@ public class PrijavaNaIzpitZrno {
                 .getResultList();
 
         if (zakljucenePrijave.size() != 0 &&
-            zakljucenePrijave.get(0).getRok().getDatum().isBefore(timeBetweenApplications)) {
-            log.info("Od zadnje prijave še ni minilo dovolj časa");
-            throw new Exception("Od zadnje prijave še ni minilo dovolj časa");
+            zakljucenePrijave.get(0).getRok().getDatum().isAfter(timeBetweenApplications)) {
+            log.info("Od zadnjega polaganja še ni minilo dovolj časa");
+            throw new Exception("Od zadnjega polaganja še ni minilo dovolj časa");
         }
 
         return izpitniRok;

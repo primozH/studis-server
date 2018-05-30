@@ -423,6 +423,9 @@ localhost:8080/api/v1/
     - DELETE /rok/{id}
         - izbriše izpitni rok
     
+    - GET /rok/prijava/{predmet}/{student}
+        - vrne aktivno prijavo študenta, če obstaja
+    
 - podatki o izvajanju predmetov:
     - GET /predmet/studenti?studijsko-leto={leto}&sifra-predmeta={sifra} 
         - seznam vseh študentov, vpisanih v predmet za študijsko leto
@@ -459,6 +462,8 @@ localhost:8080/api/v1/
                 }
             ]
             ```
+    - DELETE /izpit/rok/{rokid}/rezultati/{studentId}
+        - vrne prijavo za študenta in izbriše morebitne vnešene rezultate
     - GET /izpit/prijavljeni-ocene?sifra-roka={id roka}
         - seznam vseh studentov, ki imajo oceno za dolocen izpit za dolocen izpitni rok
         - vrne se json Izpita (vsak vpisan student se pojavi zgolj enkrat
