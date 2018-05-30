@@ -107,8 +107,7 @@ public class IzpitVir {
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
     @Path("{id}/opravljeni")
     public Response vrniSeznamOpravljenihIzpitovZaLeto(@PathParam("id") Integer studentId,
-                                                 @Context HttpServletRequest httpServletRequest,
-                                                 @QueryParam("studijsko-leto") Integer studijskoLeto) {
+                                                 @Context HttpServletRequest httpServletRequest) {
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
         Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
         try {
@@ -118,7 +117,7 @@ public class IzpitVir {
                     throw new Exception("Student lahko izpise ocene le zase");
                 }
             }
-            return Response.ok(izpitZrno.vrniOpravljeneIzpite(student, studijskoLeto)).build();
+            return Response.ok(izpitZrno.vrniOpravljeneIzpite(student)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }

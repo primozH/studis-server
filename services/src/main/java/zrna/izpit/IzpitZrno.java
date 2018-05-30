@@ -1,5 +1,6 @@
 package zrna.izpit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,8 +18,10 @@ import javax.transaction.Transactional;
 import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
 import izpit.OdjavaIzpit;
+import izpit.OpravljeniPredmetiStatistika;
 import izpit.PrijavaRok;
 import sifranti.Predmet;
+import sifranti.StudijskoLeto;
 import vloge.Student;
 import vloge.Uporabnik;
 
@@ -286,19 +289,14 @@ public class IzpitZrno {
             return null;
         }
     }
-    public List<Izpit> vrniOpravljeneIzpite(Student student, int studijskoLeto) throws Exception {
+
+    @Transactional
+    public List<OpravljeniPredmetiStatistika> vrniOpravljeneIzpite(Student student) throws Exception {
         try {
             List<Izpit> izpiti;
-            if (studijskoLeto > 0) {
-                izpiti = em.createNamedQuery("entitete.izpit.Izpit.pozitivniPredmetiZaLeto", Izpit.class)
-                           .setParameter("student", student.getId())
-                           .setParameter("studijskoLeto", studijskoLeto)
-                           .getResultList();
-            } else {
-                izpiti = em.createNamedQuery("entitete.izpit.Izpit.pozitivniPredmeti", Izpit.class)
-                           .setParameter("student", student.getId())
-                           .getResultList();
-            }
+            izpiti = em.createNamedQuery("entitete.izpit.Izpit.pozitivniPredmeti", Izpit.class)
+                       .setParameter("student", student.getId())
+                       .getResultList();
             if (izpiti.isEmpty()) throw new NoResultException();
             Iterator<Izpit> iterator = izpiti.iterator();
             Map<Integer, Izpit> zadnjeOceneMap = new HashMap<>();
@@ -314,16 +312,44 @@ public class IzpitZrno {
                     }
                 }
             }
-            List<Izpit> filtriraniIzpiti = new ArrayList<>();
+
+            Map<StudijskoLeto, ArrayList<Izpit>> filtriraniIzpiti = new HashMap<>();
+
             for (Izpit izpit : zadnjeOceneMap.values()) {
-                filtriraniIzpiti.add(izpit);
+                StudijskoLeto studijskoLetoZaIzpit = vrniStudijskoLeto(izpit.getDatum());
+
+                log.info("studijsko leto = " + studijskoLetoZaIzpit.getStudijskoLeto() + "  " + izpit.getPredmet().getNaziv() + "  " + izpit.getPredmet().getSifra());
+                if (filtriraniIzpiti.containsKey(studijskoLetoZaIzpit)) {
+                    filtriraniIzpiti.get(studijskoLetoZaIzpit).add(izpit);
+                } else {
+                    ArrayList<Izpit> izpitList = new ArrayList<>();
+                    izpitList.add(izpit);
+                    filtriraniIzpiti.put(studijskoLetoZaIzpit, izpitList);
+                }
                 log.info("predmet = " + izpit.getPredmet().getSifra() + "  ocena = " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getId());
             }
 
-            return filtriraniIzpiti;
+            List<OpravljeniPredmetiStatistika> opravljeniPredmetiStatistika = new ArrayList<>();
+            for (StudijskoLeto studijskoLeto : filtriraniIzpiti.keySet()) {
+                opravljeniPredmetiStatistika.add(new OpravljeniPredmetiStatistika(filtriraniIzpiti.get(studijskoLeto), studijskoLeto));
+            }
+            return opravljeniPredmetiStatistika;
         } catch (NoResultException e) {
-            throw new Exception("Student nima opravljenih izpitov");
+            throw new Exception("Študent nima opravljenih izpitov");
         }
+    }
+
+    private StudijskoLeto vrniStudijskoLeto(LocalDate date) {
+        StudijskoLeto studijskoLetoZaIzpit = new StudijskoLeto();
+        int studijskoLeto =  date.getYear();
+        if (date.getMonth().getValue() >= 10 &&  date.getMonth().getValue() <= 12) {
+
+        } else {
+            studijskoLeto--;
+        }
+        studijskoLetoZaIzpit.setId(studijskoLeto);
+        studijskoLetoZaIzpit.setStudijskoLeto(studijskoLeto +"/"+ (studijskoLeto + 1));
+        return studijskoLetoZaIzpit;
     }
 
 }

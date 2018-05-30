@@ -43,9 +43,6 @@ import vloge.Student;
         @NamedQuery(name = "entitete.izpit.Izpit.pozitivniPredmeti",
                 query = "SELECT i FROM Izpit i " +
                         "WHERE i.student.id = :student AND i.koncnaOcena > 5 ORDER BY i.predmet.sifra DESC, i.datum DESC, i.stPolaganjaSkupno DESC"),
-        @NamedQuery(name = "entitete.izpit.Izpit.pozitivniPredmetiZaLeto",
-                query = "SELECT i FROM Izpit i " +
-                        "WHERE i.student.id = :student AND i.studijskoLeto = :studijskoLeto AND i.koncnaOcena > 5 ORDER BY i.predmet.sifra DESC, i.datum DESC, i.stPolaganjaSkupno DESC"),
         @NamedQuery(name = "entitete.izpit.Izpit.vneseneOceneZaRok",
                 query = "SELECT i FROM Izpit i " +
                         "WHERE i.prijavaRok.rok.id = :rok"),
