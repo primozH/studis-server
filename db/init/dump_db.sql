@@ -2,7 +2,7 @@
 -- Strežnik:                     127.0.0.1
 -- Verzija strežnika:            10.2.9-MariaDB - mariadb.org binary distribution
 -- Operacijski sistem strežnika: Win64
--- HeidiSQL Različica:           9.5.0.5196
+-- HeidiSQL Različica:           9.4.0.5125
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -330,9 +330,9 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 	CONSTRAINT `FK_izpit_studijsko_leto` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`),
 	CONSTRAINT `izpit_predmet_sifra_fk` FOREIGN KEY (`predmet`) REFERENCES `predmet` (`sifra`),
 	CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`id`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpit: ~23 rows (približno)
+-- Dumping data for table studis.izpit: ~34 rows (približno)
 /*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
 INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `st_polaganja_leto`, `st_polaganja_skupno`, `predmet`, `student`) VALUES
 	(2, 66, '2018-05-18', 5, 45, NULL, 1, 1, 63202, 53),
@@ -357,7 +357,18 @@ INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`,
 	(23, 154, '2018-05-28', NULL, NULL, NULL, 1, 1, 63277, 62),
 	(24, 163, '2018-05-28', NULL, NULL, NULL, 1, 1, 63277, 63),
 	(33, 187, '2018-05-28', 5, 45, NULL, 1, 1, 63279, 55),
-	(34, 188, '2018-05-28', 5, 40, NULL, 2, 2, 63279, 55);
+	(34, 188, '2018-05-28', 5, 40, NULL, 2, 2, 63279, 55),
+	(36, 192, '2018-05-29', 5, 46, NULL, 1, 1, 63279, 65),
+	(37, 193, '2018-05-29', 5, 48, NULL, 1, 2, 63279, 65),
+	(38, 194, '2018-05-29', 5, 38, NULL, 1, 1, 63280, 65),
+	(39, 118, '2018-05-29', NULL, NULL, NULL, 1, 1, 63280, 59),
+	(40, 141, '2018-05-29', NULL, NULL, NULL, 1, 1, 63280, 60),
+	(41, 195, '2018-05-29', 7, 68, NULL, 2, 2, 63280, 65),
+	(42, 196, '2018-05-29', 5, 35, NULL, 1, 1, 63283, 65),
+	(43, 119, '2018-05-29', NULL, NULL, NULL, 1, 1, 63283, 59),
+	(44, 142, '2018-05-29', NULL, NULL, NULL, 1, 1, 63283, 60),
+	(45, 197, '2018-05-29', 5, 46, NULL, 2, 2, 63283, 65),
+	(46, 198, '2018-05-29', 9, 85, NULL, 3, 3, 63283, 65);
 /*!40000 ALTER TABLE `izpit` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpitni_rok
@@ -844,9 +855,9 @@ CREATE TABLE IF NOT EXISTS `odjava` (
 	KEY `FK_odjava_studijsko_leto` (`prijava_id`),
 	CONSTRAINT `FK_odjava_odjavitelj` FOREIGN KEY (`odjavitelj`) REFERENCES `uporabnik` (`id_uporabnik`),
 	CONSTRAINT `FK_odjava_prijava` FOREIGN KEY (`prijava_id`) REFERENCES `prijava_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.odjava: ~65 rows (približno)
+-- Dumping data for table studis.odjava: ~67 rows (približno)
 /*!40000 ALTER TABLE `odjava` DISABLE KEYS */;
 INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(1, 3, '2018-05-15 16:22:03', 52),
@@ -914,7 +925,8 @@ INSERT INTO `odjava` (`id`, `prijava_id`, `cas_odjave`, `odjavitelj`) VALUES
 	(64, 180, '2018-05-28 21:57:27', 2),
 	(65, 181, '2018-05-28 21:57:48', 2),
 	(66, 189, '2018-05-28 22:06:41', 55),
-	(67, 190, '2018-05-28 23:14:49', 2);
+	(67, 190, '2018-05-28 23:14:49', 2),
+	(68, 191, '2018-05-29 11:00:44', 65);
 /*!40000 ALTER TABLE `odjava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.posta
@@ -3058,9 +3070,9 @@ CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	KEY `FK_prijava_rok_izpitni_rok` (`izpitni_rok`),
 	CONSTRAINT `FK_prijava_rok_izpitni_rok` FOREIGN KEY (`izpitni_rok`) REFERENCES `izpitni_rok` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `FK_prijava_rok_uporabnik` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
-) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=199 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.prijava_rok: ~182 rows (približno)
+-- Dumping data for table studis.prijava_rok: ~191 rows (približno)
 /*!40000 ALTER TABLE `prijava_rok` DISABLE KEYS */;
 INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`, `valuta`, `zakljucena`, `brisana`) VALUES
 	(3, 4, '2018-05-15 16:19:35', 52, 0.00, NULL, 0, 1),
@@ -3245,7 +3257,15 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 	(187, 10, '2018-05-28 21:58:11', 55, 0.00, NULL, 1, 0),
 	(188, 39, '2018-05-28 22:05:23', 55, 0.00, NULL, 1, 0),
 	(189, 40, '2018-05-28 22:06:26', 55, 0.00, NULL, 0, 1),
-	(190, 40, '2018-05-28 23:13:44', 55, 0.00, NULL, 1, 1);
+	(190, 40, '2018-05-28 23:13:44', 55, 0.00, NULL, 1, 1),
+	(191, 91, '2018-05-29 11:00:09', 65, 0.00, NULL, 0, 1),
+	(192, 91, '2018-05-29 11:00:50', 65, 0.00, NULL, 1, 0),
+	(193, 40, '2018-05-29 11:01:35', 65, 9.00, NULL, 1, 0),
+	(194, 20, '2018-05-29 15:27:20', 65, 9.00, NULL, 1, 0),
+	(195, 3, '2018-05-29 15:28:10', 65, 9.00, NULL, 1, 0),
+	(196, 36, '2018-05-29 15:29:14', 65, 9.00, NULL, 1, 0),
+	(197, 37, '2018-05-29 15:29:36', 65, 9.00, NULL, 1, 0),
+	(198, 38, '2018-05-29 15:30:37', 65, 9.00, NULL, 1, 0);
 /*!40000 ALTER TABLE `prijava_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.referent
