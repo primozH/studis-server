@@ -16,6 +16,7 @@ import authentication.Role;
 import common.CustomErrorMessage;
 import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
+import vloge.Student;
 import vloge.Ucitelj;
 import vloge.Uporabnik;
 import zrna.izpit.IzpitZrno;
@@ -83,9 +84,9 @@ public class IzpitVir {
         }
     }
 
+    @POST
     @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
     @Path("koncna")
-    @POST
     public Response vnesiKoncnoOcenoZaIzpit(Izpit izpit,
                                             @Context HttpServletRequest httpServletRequest) {
         Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
@@ -97,6 +98,26 @@ public class IzpitVir {
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             return Response.ok(izpitZrno.vnesiKoncnoOceno(izpit)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
+        }
+    }
+
+    @GET
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
+    @Path("{id}/opravljeni")
+    public Response vrniSeznamOpravljenihIzpitovZaLeto(@PathParam("id") Integer studentId,
+                                                 @Context HttpServletRequest httpServletRequest) {
+        Uporabnik uporabnik = (Uporabnik) httpServletRequest.getAttribute("user");
+        Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
+        try {
+            Student student = prijavaNaIzpitZrno.getStudent(studentId);
+            if (uporabnikTip == Role.STUDENT) {
+                if (student.getId() != uporabnik.getId()) {
+                    throw new Exception("Student lahko izpise ocene le zase");
+                }
+            }
+            return Response.ok(izpitZrno.vrniOpravljeneIzpite(student)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new CustomErrorMessage(e.getMessage())).build();
         }

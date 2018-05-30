@@ -495,3 +495,34 @@ localhost:8080/api/v1/
         "datum": "2018-05-30"   <--- izpusti, ce gre za prijavljenega stutenda
        }
         ```
+    - GET /izpit/{id}/opravljeni
+    - {id} student
+    - Authorization header
+    Response:
+    ``` json
+    [
+        {
+            "opravljeniPredmeti": [
+                    Izpit1
+            ],
+            "steviloOpravljenihPredmetov": 1,
+            "kreditneTocke": 6,
+            "skupnoPovprecje": 8,
+            "studijskoLeto": {
+                "id": 2017,
+                "studijskoLeto": "2017/2018"
+            }
+        },{
+            "opravljeniPredmeti": [
+                   Izpit2,
+                   Izpit3
+            ],
+            "steviloOpravljenihPredmetov": 2,
+            "kreditneTocke": 12,
+            "skupnoPovprecje": 7,
+            "studijskoLeto": {
+                "id": 2018,
+                "studijskoLeto": "2018/2019"
+            }
+    ]
+    ```
