@@ -1,7 +1,42 @@
 package orodja;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.ExceptionConverter;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import helpers.entities.KartotecniList;
 import helpers.entities.Vrstica;
 import izpit.Izpit;
@@ -9,20 +44,8 @@ import izpit.IzvajanjePredmeta;
 import orodja.export.Metadata;
 import orodja.export.TableHeader;
 import orodja.export.TableRow;
-import sifranti.Predmet;
 import vpis.Vpis;
 import zrna.KartotecniListZrno;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class FileExporter {
@@ -47,27 +70,33 @@ public class FileExporter {
     }
 
     public File createFile(orodja.export.Document document) {
+        List<orodja.export.Document> documents = new ArrayList<>();
+        documents.add(document);
+        return createFile(documents);
+    }
+
+    public File createFile(List<orodja.export.Document> documents) {
         StringBuilder sb = new StringBuilder();
 //        sb.append(GENERATED_FILES);
 //        sb.append("/");
-        sb.append(document.getName());
+        sb.append(documents.get(0).getName());
         sb.append("_");
         sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")));
 
-        switch (document.getDocumentType()) {
+        switch (documents.get(0).getDocumentType()) {
             case CSV:
                 sb.append(".csv");
-                createCsv(document, sb.toString());
+                createCsv(documents, sb.toString());
                 break;
             case PDF:
                 sb.append(".pdf");
-                createPdf(document, sb.toString());
+                createPdf(documents, sb.toString());
         }
 
         return new File(sb.toString());
     }
 
-    private void createPdf(orodja.export.Document document, String fileName) {
+    private void createPdf(List<orodja.export.Document> documents, String fileName) {
         log.info("Ustvarjanje PDF dokumenta: " + fileName);
         com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
         try {
@@ -75,16 +104,22 @@ public class FileExporter {
             writer.setPageEvent(new Footer());
             doc.setPageSize(PageSize.A4.rotate());
             doc.open();
+            Iterator<orodja.export.Document> iterator = documents.iterator();
+            while (iterator.hasNext()) {
+                orodja.export.Document document = iterator.next();
+                Paragraph paragraph = new Paragraph();
+                paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+                paragraph.add(new Chunk(document.getName() != null ? document.getName() : ""));
+                doc.add(paragraph);
 
-            Paragraph paragraph = new Paragraph();
-            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
-            paragraph.add(new Chunk(document.getName() != null ? document.getName() : ""));
-            doc.add(paragraph);
-
-            addDocumentHeaders(document.getMetadata(), doc);
-            PdfPTable table = createTable(document);
-            table.setSpacingBefore(50f);
-            doc.add(table);
+                addDocumentHeaders(document.getMetadata(), doc);
+                PdfPTable table = createTable(document);
+                table.setSpacingBefore(50f);
+                doc.add(table);
+                if (iterator.hasNext()) {
+                    doc.add(new Paragraph());
+                }
+            }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -97,22 +132,23 @@ public class FileExporter {
         log.info("Postopek uspesno zakljucen");
     }
 
-    private void createCsv(orodja.export.Document document, String fileName) {
+    private void createCsv(List<orodja.export.Document> documents, String fileName) {
         log.info("Ustvarjanje CSV dokumenta: " + fileName);
-        TableHeader header = document.getTableHeader();
-        TableRow[] tableRow = document.getTableRows();
+        for (orodja.export.Document document : documents) {
+            TableHeader header = document.getTableHeader();
+            TableRow[] tableRow = document.getTableRows();
 
-        try (FileWriter fileWriter = new FileWriter(fileName)) {
-            writeMetadataCsv(document.getMetadata(), fileWriter);
-            addHeaders(header, fileWriter);
-            addRowsCsv(tableRow, fileWriter);
+            try (FileWriter fileWriter = new FileWriter(fileName)) {
+                writeMetadataCsv(document.getMetadata(), fileWriter);
+                addHeaders(header, fileWriter);
+                addRowsCsv(tableRow, fileWriter);
 
-            fileWriter.flush();
-            log.info("Postopek uspesno zakljucen");
-        } catch (IOException e) {
-            e.printStackTrace();
+                fileWriter.flush();
+                log.info("Postopek uspesno zakljucen");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public File createKartoteka(Integer studentId, Boolean expanded) {
