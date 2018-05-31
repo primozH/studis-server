@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -312,7 +313,7 @@ public class IzpitZrno {
                 }
             }
 
-            Map<Integer, ArrayList<Izpit>> filtriraniIzpiti = new HashMap<>();
+            Map<Integer, ArrayList<Izpit>> filtriraniIzpiti = new TreeMap<>();
 
             for (Izpit izpit : zadnjeOceneMap.values()) {
                 int studijskoLeto = izpit.getDatum().getYear();
