@@ -125,7 +125,7 @@ public class FileExporter {
         log.info("Ustvarjanje indexa");
         indexpdf = true;
 
-        indexDokuments.get(0).setTableHeader(new TableHeader(new String[]{"#", "Šifra", "Naziv predmeta", "Ocenil", "Datum", "Opravljanje", "ECTS", "Ocena"}));
+        indexDokuments.get(0).setTableHeader(new TableHeader(new String[]{"#", "Šifra", "Naziv predmeta", "Datum", "Opravljanje", "ECTS", "Ocena"}));
         indexDokuments.get(1).setTableHeader(new TableHeader(new String[]{"#", "Študijsko leto", "Št. opravljenih izpitov", "Kreditne točke", "Skupno povprečje"}));
         indexDokuments.get(2).setTableHeader(new TableHeader(new String[]{"Število opravljenih izpitov", "Kreditne točke", "Skupno povprečje"}));
 
