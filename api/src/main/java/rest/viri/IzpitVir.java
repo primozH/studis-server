@@ -105,7 +105,7 @@ public class IzpitVir {
     }
 
     @GET
-    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
+    @Auth(rolesAllowed = {Role.STUDENT, Role.REFERENT, Role.PREDAVATELJ})
     @Path("{id}/opravljeni")
     public Response vrniSeznamOpravljenihIzpitovZaLeto(@PathParam("id") Integer studentId,
                                                  @Context HttpServletRequest httpServletRequest) {
