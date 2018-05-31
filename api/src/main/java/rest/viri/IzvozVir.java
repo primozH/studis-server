@@ -1,15 +1,23 @@
 package rest.viri;
 
-import orodja.export.Document;
-import orodja.FileExporter;
+import java.io.File;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.util.logging.Logger;
+
+import orodja.FileExporter;
+import orodja.export.Document;
+import orodja.export.IndexDokument;
 
 @Path("izvoz")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +46,21 @@ public class IzvozVir {
                 .header("Content-Disposition", "attachment; filename=" + file.getName())
                 .header("Content-Type", contentType)
                 .build();
+    }
+
+
+
+    @POST
+    @Path("index")
+    public Response exportDocumentsToPdf(List<IndexDokument> documents) {
+        log.info("Zahteva za izvoz vec dokumentov v datoteko");
+        File file = fileExporter.createIndex(documents);
+        String contentType = "application/pdf";
+
+        return Response.ok(file)
+                       .header("Content-Disposition", "attachment; filename=" + file.getName())
+                       .header("Content-Type", contentType)
+                       .build();
     }
 
     @GET

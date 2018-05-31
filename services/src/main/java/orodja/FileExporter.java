@@ -1,28 +1,51 @@
 package orodja;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
-import helpers.entities.KartotecniList;
-import helpers.entities.Vrstica;
-import izpit.Izpit;
-import izpit.IzvajanjePredmeta;
-import orodja.export.Metadata;
-import orodja.export.TableHeader;
-import orodja.export.TableRow;
-import sifranti.Predmet;
-import vpis.Vpis;
-import zrna.KartotecniListZrno;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.ExceptionConverter;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import helpers.entities.KartotecniList;
+import helpers.entities.Vrstica;
+import izpit.Izpit;
+import izpit.IzvajanjePredmeta;
+import orodja.export.IndexDokument;
+import orodja.export.Metadata;
+import orodja.export.TableHeader;
+import orodja.export.TableRow;
+import vloge.Student;
+import vpis.Vpis;
+import zrna.KartotecniListZrno;
 
 @ApplicationScoped
 public class FileExporter {
@@ -34,6 +57,7 @@ public class FileExporter {
     private String NOTOSANS_BOLD = "/fonts/NotoSans-Bold.ttf";
     private String NOTOSANS_REGULAR = "/fonts/NotoSans-Regular.ttf";
     private Font notoRegular;
+    private boolean indexpdf = false;
 
     @Inject
     private KartotecniListZrno kartotecniListZrno;
@@ -95,6 +119,86 @@ public class FileExporter {
 
         doc.close();
         log.info("Postopek uspesno zakljucen");
+    }
+
+    public File createIndex(List<IndexDokument> indexDokuments){
+        log.info("Ustvarjanje indexa");
+        indexpdf = true;
+
+        indexDokuments.get(0).setTableHeader(new TableHeader(new String[]{"#", "Šifra", "Naziv predmeta", "Ocenil", "Datum", "Opravljanje", "ECTS", "Ocena"}));
+        indexDokuments.get(1).setTableHeader(new TableHeader(new String[]{"#", "Študijsko leto", "Št. opravljenih izpitov", "Kreditne točke", "Skupno povprečje"}));
+        indexDokuments.get(2).setTableHeader(new TableHeader(new String[]{"Število opravljenih izpitov", "Kreditne točke", "Skupno povprečje"}));
+
+        StringBuilder sb = new StringBuilder();
+        //        sb.append(GENERATED_FILES);
+        //        sb.append("/");
+        sb.append(indexDokuments.get(0).getName());
+        sb.append("_");
+        sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")));
+        sb.append(".pdf");
+        com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
+        try {
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(sb.toString()));
+            writer.setPageEvent(new Footer());
+            doc.setPageSize(PageSize.A4);
+            doc.open();
+
+            Paragraph paragraph = new Paragraph();
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
+            paragraph.add(new Chunk("Elektronski indeks".toUpperCase()));
+            doc.add(paragraph);
+
+
+            paragraph = new Paragraph();
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16));
+            Student student = indexDokuments.get(0).getIndexMetadata().getStudent();
+            paragraph.add(new Chunk(student.getVpisnaStevilka().toString() + " " + student.getIme() + " " + student.getPriimek()));
+            paragraph.setSpacingBefore(10f);
+            doc.add(paragraph);
+
+
+            PdfPTable table = createTable(indexDokuments.get(0));
+            table.setSpacingBefore(40f);
+            table.setSpacingAfter(30f);
+            table.setWidthPercentage(95);
+            doc.add(table);
+
+            paragraph = new Paragraph();
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16));
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            paragraph.add(new Chunk("Povprečne ocene po študijskih letih"));
+            doc.add(paragraph);
+
+            table = createTable(indexDokuments.get(1));
+            table.setSpacingBefore(40f);
+            table.setSpacingAfter(30f);
+            table.setWidthPercentage(90);
+            doc.add(table);
+
+            paragraph = new Paragraph();
+            paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16));
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            paragraph.add(new Chunk("Skupna povprečna ocena"));
+            doc.add(paragraph);
+
+            table = createTable(indexDokuments.get(2));
+            table.setSpacingBefore(40f);
+            table.setWidthPercentage(70);
+            doc.add(table);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            log.info("lalal");
+            e.printStackTrace();
+        }
+        doc.close();
+        log.info("done");
+        return new File(sb.toString());
     }
 
     private void createCsv(orodja.export.Document document, String fileName) {
@@ -258,7 +362,13 @@ public class FileExporter {
         for(String hCell : tableHeader) {
             PdfPCell header = new PdfPCell();
             header.setBorderWidth(2);
-            header.setPhrase(new Phrase(hCell, notoRegular));
+            Phrase headerPhrase = new Phrase(hCell, notoRegular);
+            if (indexpdf) {
+                header.setBorderWidth(0);
+                header.setPaddingBottom(5f);
+                headerPhrase = new Phrase(hCell, FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 8));
+            }
+            header.setPhrase(headerPhrase);
             table.addCell(header);
         };
     }
@@ -266,7 +376,10 @@ public class FileExporter {
     private void addRows(TableRow[] rows, PdfPTable table) {
         for(TableRow tableRow : rows) {
             for (String celica : tableRow) {
-                table.addCell(new Phrase(celica, notoRegular));
+                PdfPCell row = new PdfPCell();
+                row.setBorderWidth(indexpdf ? 0 : 1);
+                row.setPhrase(new Phrase(celica, notoRegular));
+                table.addCell(row);
             }
         }
     }
