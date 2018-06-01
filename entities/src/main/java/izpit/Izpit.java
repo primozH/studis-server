@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import helpers.adapters.LocalDateAdapter;
 import sifranti.Predmet;
 import vloge.Student;
+import vloge.Ucitelj;
 
 @Entity
 @Table(name = "izpit")
@@ -78,6 +79,10 @@ public class Izpit {
     @ManyToOne
     @JoinColumn(name = "student")
     private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "izprasevalec")
+    private Ucitelj izprasevalec;
 
     @Column(name = "st_polaganja_leto", nullable = false)
     private Integer stPolaganjaLeto;
@@ -176,5 +181,13 @@ public class Izpit {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Ucitelj getIzprasevalec() {
+        return izprasevalec;
+    }
+
+    public void setIzprasevalec(Ucitelj izprasevalec) {
+        this.izprasevalec = izprasevalec;
     }
 }

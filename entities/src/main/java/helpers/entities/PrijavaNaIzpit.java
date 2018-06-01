@@ -1,10 +1,13 @@
 package helpers.entities;
 
 import izpit.PrijavaRok;
+import vloge.Ucitelj;
 
 public class PrijavaNaIzpit {
     private Integer koncnaOcena;
     private Integer ocenaPisno;
+
+    private Ucitelj izprasevalec;
 
     private PrijavaRok prijavaRok;
 
@@ -22,6 +25,14 @@ public class PrijavaNaIzpit {
 
     public void setOcenaPisno(Integer ocenaPisno) {
         this.ocenaPisno = ocenaPisno;
+    }
+
+    public Ucitelj getIzprasevalec() {
+        return izprasevalec;
+    }
+
+    public void setIzprasevalec(Ucitelj izprasevalec) {
+        this.izprasevalec = izprasevalec;
     }
 
     public PrijavaRok getPrijavaRok() {
