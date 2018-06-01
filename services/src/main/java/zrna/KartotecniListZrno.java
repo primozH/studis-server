@@ -12,6 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,9 +66,11 @@ public class KartotecniListZrno {
 
                 izvajanjePredmeta.setStudijskoLeto(null);
 
-                List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganja", Izpit.class)
+                List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganjaZaStudijskoLeto", Izpit.class)
                         .setParameter("sifraPredmeta", predmet.getPredmet().getSifra())
                         .setParameter("studentId", studentId)
+                        .setParameter("letoStart", LocalDate.of(vpis.getStudijskoLeto().getId(), 10, 1))
+                        .setParameter("letoStop", LocalDate.of(vpis.getStudijskoLeto().getId() + 1, 9, 30))
                         .getResultList();
 
                 sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)

@@ -106,6 +106,10 @@ public class IzpitZrno {
             }
             stored.setStPolaganjaSkupno((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaSkupno() : 0) + 1);
 
+            if (prijavaRok != null) {
+                stored.setDatum(prijavaRok.getRok().getDatum());
+            }
+
             em.persist(stored);
         } else {
             if (izpit.getOcenaPisno() != null)
@@ -113,6 +117,10 @@ public class IzpitZrno {
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
 
             stored.setIzprasevalec(izpit.getIzprasevalec());
+
+            if (prijavaRok != null) {
+                stored.setDatum(prijavaRok.getRok().getDatum());
+            }
             em.merge(stored);
         }
 

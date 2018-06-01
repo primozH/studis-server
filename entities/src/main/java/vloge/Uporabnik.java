@@ -20,9 +20,8 @@ import naslov.Drzava;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tip")
 @NamedQueries( value = {
-        @NamedQuery(name = "entitete.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.uporabniskoIme = :uporabniskoIme"),
-        @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email"),
-        @NamedQuery(name = "entitete.vloge.Uporabnik.vrniUporabnika", query = "SELECT u FROM Uporabnik u WHERE u.id = :uporabnikId")
+        @NamedQuery(name = "entitete.vloge.Uporabnik.prijava", query = "SELECT u FROM Uporabnik u WHERE u.email = :email"),
+        @NamedQuery(name = "entitete.vloge.Uporabnik.pozabljeno.geslo", query = "SELECT u FROM Uporabnik u WHERE u.email = :email")
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Uporabnik {
@@ -37,9 +36,6 @@ public class Uporabnik {
 
     @Column(name = "ime") private String ime;
     @Column(name = "priimek") private String priimek;
-
-    @Column(name = "uporabnisko_ime", nullable = false)
-    private String uporabniskoIme;
 
     @XmlTransient
     @Column(name = "geslo", nullable = false)
@@ -90,9 +86,8 @@ public class Uporabnik {
 
     public Uporabnik() { }
 
-    public Uporabnik(String email, String geslo, String uporabniskoIme) {
+    public Uporabnik(String email, String geslo) {
         this.email = email;
-        this.uporabniskoIme = uporabniskoIme;
         setGeslo(geslo);
     }
 
@@ -275,13 +270,5 @@ public class Uporabnik {
             throw new IllegalArgumentException("Neveljavnen priimek");
 
         this.priimek = priimek;
-    }
-
-    public String getUporabniskoIme() {
-        return uporabniskoIme;
-    }
-
-    public void setUporabniskoIme(String uporabniskoIme) {
-        this.uporabniskoIme = uporabniskoIme;
     }
 }

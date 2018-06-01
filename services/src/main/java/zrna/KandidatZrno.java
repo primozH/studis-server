@@ -16,9 +16,6 @@ public class KandidatZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
-    @Inject
-    private UserTransaction ux;
-
     @Inject private ZetonZrno zetonZrno;
 
     public List<Kandidat> getKandidats() {
@@ -38,7 +35,6 @@ public class KandidatZrno {
         student.setGeslo(kandidat.getGesloPlain());
         student.setIme(kandidat.getIme());
         student.setPriimek(kandidat.getPriimek());
-        student.setUporabniskoIme(kandidat.getUporabniskoIme());
 
         em.persist(student);
 

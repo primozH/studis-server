@@ -18,7 +18,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -35,11 +34,9 @@ import common.Email;
 import orodja.GeneratorPodatkov;
 import prijava.NapacnaPrijava;
 import prijava.Prijava;
-import student.Zeton;
 import vloge.Kandidat;
 import vloge.Uporabnik;
 import zrna.KandidatZrno;
-import zrna.ZetonZrno;
 
 @Path("avtorizacija")
 @Produces(MediaType.APPLICATION_JSON)
@@ -49,8 +46,6 @@ public class PrijavaVir {
 
     @PersistenceContext(unitName = "studis")
     private EntityManager em;
-
-    @Inject private UserTransaction ux;
 
     @Inject private GeneratorPodatkov generator;
     @Inject private HttpServletRequest httpServletRequest;
@@ -87,13 +82,7 @@ public class PrijavaVir {
                                 " sekund.");
                     return Response.status(Response.Status.FORBIDDEN).entity(new JSONObject().put("preostalCas", preostaliCasBana).toString()).build();
                 }
-//                Ce bomo pustili po koncu "bana" uporabniku spet 3 poskuse, odkomentiraj tole
-//                else if (napacnaPrijava.getCasPotekaIzklopaMilliseconds() != null) {
-//                    logger.info("Uporabniku je potekla casovna prepoved, zbrisi iz baze.");
-//                    em.persist(napacnaPrijava);
-//                    em.remove(napacnaPrijava);
-//                    napacnaPrijava = null;
-//                }
+
             } catch (NoResultException e) {
                 logger.info("IP-ja ni v bazi");
             }
@@ -103,20 +92,20 @@ public class PrijavaVir {
         Kandidat kandidat = null;
         try {
             uporabnik = this.em.createNamedQuery("entitete.vloge.Uporabnik.prijava", Uporabnik.class)
-                    .setParameter("uporabniskoIme", prijava.getUporabniskoIme())
+                    .setParameter("email", prijava.getEmail())
                     .getSingleResult();
         } catch (NoResultException e) {
-            logger.info("Uporabnik z uporabniskim imenom: " + prijava.getUporabniskoIme() + " ne obstaja");
+            logger.info("Uporabnik z emailom: " + prijava.getEmail() + " ne obstaja");
             uporabnik = null;
         }
 
         if (uporabnik == null) {
             try {
                 kandidat = em.createNamedQuery("entitete.vloge.Kandidat.prijava", Kandidat.class)
-                        .setParameter("uporabniskoIme", prijava.getUporabniskoIme())
+                        .setParameter("email", prijava.getEmail())
                         .getSingleResult();
             } catch (NoResultException e) {
-                logger.info("Ne najdem kandidata z uporabniskim imenom: " + prijava.getUporabniskoIme());
+                logger.info("Ne najdem kandidata z emailom: " + prijava.getEmail());
             }
         }
 

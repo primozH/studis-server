@@ -10,9 +10,9 @@ public class Ucitelj extends Uporabnik {
     public Ucitelj() {
     }
 
-    public Ucitelj(String email, String geslo, String uporabniskoIme,
+    public Ucitelj(String email, String geslo,
                    String ime, String priimek) {
-        super(email, geslo, uporabniskoIme);
+        super(email, geslo);
         this.setIme(ime);
         this.setPriimek(priimek);
     }
