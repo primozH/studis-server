@@ -239,6 +239,10 @@ public class IzpitZrno {
         if (requestIzpit.getStPolaganjaSkupno() != null) {
             izpit.setStPolaganjaSkupno(requestIzpit.getStPolaganjaSkupno());
         }
+        if (izpit.getKoncnaOcena() != null && izpit.getPrijavaRok() != null) {
+            log.info("Koncna ocena zakljucena.");
+            zakljuciPrijavo(izpit.getPrijavaRok());
+        }
         em.merge(izpit);
         return izpit;
     }
@@ -324,7 +328,20 @@ public class IzpitZrno {
                 log.info("studijsko leto = " + studijskoLeto + "  " + izpit.getPredmet().getNaziv() + "  " + izpit.getPredmet().getSifra());
                 if (filtriraniIzpiti.containsKey(studijskoLeto)) {
                     ArrayList<Izpit> izpitArrayList = filtriraniIzpiti.get(studijskoLeto);
-                    izpitArrayList.add(izpit);
+//                    izpitArrayList.add(izpit);
+                    for (int i = 0; i< izpitArrayList.size(); i++) {
+                        if (izpit.getDatum().isBefore(izpitArrayList.get(i).getDatum())) {
+//                            log.info("trenutni = " + izpit.getDatum() + "  primerjani = " + izpitArrayList.get(i).getDatum());
+                            izpitArrayList.add(i, izpit);
+                            break;
+                        }
+                    }
+                    if (!izpitArrayList.contains(izpit)) {
+                        izpitArrayList.add(izpitArrayList.size(), izpit);
+                    }
+                    for (Izpit izpit1 : izpitArrayList) {
+                        log.info("izpit = " + izpit1.getDatum());
+                    }
                     filtriraniIzpiti.replace(studijskoLeto, izpitArrayList);
                 } else {
                     ArrayList<Izpit> izpitList = new ArrayList<>();
