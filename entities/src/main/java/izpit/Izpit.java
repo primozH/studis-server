@@ -62,7 +62,6 @@ public class Izpit {
 
     @Column(name = "datum")
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    @Temporal(TemporalType.DATE)
     private LocalDate datum;
 
     @ManyToOne

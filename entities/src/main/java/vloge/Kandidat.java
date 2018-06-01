@@ -28,9 +28,6 @@ public class Kandidat {
     @Column(name = "ime") private String ime;
     @Column(name = "priimek") private String priimek;
 
-    @Column(name = "uporabnisko_ime", nullable = false)
-    private String uporabniskoIme;
-
     @Column(name = "email") private String email;
 
     @Column(name = "vpisna_stevilka")
@@ -65,14 +62,6 @@ public class Kandidat {
 
     public void setPriimek(String priimek) {
         this.priimek = priimek;
-    }
-
-    public String getUporabniskoIme() {
-        return uporabniskoIme;
-    }
-
-    public void setUporabniskoIme(String uporabniskoIme) {
-        this.uporabniskoIme = uporabniskoIme;
     }
 
     public String getEmail() {

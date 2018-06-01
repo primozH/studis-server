@@ -29,9 +29,6 @@ public class ZetonZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
-    @Inject
-    private UserTransaction ux;
-
     public List<Zeton> getTokens(Integer student, Boolean izkoriscen) {
         if (student != null) {
             if (izkoriscen != null) {
@@ -59,8 +56,8 @@ public class ZetonZrno {
         Letnik letnik = em.find(Letnik.class, 1);
         NacinStudija nacinStudija = em.find(NacinStudija.class, 1);
         OblikaStudija oblikaStudija = em.find(OblikaStudija.class, 1);
-        StudijskoLeto studijskoLeto = (StudijskoLeto) em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniStudijkoLeto")
-                .setParameter("studijskoLeto", Integer.toString(LocalDate.now().getYear()) + "%")
+        StudijskoLeto studijskoLeto = (StudijskoLeto) em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniStudijskoLeto")
+                .setParameter("studijskoLeto", Integer.toString(LocalDate.now().getYear() - 1) + "%")
                 .getSingleResult();
         VrstaVpisa vrstaVpisa = em.find(VrstaVpisa.class, 1);
 
@@ -95,8 +92,8 @@ public class ZetonZrno {
         OblikaStudija oblika = zadnjiVpis.getOblikaStudija();
         boolean prostaIzbira = false;
         StudijskiProgram studijskiProgram = zadnjiVpis.getStudijskiProgram();
-        StudijskoLeto studijskoLeto = (StudijskoLeto) em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniStudijkoLeto")
-                .setParameter("studijskoLeto", Integer.toString(LocalDate.now().getYear()) + "%")
+        StudijskoLeto studijskoLeto = (StudijskoLeto) em.createNamedQuery("entitete.sifranti.StudijskoLeto.vrniStudijskoLeto")
+                .setParameter("studijskoLeto", Integer.toString(LocalDate.now().getYear() - 1) + "%")
                 .getSingleResult();
 
         zeton.setLetnik(letnik);

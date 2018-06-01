@@ -122,7 +122,6 @@ public class UvozPodatkov {
         k.setEmail(email);
         String geslo = generator.generirajGeslo();
         k.setGesloPlain(geslo);
-        k.setUporabniskoIme(generator.generirajUporabniskoIme(ime, priimek));
         k.setVpisnaStevilka(generator.generirajVpisnoStevilko());
 
         try {

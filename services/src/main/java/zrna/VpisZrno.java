@@ -329,23 +329,6 @@ public class VpisZrno {
                 .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv())
                 .replace("Č", "C")
                 .replace("č", "c");
-//        Date now = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-//        String strDate = sdf.format(now);
-//        return html.replace("PRIIMEK",  "lalasafeaa")
-//                   .replace("IME", " " + "lalaa")
-//                   .replace("LETNIK", "2. letnik")
-//                   .replace("ULICA", "alalalla")
-//                   .replace("MESTO", "aefaefaa")
-//                   .replace("DRZAVA", "drzava")
-//                   .replace("EMSO", " " + "12424")
-//                   .replace("DATUMURA", " " + strDate)
-//                   .replace("VPISNA", " " + "1234567")
-//                   .replace("DATUMROJSTVA", "datum")
-//                   .replace("KRAJROJSTVA", "kraj")
-//                   .replace("SOLSKOLETO", "afeaa")
-//                   .replace("NACINSTUDIJA", "aaeaef")
-//                   .replace("STUDIJSKIPROGRAM", "studijskiProgram");
     }
 
     public Vpis vrniVpis(int studentId, int studijskoLeto) {
