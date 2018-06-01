@@ -93,8 +93,7 @@ public class IzpitZrno {
             stored.setPredmet(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet());
             stored.setStudent(izpit.getPrijavaRok().getStudent());
             stored.setPrijavaRok(prijavaRok);
-
-            if (zadnjePolaganje != null &&
+            if (zadnjePolaganje != null && prijavaRok != null &&
                     zadnjePolaganje.getPrijavaRok().getRok().getIzvajanjePredmeta().getStudijskoLeto().getId()
                             .equals(prijavaRok.getRok().getIzvajanjePredmeta().getStudijskoLeto().getId())) {
                 stored.setStPolaganjaLeto(zadnjePolaganje.getStPolaganjaLeto() + 1);
@@ -214,7 +213,7 @@ public class IzpitZrno {
                     student = em.createNamedQuery("entitete.vloge.Student.vrniStudentaPoVpisniStevilki", Student.class)
                                 .setParameter("vpisnaStevilka", prijavaNaIzpit.getPrijavaRok().getStudent().getVpisnaStevilka())
                                 .getSingleResult();
-                } catch (Exception exc) {
+                } catch (NullPointerException exc) {
                     ex.printStackTrace();
                     throw new Exception("Student ni bil najden");
                 }
@@ -223,7 +222,7 @@ public class IzpitZrno {
                 try {
                     predmet =
                             em.find(Predmet.class, prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet().getSifra());
-                } catch (Exception exc) {
+                } catch (NullPointerException exc) {
                     throw new Exception("Predmet ne obstaja");
                 }
                 prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setPredmet(predmet);
@@ -234,9 +233,11 @@ public class IzpitZrno {
             izpit.setDatum(requestIzpit.getDatum());
         }
         if (requestIzpit.getStPolaganjaLeto() != null) {
+            log.info("stevilo polaganj leto nastavljeno");
             izpit.setStPolaganjaLeto(requestIzpit.getStPolaganjaLeto());
         }
         if (requestIzpit.getStPolaganjaSkupno() != null) {
+            log.info("stevilo polaganj skupno");
             izpit.setStPolaganjaSkupno(requestIzpit.getStPolaganjaSkupno());
         }
         if (izpit.getKoncnaOcena() != null && izpit.getPrijavaRok() != null) {
