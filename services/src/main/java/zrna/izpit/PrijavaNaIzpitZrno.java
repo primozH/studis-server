@@ -28,11 +28,11 @@ import izpit.IzpitniRok;
 import izpit.IzvajanjePredmeta;
 import izpit.OdjavaIzpit;
 import izpit.PrijavaRok;
-import prijava.Prijava;
 import sifranti.Cenik;
 import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
 import vloge.Student;
+import vloge.Ucitelj;
 import vloge.Uporabnik;
 import vpis.Vpis;
 
@@ -404,6 +404,17 @@ public class PrijavaNaIzpitZrno {
             return em.find(Student.class, student.getId());
         } catch (Exception e) {
             throw new Exception("Student ne obstaja");
+        }
+    }
+
+    public Ucitelj getUcitelj(int ucitelj) throws Exception {
+        Ucitelj ucitelj1 = new Ucitelj();
+        ucitelj1.setId(ucitelj);
+        try {
+
+            return em.find(Ucitelj.class, ucitelj1.getId());
+        } catch (Exception e) {
+            throw new Exception("Ucitelj ne obstaja");
         }
     }
 }

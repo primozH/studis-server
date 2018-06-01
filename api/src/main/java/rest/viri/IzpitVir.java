@@ -6,7 +6,14 @@ import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,7 +24,6 @@ import common.CustomErrorMessage;
 import helpers.entities.PrijavaNaIzpit;
 import izpit.Izpit;
 import vloge.Student;
-import vloge.Ucitelj;
 import vloge.Uporabnik;
 import zrna.izpit.IzpitZrno;
 import zrna.izpit.PrijavaNaIzpitZrno;
@@ -94,7 +100,7 @@ public class IzpitVir {
         Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
         try {
             if (uporabnikTip == Role.PREDAVATELJ) {
-                izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setNosilec1((Ucitelj) uporabnik);
+                izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setNosilec1(prijavaNaIzpitZrno.getUcitelj(uporabnik.getId()));
                 if (prijavaNaIzpitZrno.getExamExecution(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta()) == null)
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
