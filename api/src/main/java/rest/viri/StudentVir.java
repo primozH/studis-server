@@ -43,8 +43,6 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 
-import authentication.Auth;
-import authentication.Role;
 import common.CustomErrorMessage;
 import orodja.PotrdiloVpisaHTML;
 import vloge.Student;
@@ -52,7 +50,7 @@ import vloge.Uporabnik;
 import vpis.Vpis;
 import vpis.VpisniList;
 import zrna.KartotecniListZrno;
-import zrna.StudentZrno;
+import zrna.uporabniki.StudentZrno;
 import zrna.VpisZrno;
 
 @Path("/student")

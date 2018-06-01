@@ -36,7 +36,7 @@ import prijava.NapacnaPrijava;
 import prijava.Prijava;
 import vloge.Kandidat;
 import vloge.Uporabnik;
-import zrna.KandidatZrno;
+import zrna.uporabniki.KandidatZrno;
 
 @Path("avtorizacija")
 @Produces(MediaType.APPLICATION_JSON)

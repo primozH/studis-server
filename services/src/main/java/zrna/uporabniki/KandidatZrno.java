@@ -1,7 +1,8 @@
-package zrna;
+package zrna.uporabniki;
 
 import vloge.Kandidat;
 import vloge.Student;
+import zrna.ZetonZrno;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
