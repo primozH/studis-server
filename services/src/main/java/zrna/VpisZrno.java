@@ -24,6 +24,7 @@ import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
+import predmetnik.Modul;
 import predmetnik.Predmetnik;
 import sifranti.DelPredmetnika;
 import sifranti.Letnik;
@@ -247,37 +248,18 @@ public class VpisZrno {
 
         logger.info("Preverjanje veljavnosti izbire modulov");
         List<Predmet> module1 = new ArrayList<>();
-        List<Predmet> module2 = new ArrayList<>();
-        Predmet optionalModuleCourse = null;
-        int module1Code = -1;
-        int module2Code = -1;
 
         List<Predmetnik> curriculum = psz.getCurriculum(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(3)));
 
-        curriculum = curriculum.stream().filter(predmetnik -> courses.contains(predmetnik.getPredmet())).collect(Collectors.toList());
+        Map<Modul, List<Predmetnik>> filteredCurriculum = curriculum.stream()
+                .filter(predmetnik -> courses.contains(predmetnik.getPredmet()))
+                .collect(Collectors.groupingBy(Predmetnik::getModul));
 
-        for(Predmetnik p : curriculum) {
-            if (module1Code < 0) {
-                module1Code = p.getModul().ordinal();
-            }
-            if (p.getModul().ordinal() != module1Code && module2Code < 0) {
-                module2Code = p.getModul().ordinal();
-            }
-
-            // course must be part of module1 or module2
-            if (module1Code == p.getModul().ordinal()) {
+        filteredCurriculum.forEach((modul, predmetnik) -> {
+            for (Predmetnik p : predmetnik) {
                 module1.add(p.getPredmet());
-            } else if (module2Code == p.getModul().ordinal()){
-                module2.add(p.getPredmet());
-            } else if (optionalModuleCourse == null){
-                optionalModuleCourse = p.getPredmet();
-            } else {
-                return null;
             }
-        }
-
-        module1.addAll(module2);
-        if (optionalModuleCourse != null) module1.add(optionalModuleCourse);
+        });
 
         if (module1.size() < 6) {
             return null;

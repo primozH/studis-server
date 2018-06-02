@@ -10,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
+import javax.ws.rs.QueryParam;
 
 import sifranti.Letnik;
 import sifranti.NacinStudija;
@@ -41,8 +42,14 @@ public class ZetonZrno {
                     .setParameter("student", student)
                     .getResultList();
         }
-        return em.createNamedQuery("entitete.vpis.Zeton.vrniVse", Zeton.class)
-                .getResultList();
+        if (izkoriscen == null) {
+            return em.createNamedQuery("entitete.vpis.Zeton.vrniVse", Zeton.class)
+                    .getResultList();
+        } else {
+            return em.createNamedQuery("entitete.vpis.Zeton.vrniVseIzkoriscenost", Zeton.class)
+                    .setParameter("izkoriscen", izkoriscen)
+                    .getResultList();
+        }
     }
 
     public Zeton getToken(Integer student, Integer vrstaVpisa) {

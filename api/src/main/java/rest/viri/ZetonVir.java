@@ -23,8 +23,8 @@ public class ZetonVir {
     private ZetonZrno zetonZrno;
 
     @GET
-    public Response getTokens() {
-        List<Zeton> zetoni = zetonZrno.getTokens(null, null);
+    public Response getTokens(@QueryParam("izkoriscen") Boolean izkoriscen) {
+        List<Zeton> zetoni = zetonZrno.getTokens(null, izkoriscen);
         return Response.ok(zetoni).build();
     }
 
