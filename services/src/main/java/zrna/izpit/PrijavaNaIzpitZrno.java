@@ -62,7 +62,7 @@ public class PrijavaNaIzpitZrno {
         Integer totalTries = checkApplicationCount(prijavaRok, vpisi);
 
         // preveri roke (prijava po izteku, premalo dni)
-//        checkDates(prijavaRok);
+        checkDates(prijavaRok);
 
         // preveri prijavo na že opravljen izpit
         checkForPassedExam(prijavaRok);

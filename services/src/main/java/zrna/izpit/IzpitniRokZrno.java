@@ -49,7 +49,7 @@ public class IzpitniRokZrno {
             log.info("Pridobivanje izpitnih rokov za študenta " + uporabnik.getId());
             roki = em.createNamedQuery("entitete.izpit.IzpitniRok.izpitniRokiZaStudenta", IzpitniRok.class)
                     .setParameter("student", uporabnik.getId())
-//                    .setParameter("datum", LocalDate.now())
+                    .setParameter("datum", LocalDate.now())
                     .getResultList();
 
         }
@@ -74,7 +74,7 @@ public class IzpitniRokZrno {
             throw new Exception("Manjkajo podatki, potrebni za razpis roka");
         }
 
-//        checkDate(rok);
+        checkDate(rok);
         checkIfAlreadyCreated(rok);
 
         preveriIzvajalca(rok, vnasalec);
