@@ -21,16 +21,18 @@ import java.io.Serializable;
                     "SET z.izkoriscen = :izkoriscen WHERE z.student = :student")
         }
 )
-@IdClass(ZetonId.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Zeton {
 
     @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "vrsta_vpisa")
     private VrstaVpisa vrstaVpisa;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "student")
     private Student student;
@@ -60,6 +62,14 @@ public class Zeton {
 
     @Column(name = "izkoriscen")
     private boolean izkoriscen = false;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Student getStudent() {
         return student;

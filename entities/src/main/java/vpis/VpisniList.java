@@ -7,16 +7,16 @@ import java.util.List;
 
 public class VpisniList {
 
-    private Zeton zeton;
+    private Integer zeton;
     private List<Predmet> strokovniPredmeti;
     private List<Predmet> splosniPredmeti;
     private List<Predmet> modulskiPredmeti;
 
-    public Zeton getZeton() {
+    public Integer getZeton() {
         return zeton;
     }
 
-    public void setZeton(Zeton zeton) {
+    public void setZeton(Integer zeton) {
         this.zeton = zeton;
     }
 

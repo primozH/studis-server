@@ -73,13 +73,15 @@ public class VpisZrno {
         });
     }
 
-    public Vpis enrollmentProcedure(VpisniList vpisniList) throws Exception {
+    public Vpis enrollmentProcedure(Integer studentId, VpisniList vpisniList) throws Exception {
         logger.info("Začenjam postopek vpisa. Pridobivanje podatkov...");
-        Integer studentId = vpisniList.getZeton().getStudent().getId();
-        Integer enrollmentType = vpisniList.getZeton().getVrstaVpisa().getSifraVpisa();
-        ZetonId zetonId = new ZetonId(studentId, enrollmentType);
+        Integer zetonId = vpisniList.getZeton();
 
         Zeton token = em.find(Zeton.class, zetonId);
+        if (!studentId.equals(token.getStudent().getId())) {
+            throw new Exception("Podatki o študentu se ne ujemajo");
+        }
+
         List<Predmet> profCourses = vpisniList.getStrokovniPredmeti();
         List<Predmet> optionalCourses = vpisniList.getSplosniPredmeti();
         List<Predmet> moduleCourses = vpisniList.getModulskiPredmeti();
@@ -331,6 +333,8 @@ public class VpisZrno {
         if (vpis == null) return false;
         vpis.setPotrjen(true);
         em.merge(vpis);
+
+
         return true;
     }
 
@@ -341,6 +345,13 @@ public class VpisZrno {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public List<Vpis> vrniVpisaneVLetnik(Integer leto, Integer letnik) {
+        return em.createNamedQuery("entitete.vpis.Vpis.vrniPotrjeneVpiseVLetnik", Vpis.class)
+                .setParameter("leto", leto)
+                .setParameter("letnik", letnik)
+                .getResultList();
     }
 
 }

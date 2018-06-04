@@ -30,18 +30,20 @@ public class ZetonZrno {
     @PersistenceContext(name = "studis")
     private EntityManager em;
 
-    public List<Zeton> getTokens(Integer student, Boolean izkoriscen) {
-        if (student != null) {
-            if (izkoriscen != null) {
-                return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudentaIzkoriscenost", Zeton.class)
-                        .setParameter("student", student)
-                        .setParameter("izkoriscen", izkoriscen)
-                        .getResultList();
-            }
+    public List<Zeton> getTokensForStudent(Integer student, Boolean izkoriscen) {
+        if (izkoriscen == null) {
             return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudenta", Zeton.class)
                     .setParameter("student", student)
                     .getResultList();
         }
+
+        return em.createNamedQuery("entitete.vpis.Zeton.vrniZetoneZaStudentaIzkoriscenost", Zeton.class)
+                .setParameter("student", student)
+                .setParameter("izkoriscen", izkoriscen)
+                .getResultList();
+    }
+
+    public List<Zeton> getTokens(Boolean izkoriscen) {
         if (izkoriscen == null) {
             return em.createNamedQuery("entitete.vpis.Zeton.vrniVse", Zeton.class)
                     .getResultList();
@@ -52,8 +54,7 @@ public class ZetonZrno {
         }
     }
 
-    public Zeton getToken(Integer student, Integer vrstaVpisa) {
-        ZetonId zetonId = new ZetonId(student, vrstaVpisa);
+    public Zeton getToken(Integer zetonId) {
         return em.find(Zeton.class, zetonId);
     }
 
@@ -118,33 +119,14 @@ public class ZetonZrno {
     }
 
     @Transactional
-    public Zeton updateToken(Zeton zeton, Integer vrstaVpisa) {
-        ZetonId zetonId = new ZetonId(zeton.getStudent().getId(), vrstaVpisa);
+    public Zeton updateToken(Zeton zeton, Integer zetonId) {
         Zeton oldToken = em.find(Zeton.class, zetonId);
 
         if (oldToken.isIzkoriscen())
             return oldToken;
 
-        if (zeton.getVrstaVpisa() != null && !zeton.getVrstaVpisa().getSifraVpisa().equals(vrstaVpisa)) {
-            Zeton newToken = new Zeton();
-            newToken.setVrstaVpisa(zeton.getVrstaVpisa());
-            newToken.setStudent(zeton.getStudent());
-            newToken.setStudijskiProgram(zeton.getStudijskiProgram());
-            newToken.setLetnik(zeton.getLetnik());
-            newToken.setStudijskoLeto(zeton.getStudijskoLeto());
-            newToken.setNacinStudija(zeton.getNacinStudija());
-            newToken.setOblikaStudija(zeton.getOblikaStudija());
-            newToken.setProstaIzbira(zeton.isProstaIzbira());
-
-            em.remove(oldToken);
-            em.persist(newToken);
-
-            em.flush();
-            em.clear();
-            ZetonId newTokenId = new ZetonId(newToken.getStudent().getId(), newToken.getVrstaVpisa().getSifraVpisa());
-            newToken = em.find(Zeton.class, newTokenId);
-
-            return newToken;
+        if (zeton.getVrstaVpisa() != null) {
+            oldToken.setVrstaVpisa(zeton.getVrstaVpisa());
         }
         if (zeton.getStudijskoLeto() != null) {
             oldToken.setStudijskoLeto(zeton.getStudijskoLeto());
@@ -154,6 +136,9 @@ public class ZetonZrno {
         }
         if (zeton.getOblikaStudija() != null) {
             oldToken.setOblikaStudija(zeton.getOblikaStudija());
+        }
+        if (zeton.getNacinStudija() != null) {
+            oldToken.setNacinStudija(zeton.getNacinStudija());
         }
         if (zeton.getLetnik() != null) {
             oldToken.setLetnik(zeton.getLetnik());
@@ -165,8 +150,7 @@ public class ZetonZrno {
     }
 
     @Transactional
-    public void deleteToken(Integer student, Integer vrstaVpisa) {
-        ZetonId zetonId = new ZetonId(student, vrstaVpisa);
+    public void deleteToken(Integer zetonId) {
         Zeton zeton = em.find(Zeton.class, zetonId);
         if (!zeton.isIzkoriscen()) {
             em.remove(zeton);

@@ -50,7 +50,7 @@ public class UvozPodatkov {
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName));
 
             while ((count = reader.read(buffer)) > 0) {
-                out.write(buffer);
+                out.write(buffer, 0, count);
             }
 
             out.flush();
@@ -82,8 +82,8 @@ public class UvozPodatkov {
             if (br.read() != 0xFEFF)
                 br.reset();
 
-            while (br.ready()) {
-                line = br.readLine();
+            while ((line = br.readLine()) != null ) {
+
                 int length = line.length();
                 logger.info(line + " " + Integer.toString(length));
                 if (length == 0)
