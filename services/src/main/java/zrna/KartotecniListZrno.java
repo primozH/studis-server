@@ -1,5 +1,15 @@
 package zrna;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import helpers.entities.KartotecniList;
 import helpers.entities.Vrstica;
 import izpit.Izpit;
@@ -7,15 +17,6 @@ import izpit.IzvajanjePredmeta;
 import student.PredmetStudent;
 import vloge.Student;
 import vpis.Vpis;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class KartotecniListZrno {
@@ -69,12 +70,25 @@ public class KartotecniListZrno {
                         .setParameter("sifraPredmeta", predmet.getPredmet().getSifra())
                         .setParameter("studentId", studentId)
                         .getResultList();
+//                List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniVseIzpiteZaStudenta", Izpit.class)
+//                                       .setParameter("sifraPredmeta", predmet.getPredmet().getSifra())
+//                                       .setParameter("studentId", studentId)
+//                                       .getResultList();
+                for (Izpit izpit : izpiti) {
+                    log.info("izpi " + izpit.getStPolaganjaSkupno() + "  " + izpit.getDatum() + "  " + izpit.getKoncnaOcena() + "  " + izpit.getPredmet().getSifra());
+                }
+//                izpiti = IzpitZrno.odstraniPredmeteZNegativnoZadnjoOceno(izpiti);
+//
+//                for (Izpit izpit : izpiti) {
+//                    log.info("po izpi " + izpit.getStPolaganjaSkupno() + "  " + izpit.getDatum() + "  " + izpit.getKoncnaOcena() + "  " + izpit.getPredmet().getSifra());
+//                }
 
                 sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .mapToInt(Izpit::getKoncnaOcena)
                         .sum();
                 countGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .count();
+                log.info("counGrade = "  + countGrade + "   " + sumGrade);
 
                 sumECTS += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .mapToInt(izpit -> izpit.getPredmet().getECTS())
@@ -86,6 +100,7 @@ public class KartotecniListZrno {
                 ocene.put(predmet.getPredmet().getSifra(), izpiti);
             }
 
+            log.info("koncno counGrade = "  + countGrade + "   " + sumGrade);
             if (countGrade == 0) {
                 vrstica.setPovprecnaOcena(0d);
             } else {
