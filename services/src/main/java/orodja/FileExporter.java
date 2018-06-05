@@ -145,8 +145,21 @@ public class FileExporter {
 
             Paragraph paragraph = new Paragraph();
             paragraph.setAlignment(Element.ALIGN_CENTER);
+            paragraph.setFont(FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 8, Font.ITALIC, null));
+            paragraph.add(new Chunk("Fakulteta za računalništvo in informatiko\nUniverza v Ljubljani"));
+            doc.add(paragraph);
+
+            paragraph = new Paragraph();
+            paragraph.setAlignment(Element.ALIGN_RIGHT);
+            paragraph.setFont(FontFactory.getFont("notosans-regular", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 8));
+            paragraph.add(new Chunk("Datum: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.uuuu"))));
+            doc.add(paragraph);
+
+            paragraph = new Paragraph();
+            paragraph.setAlignment(Element.ALIGN_CENTER);
             paragraph.setFont(FontFactory.getFont("notosans-bold", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20));
             paragraph.add(new Chunk("Elektronski indeks".toUpperCase()));
+            paragraph.setSpacingBefore(15f);
             doc.add(paragraph);
 
 
