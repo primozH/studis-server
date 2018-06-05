@@ -192,7 +192,7 @@ public class IzpitniRokVir {
             Role uporabnikTip = (Role) httpServletRequest.getAttribute("role");
             if (uporabnikTip == Role.PREDAVATELJ) {
                 IzpitniRok izpitniRok = prijavaNaIzpitZrno.getExam(prijavaRok);
-                if (izpitniRok.getIzvajalec().getId() != uporabnik.getId())
+                if (!izpitniRok.getIzvajalec().getId().equals(uporabnik.getId()))
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             prijavaRok.setStudent(prijavaNaIzpitZrno.getStudentVpisna(prijavaRok.getStudent()));
