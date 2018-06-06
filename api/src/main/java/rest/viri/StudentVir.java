@@ -43,8 +43,6 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 
-import authentication.Auth;
-import authentication.Role;
 import common.CustomErrorMessage;
 import orodja.PotrdiloVpisaHTML;
 import vloge.Student;
@@ -52,7 +50,7 @@ import vloge.Uporabnik;
 import vpis.Vpis;
 import vpis.VpisniList;
 import zrna.KartotecniListZrno;
-import zrna.StudentZrno;
+import zrna.uporabniki.StudentZrno;
 import zrna.VpisZrno;
 
 @Path("/student")
@@ -104,12 +102,9 @@ public class StudentVir {
     @POST
     @Path("{id}/vpis")
     public Response vpisiStudenta(@PathParam("id") Integer studentId, VpisniList vpisniList) {
-        if (!studentId.equals(vpisniList.getZeton().getStudent().getId()))
-            return Response.status(Response.Status.CONFLICT).build();
-
         Vpis vpis;
         try {
-            vpis = vpisZrno.enrollmentProcedure(vpisniList);
+            vpis = vpisZrno.enrollmentProcedure(studentId, vpisniList);
         } catch (Exception e) {
             return Response.status(Response.Status.CONFLICT).entity(new CustomErrorMessage(e.getMessage())).build();
         }
@@ -120,6 +115,14 @@ public class StudentVir {
     @Path("{id}/vpis")
     public Response vrniVpiseZaStudenta(@PathParam("id") Integer studentId) {
         List<Vpis> vpisi = vpisZrno.getVpisi(studentId);
+
+        return Response.ok(vpisi).build();
+    }
+
+    @GET
+    @Path("vpis/leto/{leto}/letnik/{letnik}")
+    public Response vrniVpisaneVLetnik (@PathParam("leto") Integer leto, @PathParam("letnik") Integer letnik) {
+        List<Vpis> vpisi = vpisZrno.vrniVpisaneVLetnik(leto, letnik);
 
         return Response.ok(vpisi).build();
     }

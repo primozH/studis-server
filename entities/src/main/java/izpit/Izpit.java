@@ -1,32 +1,29 @@
 package izpit;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import helpers.adapters.LocalDateAdapter;
+import helpers.adapters.LocalDateTimeAdapter;
 import sifranti.Predmet;
 import vloge.Student;
+import vloge.Ucitelj;
 
 @Entity
 @Table(name = "izpit")
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.izpit.Izpit.vrniPolaganja",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
+                "AND i.student.id = :studentId " +
+                "ORDER BY i.datum DESC"),
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniPolaganjaZaStudijskoLeto",
+                    query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
-                        "ORDER BY i.prijavaRok.rok.datum DESC"),
+                        "AND i.datum BETWEEN :letoStart AND :letoStop " +
+                        "ORDER BY i.datum DESC"),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
@@ -85,6 +82,10 @@ public class Izpit {
     @JoinColumn(name = "student")
     private Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "izprasevalec")
+    private Ucitelj izprasevalec;
+
     @Column(name = "st_polaganja_leto", nullable = false)
     private Integer stPolaganjaLeto;
 
@@ -98,11 +99,22 @@ public class Izpit {
     @Column(name = "koncna_ocena")
     private Integer koncnaOcena = null;
 
+    @Column(name = "ustvarjeno")
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime ustvarjeno;
 
-    @PrePersist @PreUpdate
-    void updateDatum() {
-        datum = LocalDate.now();
+    @Column(name = "spremenjeno")
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime spremenjeno;
+
+
+    @PrePersist
+    void created() {
+        ustvarjeno = LocalDateTime.now();
     }
+
+    @PreUpdate
+    void updated() { spremenjeno = LocalDateTime.now(); }
 
     public PrijavaRok getPrijavaRok() {
         return prijavaRok;
@@ -182,5 +194,21 @@ public class Izpit {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Ucitelj getIzprasevalec() {
+        return izprasevalec;
+    }
+
+    public void setIzprasevalec(Ucitelj izprasevalec) {
+        this.izprasevalec = izprasevalec;
+    }
+
+    public LocalDateTime getUstvarjeno() {
+        return ustvarjeno;
+    }
+
+    public LocalDateTime getSpremenjeno() {
+        return spremenjeno;
     }
 }

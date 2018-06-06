@@ -7,15 +7,15 @@ package prijava;
  */
 public class Prijava {
 
-    private String uporabniskoIme;
+    private String email;
     private String geslo;
 
-    public String getUporabniskoIme() {
-        return uporabniskoIme;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUporabniskoIme(String uporabniskoIme) {
-        this.uporabniskoIme = uporabniskoIme;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getGeslo() {

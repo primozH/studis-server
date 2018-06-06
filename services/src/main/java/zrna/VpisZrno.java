@@ -24,6 +24,7 @@ import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
+import predmetnik.Modul;
 import predmetnik.Predmetnik;
 import sifranti.DelPredmetnika;
 import sifranti.Letnik;
@@ -72,13 +73,15 @@ public class VpisZrno {
         });
     }
 
-    public Vpis enrollmentProcedure(VpisniList vpisniList) throws Exception {
+    public Vpis enrollmentProcedure(Integer studentId, VpisniList vpisniList) throws Exception {
         logger.info("Začenjam postopek vpisa. Pridobivanje podatkov...");
-        Integer studentId = vpisniList.getZeton().getStudent().getId();
-        Integer enrollmentType = vpisniList.getZeton().getVrstaVpisa().getSifraVpisa();
-        ZetonId zetonId = new ZetonId(studentId, enrollmentType);
+        Integer zetonId = vpisniList.getZeton();
 
         Zeton token = em.find(Zeton.class, zetonId);
+        if (!studentId.equals(token.getStudent().getId())) {
+            throw new Exception("Podatki o študentu se ne ujemajo");
+        }
+
         List<Predmet> profCourses = vpisniList.getStrokovniPredmeti();
         List<Predmet> optionalCourses = vpisniList.getSplosniPredmeti();
         List<Predmet> moduleCourses = vpisniList.getModulskiPredmeti();
@@ -247,37 +250,18 @@ public class VpisZrno {
 
         logger.info("Preverjanje veljavnosti izbire modulov");
         List<Predmet> module1 = new ArrayList<>();
-        List<Predmet> module2 = new ArrayList<>();
-        Predmet optionalModuleCourse = null;
-        int module1Code = -1;
-        int module2Code = -1;
 
         List<Predmetnik> curriculum = psz.getCurriculum(enrollment, curriculumPart.get(coursesTypeSearchStrings.get(3)));
 
-        curriculum = curriculum.stream().filter(predmetnik -> courses.contains(predmetnik.getPredmet())).collect(Collectors.toList());
+        Map<Modul, List<Predmetnik>> filteredCurriculum = curriculum.stream()
+                .filter(predmetnik -> courses.contains(predmetnik.getPredmet()))
+                .collect(Collectors.groupingBy(Predmetnik::getModul));
 
-        for(Predmetnik p : curriculum) {
-            if (module1Code < 0) {
-                module1Code = p.getModul().ordinal();
-            }
-            if (p.getModul().ordinal() != module1Code && module2Code < 0) {
-                module2Code = p.getModul().ordinal();
-            }
-
-            // course must be part of module1 or module2
-            if (module1Code == p.getModul().ordinal()) {
+        filteredCurriculum.forEach((modul, predmetnik) -> {
+            for (Predmetnik p : predmetnik) {
                 module1.add(p.getPredmet());
-            } else if (module2Code == p.getModul().ordinal()){
-                module2.add(p.getPredmet());
-            } else if (optionalModuleCourse == null){
-                optionalModuleCourse = p.getPredmet();
-            } else {
-                return null;
             }
-        }
-
-        module1.addAll(module2);
-        if (optionalModuleCourse != null) module1.add(optionalModuleCourse);
+        });
 
         if (module1.size() < 6) {
             return null;
@@ -329,23 +313,6 @@ public class VpisZrno {
                 .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv())
                 .replace("Č", "C")
                 .replace("č", "c");
-//        Date now = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-//        String strDate = sdf.format(now);
-//        return html.replace("PRIIMEK",  "lalasafeaa")
-//                   .replace("IME", " " + "lalaa")
-//                   .replace("LETNIK", "2. letnik")
-//                   .replace("ULICA", "alalalla")
-//                   .replace("MESTO", "aefaefaa")
-//                   .replace("DRZAVA", "drzava")
-//                   .replace("EMSO", " " + "12424")
-//                   .replace("DATUMURA", " " + strDate)
-//                   .replace("VPISNA", " " + "1234567")
-//                   .replace("DATUMROJSTVA", "datum")
-//                   .replace("KRAJROJSTVA", "kraj")
-//                   .replace("SOLSKOLETO", "afeaa")
-//                   .replace("NACINSTUDIJA", "aaeaef")
-//                   .replace("STUDIJSKIPROGRAM", "studijskiProgram");
     }
 
     public Vpis vrniVpis(int studentId, int studijskoLeto) {
@@ -366,6 +333,8 @@ public class VpisZrno {
         if (vpis == null) return false;
         vpis.setPotrjen(true);
         em.merge(vpis);
+
+
         return true;
     }
 
@@ -376,6 +345,13 @@ public class VpisZrno {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public List<Vpis> vrniVpisaneVLetnik(Integer leto, Integer letnik) {
+        return em.createNamedQuery("entitete.vpis.Vpis.vrniPotrjeneVpiseVLetnik", Vpis.class)
+                .setParameter("leto", leto)
+                .setParameter("letnik", letnik)
+                .getResultList();
     }
 
 }

@@ -12,9 +12,9 @@ public class Skrbnik extends Uporabnik {
         super();
     }
 
-    public Skrbnik(String email, String geslo, String uporabniskoIme,
+    public Skrbnik(String email, String geslo,
                    String ime, String priimek) {
-        super(email, geslo, uporabniskoIme);
+        super(email, geslo);
         this.setIme(ime);
         this.setPriimek(priimek);
     }

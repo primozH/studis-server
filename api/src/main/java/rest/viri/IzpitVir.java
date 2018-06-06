@@ -41,6 +41,7 @@ public class IzpitVir {
 
     @POST
     @Path("rok/{id}/rezultati")
+    @Auth(rolesAllowed = {Role.REFERENT, Role.PREDAVATELJ})
     public Response vnesiRezultate(@PathParam("id") Integer rokId, List<PrijavaNaIzpit> izpiti) {
         try {
             izpitZrno.vnesiRezultateIzpita(izpiti, rokId);
@@ -101,7 +102,7 @@ public class IzpitVir {
         try {
             if (uporabnikTip == Role.PREDAVATELJ) {
                 izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setNosilec1(prijavaNaIzpitZrno.getUcitelj(uporabnik.getId()));
-                if (prijavaNaIzpitZrno.getExamExecution(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta()) == null)
+                if (prijavaNaIzpitZrno.getCourseExecution(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta()) == null)
                     return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             return Response.ok(izpitZrno.vnesiKoncnoOceno(izpit)).build();

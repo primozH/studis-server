@@ -1,7 +1,8 @@
-package zrna;
+package zrna.uporabniki;
 
 import vloge.Kandidat;
 import vloge.Student;
+import zrna.ZetonZrno;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,9 +16,6 @@ public class KandidatZrno {
 
     @PersistenceContext(name = "studis")
     private EntityManager em;
-
-    @Inject
-    private UserTransaction ux;
 
     @Inject private ZetonZrno zetonZrno;
 
@@ -38,7 +36,6 @@ public class KandidatZrno {
         student.setGeslo(kandidat.getGesloPlain());
         student.setIme(kandidat.getIme());
         student.setPriimek(kandidat.getPriimek());
-        student.setUporabniskoIme(kandidat.getUporabniskoIme());
 
         em.persist(student);
 

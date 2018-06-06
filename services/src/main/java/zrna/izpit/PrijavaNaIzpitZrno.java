@@ -154,6 +154,7 @@ public class PrijavaNaIzpitZrno {
                 Izpit izpit = (Izpit) prijava[1];
                 prijavaNaIzpit.setOcenaPisno(izpit.getOcenaPisno());
                 prijavaNaIzpit.setKoncnaOcena(izpit.getKoncnaOcena());
+                prijavaNaIzpit.setIzprasevalec(izpit.getIzprasevalec());
             }
 
             prijaveZRezultati.add(prijavaNaIzpit);
@@ -385,7 +386,7 @@ public class PrijavaNaIzpitZrno {
         }
     }
 
-    public IzvajanjePredmeta getExamExecution(IzvajanjePredmeta izvajanjePredmeta) throws Exception {
+    public IzvajanjePredmeta getCourseExecution(IzvajanjePredmeta izvajanjePredmeta) throws Exception {
         try {
             return em.createNamedQuery("entitete.izpit.IzvajanjePredmeta.vrniPredmet", IzvajanjePredmeta.class)
                      .setParameter("studijskoLeto", izvajanjePredmeta.getStudijskoLeto().getId())

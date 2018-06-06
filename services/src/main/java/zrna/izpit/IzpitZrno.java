@@ -53,6 +53,8 @@ public class IzpitZrno {
                 log.warning("Neveljavna končna ocena");
             }
 
+            izpit.setIzprasevalec(prijavaRok.getRok().getIzvajalec());
+
             Izpit stored = izpitObstaja(izpit.getPrijavaRok().getStudent(), rokId);
             stored = vnesiRezultate(stored, izpit, prijavaRok);
 
@@ -92,6 +94,8 @@ public class IzpitZrno {
             stored.setPredmet(izpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet());
             stored.setStudent(izpit.getPrijavaRok().getStudent());
             stored.setPrijavaRok(prijavaRok);
+            stored.setIzprasevalec(izpit.getIzprasevalec());
+
             if (zadnjePolaganje != null && prijavaRok != null &&
                     zadnjePolaganje.getPrijavaRok().getRok().getIzvajanjePredmeta().getStudijskoLeto().getId()
                             .equals(prijavaRok.getRok().getIzvajanjePredmeta().getStudijskoLeto().getId())) {
@@ -101,11 +105,21 @@ public class IzpitZrno {
             }
             stored.setStPolaganjaSkupno((zadnjePolaganje != null ? zadnjePolaganje.getStPolaganjaSkupno() : 0) + 1);
 
+            if (prijavaRok != null) {
+                stored.setDatum(prijavaRok.getRok().getDatum());
+            }
+
             em.persist(stored);
         } else {
-            if (izpit.getOcenaPisno() != null) stored.setOcenaPisno(izpit.getOcenaPisno());
+            if (izpit.getOcenaPisno() != null)
+                stored.setOcenaPisno(izpit.getOcenaPisno());
             stored.setKoncnaOcena(izpit.getKoncnaOcena());
 
+            stored.setIzprasevalec(izpit.getIzprasevalec());
+
+            if (prijavaRok != null) {
+                stored.setDatum(prijavaRok.getRok().getDatum());
+            }
             em.merge(stored);
         }
 

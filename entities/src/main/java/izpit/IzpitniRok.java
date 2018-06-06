@@ -28,7 +28,8 @@ import vloge.Ucitelj;
                             "AND iz.student.id = :student) " +
                         "AND p.predmet = i.izvajanjePredmeta.predmet " +
                         "AND p.vpis.student.id = :student " +
-                        "AND i.datum > :datum " +
+                        "AND p.vpis.potrjen = true " +
+                        "AND i.datum >= :datum " +
                         "AND i NOT IN (" +
                             "SELECT iz2.prijavaRok.rok FROM Izpit iz2 " +
                             "WHERE iz2.prijavaRok.rok = i) " +

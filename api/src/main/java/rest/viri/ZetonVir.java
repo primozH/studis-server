@@ -23,26 +23,29 @@ public class ZetonVir {
     private ZetonZrno zetonZrno;
 
     @GET
-    public Response getTokens() {
-        List<Zeton> zetoni = zetonZrno.getTokens(null, null);
+    public Response getTokens(@QueryParam("izkoriscen") Boolean izkoriscen) {
+        List<Zeton> zetoni = zetonZrno.getTokens(izkoriscen);
         return Response.ok(zetoni).build();
     }
 
     @GET
-    @Path("{student}")
-    public Response getToken(@PathParam("student") Integer student, @QueryParam("vrsta-vpisa") Integer vrstaVpisa,
+    @Path("student/{id}")
+    public Response getTokensForStudent(@PathParam("id") Integer studentId,
                              @QueryParam("izkoriscen") Boolean izkoriscen) {
-        if (vrstaVpisa == null) {
-            List<Zeton> zetoni = zetonZrno.getTokens(student, izkoriscen);
-            return Response.ok(zetoni).build();
-        }
 
-        Zeton zeton = zetonZrno.getToken(student, vrstaVpisa);
+        List<Zeton> zeton = zetonZrno.getTokensForStudent(studentId, izkoriscen);
+        return Response.ok(zeton).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getToken(@PathParam("id") Integer id) {
+        Zeton zeton = zetonZrno.getToken(id);
         return Response.ok(zeton).build();
     }
 
     @POST
-    @Path("{id}")
+    @Path("/student/{id}")
     public Response createTokenForStudent(@PathParam("id")Integer studentId) {
         Zeton zeton;
         try {
@@ -55,21 +58,19 @@ public class ZetonVir {
 
     @PUT
     @Path("{id}")
-    public Response modifyToken(@PathParam("id") Integer studentId,
-                                @QueryParam("vrsta-vpisa") Integer vrstaVpisa,
+    public Response modifyToken(@PathParam("id") Integer zetonId,
                                 Zeton zeton) {
-        if (!studentId.equals(zeton.getStudent().getId()))
+        if (!zetonId.equals(zeton.getId()))
             return Response.status(Response.Status.BAD_REQUEST).build();
 
-        Zeton updatedToken = zetonZrno.updateToken(zeton, vrstaVpisa);
+        Zeton updatedToken = zetonZrno.updateToken(zeton, zetonId);
         return Response.ok(updatedToken).build();
     }
 
     @DELETE
-    @Path("{student}")
-    public Response deleteToken(@PathParam("student") Integer student,
-                                @QueryParam("vrsta-vpisa") Integer vpis) {
-        zetonZrno.deleteToken(student, vpis);
+    @Path("{id}")
+    public Response deleteToken(@PathParam("id") Integer zetonId) {
+        zetonZrno.deleteToken(zetonId);
 
         return Response.noContent().build();
     }

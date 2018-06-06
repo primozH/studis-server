@@ -18,14 +18,11 @@ import vpis.Vpis;
 @PrimaryKeyJoinColumn(name = "id_uporabnik", referencedColumnName = "id_uporabnik")
 @NamedQueries(value = {
         @NamedQuery(name = "entitete.vloge.Student.vrniVse", query = "SELECT s FROM Student s"),
-        @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoUporabniskemImenu", query = "SELECT s FROM Student s WHERE s.uporabniskoIme = :uporabniskoIme"),
         @NamedQuery(name = "entitete.vloge.Student.vrniStudentaPoVpisniStevilki", query = "SELECT s FROM Student s WHERE s.vpisnaStevilka = :vpisnaStevilka"),
         @NamedQuery(name = "entitete.vloge.Student.vrniNajvisjoZaporednoVpisnoStevilko", query = "SELECT s FROM Student s WHERE CONCAT(s.vpisnaStevilka, '') LIKE :vpisnaStevilka ORDER BY s.vpisnaStevilka DESC"),
         @NamedQuery(name = "entitete.vloge.Student.isciStudentaPoImenuPriimkuVpisni",
                 query = "SELECT s FROM Student s WHERE s.ime LIKE :parameter OR " +
-                        "s.priimek LIKE :parameter OR CONCAT(s.vpisnaStevilka, '') LIKE :parameter"),
-        @NamedQuery(name = "entitete.vloge.Student.ustvariStudentaIzKandidata", query = "UPDATE Uporabnik u SET u.tip = 'Student' WHERE " +
-                "u.id = :id"),
+                        "s.priimek LIKE :parameter OR CONCAT(s.vpisnaStevilka, '') LIKE :parameter")
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Student extends Uporabnik {
@@ -78,8 +75,8 @@ public class Student extends Uporabnik {
         super();
     }
 
-    public Student(String email, String geslo, Integer vpisnaStevilka, String uporabniskoIme, String ime, String priimek) {
-        super(email, geslo, uporabniskoIme);
+    public Student(String email, String geslo, Integer vpisnaStevilka, String ime, String priimek) {
+        super(email, geslo);
         this.vpisnaStevilka = vpisnaStevilka;
 
         this.setIme(ime);

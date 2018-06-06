@@ -1,6 +1,5 @@
-package zrna;
+package zrna.uporabniki;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 
-import naslov.Drzava;
 import orodja.GeneratorPodatkov;
 import vloge.Student;
 

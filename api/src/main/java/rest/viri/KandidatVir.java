@@ -2,11 +2,9 @@ package rest.viri;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import student.Zeton;
 import vloge.Kandidat;
-import zrna.KandidatZrno;
+import zrna.uporabniki.KandidatZrno;
 import zrna.UvozPodatkov;
-import zrna.VpisZrno;
 import zrna.ZetonZrno;
 
 import javax.enterprise.context.ApplicationScoped;

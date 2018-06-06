@@ -30,7 +30,7 @@ mvn clean package
 2. Run
 ```bash
 cd api/target
-java -jar api-0.0.1.jar
+java -jar api-1.0.0.jar
 ```
 
 ### Test data `testniPodatki`

@@ -13,23 +13,31 @@ import java.io.Serializable;
 @Entity
 @Table(name = "zeton")
 @NamedQueries( value = {
-            @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z"),
-            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudenta", query = "SELECT z FROM Zeton z WHERE z.student.id = :student"),
-            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudentaIzkoriscenost", query = "SELECT z FROM Zeton z WHERE z.student.id = :student AND z.izkoriscen = :izkoriscen"),
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniVse", query = "SELECT z FROM Zeton z " +
+                    "ORDER BY z.student.priimek, z.student.ime"),
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniVseIzkoriscenost", query = "SELECT z FROM Zeton z " +
+                    "WHERE z.izkoriscen = :izkoriscen " +
+                    "ORDER BY z.student.priimek, z.student.ime"),
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudenta", query = "SELECT z FROM Zeton z " +
+                    "WHERE z.student.id = :student ORDER BY z.student.priimek, z.student.ime"),
+            @NamedQuery(name = "entitete.vpis.Zeton.vrniZetoneZaStudentaIzkoriscenost", query = "SELECT z FROM Zeton z WHERE z.student.id = :student AND z.izkoriscen = :izkoriscen " +
+                    "ORDER BY z.student.priimek, z.student.ime"),
             @NamedQuery(name = "entitete.vpis.Zeton.nastaviIzkoriscenostZetona", query = "UPDATE Zeton z " +
                     "SET z.izkoriscen = :izkoriscen WHERE z.student = :student")
         }
 )
-@IdClass(ZetonId.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Zeton {
 
     @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "vrsta_vpisa")
     private VrstaVpisa vrstaVpisa;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "student")
     private Student student;
@@ -59,6 +67,14 @@ public class Zeton {
 
     @Column(name = "izkoriscen")
     private boolean izkoriscen = false;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Student getStudent() {
         return student;

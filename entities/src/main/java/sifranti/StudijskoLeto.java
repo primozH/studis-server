@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "studijsko_leto")
 @NamedQueries(value = {
-        @NamedQuery(name = "entitete.sifranti.StudijskoLeto.vrniStudijkoLeto", query = "SELECT s FROM StudijskoLeto s WHERE " +
+        @NamedQuery(name = "entitete.sifranti.StudijskoLeto.vrniStudijskoLeto", query = "SELECT s FROM StudijskoLeto s WHERE " +
                 "s.studijskoLeto LIKE :studijskoLeto"),
         @NamedQuery(name = "entitete.sifranti.StudijskoLeto.vrniZadnjeStudijskoLeto", query = "SELECT s FROM StudijskoLeto s ORDER BY s.id DESC")
 }

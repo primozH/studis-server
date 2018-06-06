@@ -1,15 +1,5 @@
 package zrna;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import helpers.entities.KartotecniList;
 import helpers.entities.Vrstica;
 import izpit.Izpit;
@@ -17,6 +7,16 @@ import izpit.IzvajanjePredmeta;
 import student.PredmetStudent;
 import vloge.Student;
 import vpis.Vpis;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class KartotecniListZrno {
@@ -66,9 +66,11 @@ public class KartotecniListZrno {
 
                 izvajanjePredmeta.setStudijskoLeto(null);
 
-                List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganja", Izpit.class)
+                List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniPolaganjaZaStudijskoLeto", Izpit.class)
                         .setParameter("sifraPredmeta", predmet.getPredmet().getSifra())
                         .setParameter("studentId", studentId)
+                        .setParameter("letoStart", LocalDate.of(vpis.getStudijskoLeto().getId(), 10, 1))
+                        .setParameter("letoStop", LocalDate.of(vpis.getStudijskoLeto().getId() + 1, 9, 30))
                         .getResultList();
 
                 sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
@@ -76,7 +78,6 @@ public class KartotecniListZrno {
                         .sum();
                 countGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .count();
-                log.info("counGrade = "  + countGrade + "   " + sumGrade);
 
                 sumECTS += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .mapToInt(izpit -> izpit.getPredmet().getECTS())
@@ -88,7 +89,6 @@ public class KartotecniListZrno {
                 ocene.put(predmet.getPredmet().getSifra(), izpiti);
             }
 
-            log.info("koncno counGrade = "  + countGrade + "   " + sumGrade);
             if (countGrade == 0) {
                 vrstica.setPovprecnaOcena(0d);
             } else {

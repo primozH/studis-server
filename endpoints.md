@@ -195,7 +195,7 @@ localhost:8080/api/v1/
         - vrne .txt datoteko z neuspešnimo uvoženimi kandidati
 
 - žeton:
-    - GET: zeton
+    - GET: zeton[?izkoriscen={true|false}]
         - vrne vse izdane žetone
     - GET: zeton/{student}[?vrsta-vpisa={vrsta-vpisa}]
         - vrne vse žetone za izbranega študenta in vrsto vpisa, če obstaja (če je query parameter podan, vrne samo enega).
@@ -475,7 +475,7 @@ localhost:8080/api/v1/
        {
        	"koncnaOcena":6,
        	"prijavaRok":{
-       	    "id":10,            <--- izpusti ali -1, ce gre za neprijavljenega stutenda
+       	    "id":10,
        		"rok":{
        			"izvajanjePredmeta":{
        				"predmet":{
@@ -490,9 +490,9 @@ localhost:8080/api/v1/
        			"vpisnaStevilka":63170001
        		}
        	},
-       	"stPolaganjaLeto":2,    <--- izpusti, ce gre za prijavljenega stutenda
-        "stPolaganjaSkupno":3,  <--- izpusti, ce gre za prijavljenega stutenda
-        "datum": "2018-05-30"   <--- izpusti, ce gre za prijavljenega stutenda
+       	"stPolaganjaLeto":2,
+        "stPolaganjaSkupno":3,
+        "datum": "2018-05-30"
        }
         ```
     - GET /izpit/{id}/opravljeni
