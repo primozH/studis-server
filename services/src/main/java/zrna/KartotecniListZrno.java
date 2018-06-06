@@ -70,18 +70,6 @@ public class KartotecniListZrno {
                         .setParameter("sifraPredmeta", predmet.getPredmet().getSifra())
                         .setParameter("studentId", studentId)
                         .getResultList();
-//                List<Izpit> izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniVseIzpiteZaStudenta", Izpit.class)
-//                                       .setParameter("sifraPredmeta", predmet.getPredmet().getSifra())
-//                                       .setParameter("studentId", studentId)
-//                                       .getResultList();
-                for (Izpit izpit : izpiti) {
-                    log.info("izpi " + izpit.getStPolaganjaSkupno() + "  " + izpit.getDatum() + "  " + izpit.getKoncnaOcena() + "  " + izpit.getPredmet().getSifra());
-                }
-//                izpiti = IzpitZrno.odstraniPredmeteZNegativnoZadnjoOceno(izpiti);
-//
-//                for (Izpit izpit : izpiti) {
-//                    log.info("po izpi " + izpit.getStPolaganjaSkupno() + "  " + izpit.getDatum() + "  " + izpit.getKoncnaOcena() + "  " + izpit.getPredmet().getSifra());
-//                }
 
                 sumGrade += izpiti.stream().filter(izpit -> izpit.getKoncnaOcena() != null && izpit.getKoncnaOcena() > 5)
                         .mapToInt(Izpit::getKoncnaOcena)
