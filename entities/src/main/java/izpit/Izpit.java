@@ -23,7 +23,7 @@ import vloge.Ucitelj;
                     query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
                         "AND i.datum BETWEEN :letoStart AND :letoStop " +
-                        "ORDER BY i.datum DESC"),
+                        "ORDER BY i.datum DESC, i.stPolaganjaSkupno DESC"),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
