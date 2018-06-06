@@ -36,7 +36,6 @@ import sifranti.StudijskoLeto;
 import sifranti.VrstaVpisa;
 import student.PredmetStudent;
 import student.Zeton;
-import student.ZetonId;
 import vloge.Student;
 import vpis.Vpis;
 import vpis.VpisniList;
@@ -310,9 +309,7 @@ public class VpisZrno {
                 .replace("LETNIK", vpis.getLetnik().getLetnik().toString() + ". letnik")
                 .replace("SOLSKOLETO", vpis.getStudijskoLeto().getStudijskoLeto())
                 .replace("NACINSTUDIJA", vpis.getNacinStudija().getOpis())
-                .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv())
-                .replace("Č", "C")
-                .replace("č", "c");
+                .replace("STUDIJSKIPROGRAM", vpis.getStudijskiProgram().getNaziv());
     }
 
     public Vpis vrniVpis(int studentId, int studijskoLeto) {

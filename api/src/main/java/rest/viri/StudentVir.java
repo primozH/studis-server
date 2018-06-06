@@ -3,6 +3,7 @@ package rest.viri;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,33 +26,26 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import authentication.Auth;
-import authentication.Role;
-import helpers.entities.KartotecniList;
 import org.json.JSONObject;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
-import com.itextpdf.tool.xml.html.Tags;
-import com.itextpdf.tool.xml.parser.XMLParser;
-import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
-import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
-import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
-import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
-import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 
+import authentication.Auth;
+import authentication.Role;
 import common.CustomErrorMessage;
+import helpers.entities.KartotecniList;
 import orodja.PotrdiloVpisaHTML;
 import vloge.Student;
 import vloge.Uporabnik;
 import vpis.Vpis;
 import vpis.VpisniList;
 import zrna.KartotecniListZrno;
-import zrna.uporabniki.StudentZrno;
 import zrna.VpisZrno;
+import zrna.uporabniki.StudentZrno;
 
 @Path("/student")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -164,7 +158,6 @@ public class StudentVir {
             String html = PotrdiloVpisaHTML.html;
             Vpis vpis = vpisZrno.vrniVpis(studentId, studijskoLeto);
             html = vpisZrno.zamenjajPodatkeZaPotrdiloVpisa(html, vpis);
-
             String imeDatoteke = "potrdilo" + LocalDateTime.now().format(
                     DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss")) + ".pdf";
 
@@ -172,20 +165,10 @@ public class StudentVir {
             PdfWriter writer = PdfWriter.getInstance(pdfDocument, new FileOutputStream(imeDatoteke));
             pdfDocument.setPageSize(PageSize.A4);
             pdfDocument.open();
-            CSSResolver cssResolver =
-                    XMLWorkerHelper.getInstance().getDefaultCssResolver(false);
-            HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
-            htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
-            htmlContext.autoBookmark(false);
-
-            PdfWriterPipeline pdf = new PdfWriterPipeline(pdfDocument, writer);
-            HtmlPipeline htmlP = new HtmlPipeline(htmlContext, pdf);
-            CssResolverPipeline css = new CssResolverPipeline(cssResolver, htmlP);
-            ByteArrayInputStream pdfStream = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
-
-            XMLWorker worker = new XMLWorker(css, true);
-            XMLParser p = new XMLParser(worker);
-            p.parse(pdfStream);
+            XMLWorkerFontProvider fontImp = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
+            fontImp.register("/fonts/NotoSans-Regular.ttf");
+            XMLWorkerHelper.getInstance().parseXHtml(writer, pdfDocument,
+                                                     new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8)), null, Charset.forName("UTF-8"), fontImp);
 
             pdfDocument.close();
             return Response.ok(new File(imeDatoteke))
