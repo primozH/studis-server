@@ -1,5 +1,6 @@
 package izpit;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class OpravljeniPredmetiStatistika {
             kreditneTocke += izpit.getPredmet().getECTS();
             sestevekOcen += izpit.getKoncnaOcena();
         }
-        this.skupnoPovprecje = sestevekOcen / steviloOpravljenihPredmetov;
+        this.skupnoPovprecje = Double.valueOf(new DecimalFormat("#.##").format(sestevekOcen / steviloOpravljenihPredmetov));
         this.studijskoLeto = vrniStudijskoLeto(opravljeniPredmeti.get(0).getDatum());
         this.opravljeniPredmeti = opravljeniPredmeti;
     }
