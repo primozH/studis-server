@@ -1,1 +1,1 @@
-web: java -jar api/target/api-0.0.1.jar
+web: java -jar api/target/api-1.0.0.jar
