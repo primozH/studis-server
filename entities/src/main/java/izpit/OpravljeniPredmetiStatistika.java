@@ -1,5 +1,6 @@
 package izpit;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,17 +11,17 @@ public class OpravljeniPredmetiStatistika {
     private List<Izpit> opravljeniPredmeti;
     private int steviloOpravljenihPredmetov = 0;
     private int kreditneTocke = 0;
-    private int skupnoPovprecje = 0;
+    private double skupnoPovprecje = 0;
     private StudijskoLeto studijskoLeto;
 
     public OpravljeniPredmetiStatistika(List<Izpit> opravljeniPredmeti) {
-        int sestevekOcen = 0;
+        double sestevekOcen = 0;
         for (Izpit izpit : opravljeniPredmeti) {
             steviloOpravljenihPredmetov ++;
             kreditneTocke += izpit.getPredmet().getECTS();
             sestevekOcen += izpit.getKoncnaOcena();
         }
-        skupnoPovprecje = sestevekOcen / opravljeniPredmeti.size();
+        this.skupnoPovprecje = Double.valueOf(new DecimalFormat("#.##").format(sestevekOcen / steviloOpravljenihPredmetov));
         this.studijskoLeto = vrniStudijskoLeto(opravljeniPredmeti.get(0).getDatum());
         this.opravljeniPredmeti = opravljeniPredmeti;
     }
@@ -49,11 +50,11 @@ public class OpravljeniPredmetiStatistika {
         this.kreditneTocke = kreditneTocke;
     }
 
-    public int getSkupnoPovprecje() {
+    public double getSkupnoPovprecje() {
         return skupnoPovprecje;
     }
 
-    public void setSkupnoPovprecje(int skupnoPovprecje) {
+    public void setSkupnoPovprecje(double skupnoPovprecje) {
         this.skupnoPovprecje = skupnoPovprecje;
     }
 

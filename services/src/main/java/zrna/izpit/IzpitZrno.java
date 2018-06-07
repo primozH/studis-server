@@ -2,7 +2,6 @@ package zrna.izpit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -242,7 +241,40 @@ public class IzpitZrno {
                 prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().setPredmet(predmet);
             }
         }
+        // Preverimo, ce je stevilo skupnih polaganj pravilno.
+        Izpit zadnjiIzpitPriPredmetu = null;
+        try {
+            int sifraPredmeta = izpit != null
+                    ? izpit.getPredmet().getSifra()
+                    : prijavaNaIzpit.getPrijavaRok().getRok().getIzvajanjePredmeta().getPredmet().getSifra();
+            int studentId = izpit != null
+                    ? izpit.getStudent().getId()
+                    : prijavaNaIzpit.getPrijavaRok().getStudent().getId();
+            List<Izpit> zadnjiIzpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniIzpiteZaPredmet", Izpit.class)
+                    .setParameter("predmet", sifraPredmeta)
+                    .setParameter("student", studentId)
+                    .getResultList();
+            if (zadnjiIzpiti != null && zadnjiIzpiti.size() != 0) {
+                zadnjiIzpitPriPredmetu = zadnjiIzpiti.get(0);
+            }
+        } catch (NoResultException e) {
+            log.info("Zadnji izpit ne obstaja.");
+        }
+        if (prijavaRok == null && zadnjiIzpitPriPredmetu != null && requestIzpit.getStPolaganjaSkupno() != null) {
+            if (zadnjiIzpitPriPredmetu.getStPolaganjaSkupno() >= requestIzpit.getStPolaganjaSkupno()) {
+                throw new Exception("Zadnji izpit ima večje število skupnih polaganj od trenutnega vnosa.");
+            }
+            if (requestIzpit.getStPolaganjaLeto() != null && requestIzpit.getStPolaganjaLeto() > requestIzpit.getStPolaganjaSkupno()) {
+                throw new Exception("Izpit ima vec polaganj v letu kot skupno.");
+            }
+
+            if (zadnjiIzpitPriPredmetu.getDatum().isAfter(requestIzpit.getDatum()) && requestIzpit.getStPolaganjaSkupno() > zadnjiIzpitPriPredmetu.getStPolaganjaSkupno()) {
+                throw new Exception("Datum izpita, ki ga vnasamo je pred datumom zadnjega izpita, skupno stevilo polaganj pa vecje.");
+            }
+        }
+
         izpit = vnesiRezultate(izpit, prijavaNaIzpit, prijavaRok);
+
         if (requestIzpit.getDatum() != null) {
             izpit.setDatum(requestIzpit.getDatum());
         }
@@ -309,32 +341,52 @@ public class IzpitZrno {
         }
     }
 
+    /**
+     * Metoda vrne le predmete z zadnjimi ocenami, v kolikor so pozitivne.
+     *
+     * @param izpiti
+     * @return
+     */
+    public static List<Izpit> odstraniPredmeteZNegativnoZadnjoOceno(List<Izpit> izpiti) {
+        Iterator<Izpit> iterator = izpiti.iterator();
+        int prejsnjiPredmet = 0;
+        while (iterator.hasNext()) {
+            Izpit izpit = iterator.next();
+//            log.info("trenutni predmet = " + izpit.getPredmet().getSifra() + " " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getDatum());
+            // Obdrzimo samo en izpit za predmet
+            if (izpit.getPredmet().getSifra() == prejsnjiPredmet) {
+//                log.info("odstranjen predmet zaradi iste sifre = " + izpit.getPredmet().getSifra() + " " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getDatum());
+                iterator.remove();
+                continue;
+            } else {
+//                log.info("nov predmet = " + izpit.getPredmet().getSifra() + " " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getDatum());
+                prejsnjiPredmet = izpit.getPredmet().getSifra();
+            }
+            if (izpit.getKoncnaOcena() == null || izpit.getKoncnaOcena() < 6) {
+//                log.info("odstranjen predmet zaradi " + (izpit.getKoncnaOcena() != null ? "negativne zadnje ocene" : "null") + " = " + izpit.getPredmet().getSifra() + " " + izpit.getKoncnaOcena() + " " + izpit.getStPolaganjaSkupno() + " " + izpit.getDatum());
+                iterator.remove();
+                continue;
+            }
+        }
+        return izpiti;
+    }
+
     @Transactional
     public List<OpravljeniPredmetiStatistika> vrniOpravljeneIzpite(Student student) throws Exception {
         try {
             List<Izpit> izpiti;
-            izpiti = em.createNamedQuery("entitete.izpit.Izpit.pozitivniPredmeti", Izpit.class)
+            izpiti = em.createNamedQuery("entitete.izpit.Izpit.vrniVseIzpiteZaStudenta", Izpit.class)
                        .setParameter("student", student.getId())
                        .getResultList();
             if (izpiti.isEmpty()) throw new NoResultException();
-            Iterator<Izpit> iterator = izpiti.iterator();
-            Map<Integer, Izpit> zadnjeOceneMap = new HashMap<>();
-            while (iterator.hasNext()) {
-                Izpit izpit = iterator.next();
-                if (!zadnjeOceneMap.containsKey(izpit.getPredmet().getSifra())) {
-                    zadnjeOceneMap.put(izpit.getPredmet().getSifra(), izpit);
-                } else {
-                    Izpit trenutnoNajbolsi = zadnjeOceneMap.get(izpit.getPredmet().getSifra());
-                    if (trenutnoNajbolsi.getDatum().isBefore(izpit.getDatum()) ||
-                            trenutnoNajbolsi.getDatum().isEqual(izpit.getDatum()) && izpit.getStPolaganjaSkupno() > trenutnoNajbolsi.getStPolaganjaSkupno()) {
-                        zadnjeOceneMap.replace(izpit.getPredmet().getSifra(), izpit);
-                    }
-                }
-            }
+
+            // Najprej pomecemo izpite, ki imajo zadnjo oceno negativno
+            izpiti = odstraniPredmeteZNegativnoZadnjoOceno(izpiti);
 
             Map<Integer, ArrayList<Izpit>> filtriraniIzpiti = new TreeMap<>();
 
-            for (Izpit izpit : zadnjeOceneMap.values()) {
+            // Filtriramo po studijskem letu
+            for (Izpit izpit : izpiti) {
                 int studijskoLeto = izpit.getDatum().getYear();
                 if (izpit.getDatum().getMonth().getValue() < 10) {
                     studijskoLeto--;

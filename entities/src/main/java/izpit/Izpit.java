@@ -23,7 +23,7 @@ import vloge.Ucitelj;
                     query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
                         "AND i.datum BETWEEN :letoStart AND :letoStop " +
-                        "ORDER BY i.datum DESC"),
+                        "ORDER BY i.datum DESC, i.stPolaganjaSkupno DESC"),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaLeto",
                 query = "SELECT i FROM Izpit i WHERE i.predmet.sifra = :sifraPredmeta " +
                         "AND i.student.id = :studentId " +
@@ -37,9 +37,6 @@ import vloge.Ucitelj;
                         "WHERE i.student.id = :student " +
                         "AND i.predmet.sifra = :predmet " +
                         "AND i.koncnaOcena > 5"),
-        @NamedQuery(name = "entitete.izpit.Izpit.pozitivniPredmeti",
-                query = "SELECT i FROM Izpit i " +
-                        "WHERE i.student.id = :student AND i.koncnaOcena > 5 ORDER BY i.predmet.sifra DESC, i.datum DESC, i.stPolaganjaSkupno DESC"),
         @NamedQuery(name = "entitete.izpit.Izpit.vneseneOceneZaRok",
                 query = "SELECT i FROM Izpit i " +
                         "WHERE i.prijavaRok.rok.id = :rok"),
@@ -51,7 +48,16 @@ import vloge.Ucitelj;
                 query = "SELECT i FROM Izpit i " +
                         "WHERE i.prijavaRok.rok.id = :rok"),
         @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpitZaPrijavo",
-                query = "SELECT i FROM Izpit i WHERE i.prijavaRok.id = :prijavaRokId")
+                query = "SELECT i FROM Izpit i WHERE i.prijavaRok.id = :prijavaRokId"),
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniIzpiteZaPredmet",
+                query = "SELECT i FROM Izpit i " +
+                        "WHERE i.predmet.sifra = :predmet " +
+                        "AND i.student.id = :student " +
+                        "ORDER BY i.datum DESC, i.stPolaganjaSkupno DESC, i.id DESC"),
+        @NamedQuery(name = "entitete.izpit.Izpit.vrniVseIzpiteZaStudenta",
+                query = "SELECT i FROM Izpit i " +
+                        "WHERE i.student.id = :student " +
+                        "ORDER BY i.predmet.sifra DESC, i.datum DESC, i.stPolaganjaSkupno DESC, i.id DESC")
 })
 public class Izpit {
 
