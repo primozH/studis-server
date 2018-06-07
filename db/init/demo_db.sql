@@ -12,6 +12,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping structure for tabela studis.cenik
+DROP TABLE IF EXISTS `cenik`;
 CREATE TABLE IF NOT EXISTS `cenik` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`naziv` varchar(50) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -27,6 +28,7 @@ INSERT INTO `cenik` (`id`, `naziv`, `cena`, `valuta`) VALUES
 /*!40000 ALTER TABLE `cenik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.del_predmetnika
+DROP TABLE IF EXISTS `del_predmetnika`;
 CREATE TABLE IF NOT EXISTS `del_predmetnika` (
 	`sifra` int(11) NOT NULL,
 	`tip` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -43,6 +45,7 @@ INSERT INTO `del_predmetnika` (`sifra`, `tip`) VALUES
 /*!40000 ALTER TABLE `del_predmetnika` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.drzava
+DROP TABLE IF EXISTS `drzava`;
 CREATE TABLE IF NOT EXISTS `drzava` (
 	`numericna_oznaka` int(11) NOT NULL,
 	`iso_naziv` varchar(255) COLLATE utf8_slovenian_ci NOT NULL,
@@ -309,6 +312,7 @@ INSERT INTO `drzava` (`numericna_oznaka`, `iso_naziv`, `iso_koda`, `opombe`, `sl
 /*!40000 ALTER TABLE `drzava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpit
+DROP TABLE IF EXISTS `izpit`;
 CREATE TABLE IF NOT EXISTS `izpit` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`prijava_id` int(11) DEFAULT NULL,
@@ -334,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `izpit` (
 	CONSTRAINT `izpit_student_id_uporabnik_fk` FOREIGN KEY (`student`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.izpit: ~110 rows (približno)
+-- Dumping data for table studis.izpit: ~108 rows (približno)
 /*!40000 ALTER TABLE `izpit` DISABLE KEYS */;
 INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`, `ocena_ustno`, `st_polaganja_leto`, `st_polaganja_skupno`, `predmet`, `student`, `izprasevalec`, `ustvarjeno`, `spremenjeno`) VALUES
 	(1, 10, '2017-06-16', 7, 70, NULL, 1, 1, 63209, 52, 8, '2018-06-02 11:37:00', NULL),
@@ -448,6 +452,7 @@ INSERT INTO `izpit` (`id`, `prijava_id`, `datum`, `koncna_ocena`, `ocena_pisno`,
 /*!40000 ALTER TABLE `izpit` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.izpitni_rok
+DROP TABLE IF EXISTS `izpitni_rok`;
 CREATE TABLE IF NOT EXISTS `izpitni_rok` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`datum` date NOT NULL,
@@ -577,6 +582,7 @@ INSERT INTO `izpitni_rok` (`id`, `datum`, `cas`, `prostor`, `izvajalec`, `studij
 /*!40000 ALTER TABLE `izpitni_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.kandidat
+DROP TABLE IF EXISTS `kandidat`;
 CREATE TABLE IF NOT EXISTS `kandidat` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`ime` varchar(50) COLLATE utf8_slovenian_ci NOT NULL,
@@ -596,6 +602,7 @@ CREATE TABLE IF NOT EXISTS `kandidat` (
 /*!40000 ALTER TABLE `kandidat` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.klasius
+DROP TABLE IF EXISTS `klasius`;
 CREATE TABLE IF NOT EXISTS `klasius` (
 	`sifra` int(11) NOT NULL,
 	`opis` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -628,6 +635,7 @@ INSERT INTO `klasius` (`sifra`, `opis`, `raven_izobrazbe`, `strokovni_naslov`) V
 /*!40000 ALTER TABLE `klasius` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.letnik
+DROP TABLE IF EXISTS `letnik`;
 CREATE TABLE IF NOT EXISTS `letnik` (
 	`letnik` int(11) NOT NULL,
 	PRIMARY KEY (`letnik`)
@@ -642,6 +650,7 @@ INSERT INTO `letnik` (`letnik`) VALUES
 /*!40000 ALTER TABLE `letnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.nacin_studija
+DROP TABLE IF EXISTS `nacin_studija`;
 CREATE TABLE IF NOT EXISTS `nacin_studija` (
 	`sifra` int(11) NOT NULL,
 	`opis` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -657,6 +666,7 @@ INSERT INTO `nacin_studija` (`sifra`, `opis`, `opis_ang`) VALUES
 /*!40000 ALTER TABLE `nacin_studija` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.napacna_prijava
+DROP TABLE IF EXISTS `napacna_prijava`;
 CREATE TABLE IF NOT EXISTS `napacna_prijava` (
 	`id_napacnega` int(11) NOT NULL AUTO_INCREMENT,
 	`cas_poteka_izklopa` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -670,6 +680,7 @@ CREATE TABLE IF NOT EXISTS `napacna_prijava` (
 /*!40000 ALTER TABLE `napacna_prijava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.obcina
+DROP TABLE IF EXISTS `obcina`;
 CREATE TABLE IF NOT EXISTS `obcina` (
 	`sifra` int(11) NOT NULL,
 	`ime` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -894,6 +905,7 @@ INSERT INTO `obcina` (`sifra`, `ime`) VALUES
 /*!40000 ALTER TABLE `obcina` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.oblika_studija
+DROP TABLE IF EXISTS `oblika_studija`;
 CREATE TABLE IF NOT EXISTS `oblika_studija` (
 	`sifra` int(11) NOT NULL,
 	`opis` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -910,6 +922,7 @@ INSERT INTO `oblika_studija` (`sifra`, `opis`, `opis_ang`) VALUES
 /*!40000 ALTER TABLE `oblika_studija` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.odjava
+DROP TABLE IF EXISTS `odjava`;
 CREATE TABLE IF NOT EXISTS `odjava` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`prijava_id` int(11) NOT NULL,
@@ -927,6 +940,7 @@ CREATE TABLE IF NOT EXISTS `odjava` (
 /*!40000 ALTER TABLE `odjava` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.posta
+DROP TABLE IF EXISTS `posta`;
 CREATE TABLE IF NOT EXISTS `posta` (
 	`postna_stevilka` int(11) NOT NULL,
 	`naziv_poste` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -1417,6 +1431,7 @@ INSERT INTO `posta` (`postna_stevilka`, `naziv_poste`) VALUES
 /*!40000 ALTER TABLE `posta` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.praznik
+DROP TABLE IF EXISTS `praznik`;
 CREATE TABLE IF NOT EXISTS `praznik` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`datum` date NOT NULL,
@@ -1446,6 +1461,7 @@ INSERT INTO `praznik` (`id`, `datum`, `ime`) VALUES
 /*!40000 ALTER TABLE `praznik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmet
+DROP TABLE IF EXISTS `predmet`;
 CREATE TABLE IF NOT EXISTS `predmet` (
 	`sifra` int(11) NOT NULL,
 	`ects` int(11) DEFAULT NULL,
@@ -1553,6 +1569,7 @@ INSERT INTO `predmet` (`sifra`, `ects`, `naziv`, `semester`) VALUES
 /*!40000 ALTER TABLE `predmet` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmetnik
+DROP TABLE IF EXISTS `predmetnik`;
 CREATE TABLE IF NOT EXISTS `predmetnik` (
 	`modul` int(11) DEFAULT NULL,
 	`del_predmetnika` int(11) NOT NULL,
@@ -1655,6 +1672,7 @@ INSERT INTO `predmetnik` (`modul`, `del_predmetnika`, `letnik`, `predmet`, `stud
 /*!40000 ALTER TABLE `predmetnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmet_izvajanje
+DROP TABLE IF EXISTS `predmet_izvajanje`;
 CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
 	`nosilec1` int(11) DEFAULT NULL,
 	`nosilec2` int(11) DEFAULT NULL,
@@ -1673,7 +1691,7 @@ CREATE TABLE IF NOT EXISTS `predmet_izvajanje` (
 	CONSTRAINT `FK_predmet_izvajanje_studijsko_leto` FOREIGN KEY (`studijsko_leto`) REFERENCES `studijsko_leto` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.predmet_izvajanje: ~310 rows (približno)
+-- Dumping data for table studis.predmet_izvajanje: ~320 rows (približno)
 /*!40000 ALTER TABLE `predmet_izvajanje` DISABLE KEYS */;
 INSERT INTO `predmet_izvajanje` (`nosilec1`, `nosilec2`, `nosilec3`, `predmet`, `studijsko_leto`) VALUES
 	(20, 43, NULL, 63202, 2014),
@@ -1999,6 +2017,7 @@ INSERT INTO `predmet_izvajanje` (`nosilec1`, `nosilec2`, `nosilec3`, `predmet`, 
 /*!40000 ALTER TABLE `predmet_izvajanje` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.predmet_student
+DROP TABLE IF EXISTS `predmet_student`;
 CREATE TABLE IF NOT EXISTS `predmet_student` (
 	`predmet` int(11) NOT NULL,
 	`studijsko_leto` int(11) NOT NULL,
@@ -3126,6 +3145,7 @@ INSERT INTO `predmet_student` (`predmet`, `studijsko_leto`, `student`) VALUES
 /*!40000 ALTER TABLE `predmet_student` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.prijava_rok
+DROP TABLE IF EXISTS `prijava_rok`;
 CREATE TABLE IF NOT EXISTS `prijava_rok` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`izpitni_rok` int(11) DEFAULT NULL,
@@ -3256,6 +3276,7 @@ INSERT INTO `prijava_rok` (`id`, `izpitni_rok`, `cas_prijave`, `student`, `cena`
 /*!40000 ALTER TABLE `prijava_rok` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.referent
+DROP TABLE IF EXISTS `referent`;
 CREATE TABLE IF NOT EXISTS `referent` (
 	`id_uporabnik` int(11) NOT NULL,
 	PRIMARY KEY (`id_uporabnik`),
@@ -3272,6 +3293,7 @@ INSERT INTO `referent` (`id_uporabnik`) VALUES
 /*!40000 ALTER TABLE `referent` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.skrbnik
+DROP TABLE IF EXISTS `skrbnik`;
 CREATE TABLE IF NOT EXISTS `skrbnik` (
 	`id_uporabnik` int(11) NOT NULL,
 	PRIMARY KEY (`id_uporabnik`),
@@ -3285,6 +3307,7 @@ INSERT INTO `skrbnik` (`id_uporabnik`) VALUES
 /*!40000 ALTER TABLE `skrbnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.student
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
 	`id_uporabnik` int(11) NOT NULL,
 	`drzava_rojstva` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -3375,6 +3398,7 @@ INSERT INTO `student` (`id_uporabnik`, `drzava_rojstva`, `kraj_rojstva`, `naslov
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.studijski_program
+DROP TABLE IF EXISTS `studijski_program`;
 CREATE TABLE IF NOT EXISTS `studijski_program` (
 	`sifra_evs` int(11) NOT NULL,
 	`naziv` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -3398,6 +3422,7 @@ INSERT INTO `studijski_program` (`sifra_evs`, `naziv`, `sifra`, `stevilo_semestr
 /*!40000 ALTER TABLE `studijski_program` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.studijsko_leto
+DROP TABLE IF EXISTS `studijsko_leto`;
 CREATE TABLE IF NOT EXISTS `studijsko_leto` (
 	`sifra` int(11) NOT NULL,
 	`studijsko_leto` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -3418,13 +3443,14 @@ INSERT INTO `studijsko_leto` (`sifra`, `studijsko_leto`) VALUES
 /*!40000 ALTER TABLE `studijsko_leto` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.ucitelj
+DROP TABLE IF EXISTS `ucitelj`;
 CREATE TABLE IF NOT EXISTS `ucitelj` (
 	`id_uporabnik` int(11) NOT NULL,
 	PRIMARY KEY (`id_uporabnik`),
 	CONSTRAINT `FK_ucitelj_id_uporabnik` FOREIGN KEY (`id_uporabnik`) REFERENCES `uporabnik` (`id_uporabnik`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.ucitelj: ~45 rows (približno)
+-- Dumping data for table studis.ucitelj: ~0 rows (približno)
 /*!40000 ALTER TABLE `ucitelj` DISABLE KEYS */;
 INSERT INTO `ucitelj` (`id_uporabnik`) VALUES
 	(6),
@@ -3475,6 +3501,7 @@ INSERT INTO `ucitelj` (`id_uporabnik`) VALUES
 /*!40000 ALTER TABLE `ucitelj` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.uporabnik
+DROP TABLE IF EXISTS `uporabnik`;
 CREATE TABLE IF NOT EXISTS `uporabnik` (
 	`id_uporabnik` int(11) NOT NULL AUTO_INCREMENT,
 	`tip` varchar(31) COLLATE utf8_slovenian_ci DEFAULT NULL,
@@ -3496,7 +3523,7 @@ CREATE TABLE IF NOT EXISTS `uporabnik` (
 	CONSTRAINT `FK_uporabnik_drzavljanstvo` FOREIGN KEY (`drzavljanstvo`) REFERENCES `drzava` (`numericna_oznaka`)
 ) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.uporabnik: ~101 rows (približno)
+-- Dumping data for table studis.uporabnik: ~0 rows (približno)
 /*!40000 ALTER TABLE `uporabnik` DISABLE KEYS */;
 INSERT INTO `uporabnik` (`id_uporabnik`, `tip`, `datum_rojstva`, `davcna_stevilka`, `email`, `emso`, `geslo`, `ime`, `priimek`, `spol`, `spremenjeno`, `ustvarjeno`, `zadnja_prijava`, `drzavljanstvo`) VALUES
 	(1, 'Skrbnik', NULL, NULL, 'admin@fri.uni-lj.si', NULL, '$31$16$8_suS4gpyEmol2ldJyOIwOMU9es7_Nqsn83n9zepQeY', 'Slavko', 'Horvat', NULL, NULL, '2018-04-05 21:10:52', NULL, NULL),
@@ -3603,6 +3630,7 @@ INSERT INTO `uporabnik` (`id_uporabnik`, `tip`, `datum_rojstva`, `davcna_stevilk
 /*!40000 ALTER TABLE `uporabnik` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.vpis
+DROP TABLE IF EXISTS `vpis`;
 CREATE TABLE IF NOT EXISTS `vpis` (
 	`potrjen` tinyint(1) DEFAULT 0,
 	`letnik` int(11) DEFAULT NULL,
@@ -3628,7 +3656,7 @@ CREATE TABLE IF NOT EXISTS `vpis` (
 	CONSTRAINT `FK_vpis_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.vpis: ~110 rows (približno)
+-- Dumping data for table studis.vpis: ~0 rows (približno)
 /*!40000 ALTER TABLE `vpis` DISABLE KEYS */;
 INSERT INTO `vpis` (`potrjen`, `letnik`, `nacin_studija`, `oblika_studija`, `student`, `studijski_program`, `studijsko_leto`, `vrsta_vpisa`) VALUES
 	(1, 1, 1, 1, 51, 1000468, 2017, 1),
@@ -3744,13 +3772,14 @@ INSERT INTO `vpis` (`potrjen`, `letnik`, `nacin_studija`, `oblika_studija`, `stu
 /*!40000 ALTER TABLE `vpis` ENABLE KEYS */;
 
 -- Dumping structure for tabela studis.vrsta_vpisa
+DROP TABLE IF EXISTS `vrsta_vpisa`;
 CREATE TABLE IF NOT EXISTS `vrsta_vpisa` (
 	`sifra` int(11) NOT NULL,
 	`vrsta_vpisa` varchar(255) COLLATE utf8_slovenian_ci DEFAULT NULL,
 	PRIMARY KEY (`sifra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.vrsta_vpisa: ~8 rows (približno)
+-- Dumping data for table studis.vrsta_vpisa: ~0 rows (približno)
 /*!40000 ALTER TABLE `vrsta_vpisa` DISABLE KEYS */;
 INSERT INTO `vrsta_vpisa` (`sifra`, `vrsta_vpisa`) VALUES
 	(1, 'Prvi vpis v letnik/dodatno leto'),
@@ -3793,7 +3822,7 @@ CREATE TABLE IF NOT EXISTS `zeton` (
 	CONSTRAINT `FK_zeton_vrsta_vpisa` FOREIGN KEY (`vrsta_vpisa`) REFERENCES `vrsta_vpisa` (`sifra`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 
--- Dumping data for table studis.zeton: ~10 rows (približno)
+-- Dumping data for table studis.zeton: ~0 rows (približno)
 /*!40000 ALTER TABLE `zeton` DISABLE KEYS */;
 INSERT INTO `zeton` (`id`, `izkoriscen`, `prosta_izbira`, `letnik`, `nacin_studija`, `oblika_studija`, `student`, `studijski_program`, `studijsko_leto`, `vrsta_vpisa`) VALUES
 	(1, 1, 0, 3, 1, 1, 76, 1000468, 2017, 1),
@@ -3824,7 +3853,6 @@ INSERT INTO `zeton` (`id`, `izkoriscen`, `prosta_izbira`, `letnik`, `nacin_studi
 	(26, 1, 1, 3, 1, 1, 75, 1000468, 2017, 1),
 	(27, 1, 0, 2, 1, 1, 52, 1000468, 2017, 1);
 /*!40000 ALTER TABLE `zeton` ENABLE KEYS */;
-
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
